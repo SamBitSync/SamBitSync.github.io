@@ -1,3 +1,55 @@
-baseURL = 'https://example.org/'
-languageCode = 'en-us'
-title = 'My New Hugo Site'
+baseURL = "https://sambitmaps.systems/"
+languageCode = "en-us"
+title = "Sambit's Knowledge Maps"
+theme = "PaperMod"
+
+# Enable Git info for "last modified" date
+enableGitInfo = true
+
+# Show main sections on home page
+[params]
+  defaultTheme = "auto"
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowWordCount = true
+  ShowRssButtonInSectionTermList = true
+  hideSummary = false
+  showFullTextInHome = false
+  disableSpecial1stPost = true
+  
+
+  # Define which sections to show on home page
+  mainSections = ["notes"]
+
+# Menu configuration
+[[menu.main]]
+  identifier = "notes"
+  name = "Notes"
+  url = "/notes/"
+  weight = 10
+  [menu.main.params]
+    external = false
+
+[[menu.main]]
+  identifier = "tags"
+  name = "Tags"
+  url = "/tags/"
+  weight = 20
+
+[[menu.main]]
+  identifier = "search"
+  name = "Search"
+  url = "/search/"
+  weight = 30
+
+# Taxonomy settings
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
+# Enable search
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
