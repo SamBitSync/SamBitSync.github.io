@@ -1,4 +1,6 @@
 baseURL = "https://sambitmaps.systems/"
+canonifyURLs = true
+relativeURLs = false
 languageCode = "en-us"
 title = "Sambit's Knowledge Maps"
 theme = "PaperMod"
