@@ -1,12 +1,10 @@
 baseURL = "https://sambitmaps.systems/"
-canonifyURLs = true
-relativeURLs = false
 languageCode = "en-us"
-title = "Sambit's Knowledge Maps"
+title = "Sambit\'s Knowledge Maps"
 theme = "PaperMod"
-# Enable Git info for "last modified" date
 enableGitInfo = true
-# Show main sections on home page
+canonifyURLs = true
+
 [params]
   defaultTheme = "auto"
   ShowReadingTime = true
@@ -15,61 +13,47 @@ enableGitInfo = true
   ShowBreadCrumbs = true
   ShowCodeCopyButtons = true
   ShowWordCount = true
-  ShowRssButtonInSectionTermList = true
-  hideSummary = false
-  showFullTextInHome = false
-  disableSpecial1stPost = true
+  assets.disableFingerprinting = true
   
   # Define which sections to show on home page
   mainSections = ["notes"]
+
 # Menu configuration
 [[menu.main]]
   identifier = "notes"
   name = "Notes"
   url = "/notes/"
   weight = 10
-  [menu.main.params]
-    external = false
+
 [[menu.main]]
   identifier = "tags"
   name = "Tags"
   url = "/tags/"
   weight = 20
+
 [[menu.main]]
   identifier = "search"
   name = "Search"
   url = "/search/"
   weight = 30
+
 # Taxonomy settings
 [taxonomies]
   tag = "tags"
   category = "categories"
+
 # Enable search
 [outputs]
   home = ["HTML", "RSS", "JSON"]
 
-# Add this security section to disable SRI
+# Disable SRI
 [security]
-  [security.funcs]
-    getenv = ['^HUGO_']
-  [security.http]
-    methods = ['(?i)GET|POST']
-    urls = ['.*']
-  [security.gopherjs]
-    dataWrites = false
-  enableInlineShortcodes = false
-  
-  # This is the important part - disable SRI
   [security.exec]
-    allow = ['^dart-sass-embedded$', '^go$', '^npx$', '^postcss$', '^git$']
-  [security.resourceDir]
-    allow = ['(?i).*']
-  [security.goTemplates]
-    allowActionJSTmpl = false
-  [security.csrf]
-    failOpen = false
-  # Disable asset fingerprinting and SRI
+    allow = ["^dart-sass-embedded$", "^go$", "^npx$", "^postcss$", "^git$"]
+  [security.funcs]
+    getenv = ["^HUGO_"]
+  [security.http]
+    methods = ["(?i)GET|POST"]
+    urls = [".*"]
   [security.fingerprinting]
     disable = true
-  [security.rssTemplate]
-    html = false
