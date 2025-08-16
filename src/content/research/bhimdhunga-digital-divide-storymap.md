@@ -1,7 +1,7 @@
 ---
 title: "Bhimdhunga Interactive Digital Divide Storymap"
 description: "Interactive digital divide storymap project for Bhimdhunga, Nagarjun that visualizes household-level digital access stories through an interactive map interface"
-date: 2024-06-15T00:00:00Z
+date: 2025-07-15T00:00:00Z
 status: "ongoing"
 methodology: ["mixed-methods", "interpretive-social-science"]
 collaborators: ["All In Solutions Fellowship Team"]
@@ -53,12 +53,10 @@ Official coverage maps show Bhimdhunga as having reasonable digital access, but 
 - Generational and gender differences in digital access and use
 - Creative workarounds that residents develop to navigate connectivity challenges
 
-### Community Innovation
-Despite connectivity challenges, residents have developed sophisticated strategies for maximizing their digital access, including shared resources, strategic timing of internet use, and community networks for digital support.
 
 ## Fellowship Context
 
-This project was completed as part of the All In Solutions fellowship, which focuses on community-centered approaches to development challenges. The fellowship provided both technical support and a framework for ensuring the project served community needs rather than external research agendas.
+This project was completed as part of the All In Solutions fellowship 2025
 
 ## Impact and Applications
 
@@ -86,8 +84,6 @@ Ensuring the project could be maintained and updated by community members rather
 ## What's Next
 
 Currently working on:
-- Training community members to update and maintain the storymap
-- Exploring replication in other communities
 - Academic publication about the methodology and findings
 - Integration with local development planning processes
 
