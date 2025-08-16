@@ -1,7 +1,7 @@
 ---
 title: "Bhimdhunga Interactive Digital Divide Storymap"
 description: "Interactive digital divide storymap project for Bhimdhunga, Nagarjun that visualizes household-level digital access stories through an interactive map interface"
-date: 2025-07-15T00:00:00Z
+date: 2025-08-17T00:00:00Z
 status: "ongoing"
 methodology: ["mixed-methods", "interpretive-social-science"]
 collaborators: ["All In Solutions Fellowship Team"]
