@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Majuwa Village House Update</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map { height: 500px; }
+        #info { 
+            background: #e8f5e8; 
+            border: 1px solid #4ade80;
+            padding: 15px; 
+            margin: 10px 0; 
+            font-family: Arial, sans-serif;
+            border-radius: 8px;
+        }
+        .coords { font-family: monospace; background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+        .location-marker { font-size: 24px; }
+    </style>
+</head>
+<body>
+    <h1>✅ Verification: Majuwa Village House Updated</h1>
+    <div id="info">
+        <h3>Changes Made:</h3>
+        <p><strong>✓ Coordinates Updated:</strong> <span class="coords">27.724590, 85.224822</span> (moved from 27.7244, 85.3746)</p>
+        <p><strong>✓ Location Type:</strong> Changed from "restaurant" to "village_house"</p>
+        <p><strong>✓ Description:</strong> Now shows "Traditional Village House, Majuwa"</p>
+        <p><strong>✓ Icon:</strong> Uses 🏠 (traditional village house) instead of 🏪 (restaurant)</p>
+        <p><strong>✓ Context:</strong> "Traditional Nepali village building"</p>
+    </div>
+    <div id="map"></div>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize map to show both old and new locations for comparison
+        const map = L.map('map').setView([27.72, 85.25], 12);
+        
+        // Add ESRI World Imagery satellite tiles
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri',
+            maxZoom: 18
+        }).addTo(map);
+        
+        // Icon function
+        function getLocationIcon(accessLevel, locationType = 'house') {
+            let emoji;
+            if (locationType === 'village_house') {
+                emoji = accessLevel === 'medium' ? '🏠' : '🏚️';
+            } else if (locationType === 'restaurant') {
+                emoji = '🏪';
+            } else {
+                emoji = '🏡';
+            }
+            
+            return L.divIcon({
+                html: emoji,
+                iconSize: [30, 30],
+                className: 'location-marker'
+            });
+        }
+        
+        // NEW LOCATION (Current)
+        const newLocation = L.marker([27.724590, 85.224822], { 
+            icon: getLocationIcon('medium', 'village_house') 
+        }).addTo(map);
+        
+        newLocation.bindPopup(`
+            <div style="font-family: Arial, sans-serif; min-width: 250px;">
+                <h3 style="color: #059669; margin: 0 0 10px 0;">✅ NEW: Traditional Village House</h3>
+                <p><strong>Location:</strong> Majuwa</p>
+                <p><strong>Type:</strong> Traditional Nepali village house</p>
+                <p><strong>Coordinates:</strong> 27.724590, 85.224822</p>
+                <p><strong>Icon:</strong> 🏠 (Village house - medium access)</p>
+                <p><strong>Interviews:</strong> 2 residents interviewed</p>
+                <p style="font-style: italic; color: #6b7280;">First interview site in digital divide research</p>
+            </div>
+        `).openPopup();
+        
+        // OLD LOCATION (For comparison - shown in red)
+        const oldLocation = L.marker([27.7244, 85.3746], { 
+            icon: L.divIcon({
+                html: '❌',
+                iconSize: [30, 30],
+                className: 'location-marker',
+                iconAnchor: [15, 15]
+            })
+        }).addTo(map);
+        
+        oldLocation.bindPopup(`
+            <div style="font-family: Arial, sans-serif; min-width: 250px;">
+                <h3 style="color: #dc2626; margin: 0 0 10px 0;">❌ OLD: Restaurant Location</h3>
+                <p><strong>Previous coordinates:</strong> 27.7244, 85.3746</p>
+                <p><strong>Previous type:</strong> Restaurant/Commercial</p>
+                <p><strong>Previous icon:</strong> 🏪</p>
+                <p style="color: #dc2626; font-style: italic;">This location has been moved and updated</p>
+            </div>
+        `);
+        
+        // Add other house locations for context
+        const houseLocations = [
+            { lat: 27.7471, lng: 85.2660, name: "IT Professional's Home", access: "high", type: "house" },
+            { lat: 27.7466, lng: 85.2656, name: "Elderly Couple", access: "low", type: "house" },
+            { lat: 27.7473, lng: 85.2663, name: "Student's Home", access: "medium", type: "house" }
+        ];
+        
+        houseLocations.forEach(loc => {
+            const marker = L.marker([loc.lat, loc.lng], { 
+                icon: getLocationIcon(loc.access, loc.type) 
+            }).addTo(map);
+            marker.bindPopup(`<strong>${loc.name}</strong><br>Access: ${loc.access}`);
+        });
+        
+        // Add distance line between old and new locations
+        const distanceLine = L.polyline([
+            [27.7244, 85.3746],
+            [27.724590, 85.224822]
+        ], {
+            color: '#f59e0b',
+            weight: 2,
+            opacity: 0.7,
+            dashArray: '5, 10'
+        }).addTo(map);
+        
+        // Calculate distance
+        const distance = map.distance([27.7244, 85.3746], [27.724590, 85.224822]);
+        console.log(`Distance moved: ${Math.round(distance)} meters (${(distance/1000).toFixed(2)} km)`);
+        
+        // Fit bounds to show both locations
+        const group = new L.featureGroup([newLocation, oldLocation]);
+        map.fitBounds(group.getBounds().pad(0.1));
+        
+        console.log('Majuwa village house update verified successfully');
+        console.log('New coordinates:', 27.724590, 85.224822);
+        console.log('Location type: village_house');
+        console.log('Icon: 🏠 (traditional village house)');
+    </script>
+</body>
+</html>

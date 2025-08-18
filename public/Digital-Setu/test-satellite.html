@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test ESRI Satellite Imagery</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map { height: 400px; }
+        #info { 
+            background: #f0f0f0; 
+            padding: 10px; 
+            margin: 10px 0; 
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>ESRI World Imagery Satellite Tiles Test</h1>
+    <div id="info">
+        <p><strong>Testing:</strong> ESRI World Imagery satellite tiles for Nepal region</p>
+        <p><strong>Expected:</strong> High-resolution satellite imagery showing terrain features</p>
+        <p><strong>Zoom in:</strong> Click and drag to explore the Kathmandu valley area</p>
+    </div>
+    <div id="map"></div>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize map centered on Nepal/Kathmandu region
+        const map = L.map('map').setView([27.7172, 85.3240], 10);
+        
+        // Add ESRI World Imagery satellite tiles
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+            maxZoom: 18
+        }).addTo(map);
+        
+        // Add a marker at Bhimdhunga, Nagarjun location for reference
+        L.marker([27.7469, 85.2658]).addTo(map)
+            .bindPopup('<b>Bhimdhunga, Nagarjun</b><br>Digital Divide Storymap Location')
+            .openPopup();
+        
+        // Add tile loading event listeners for testing
+        let tilesLoaded = 0;
+        let tilesLoading = 0;
+        
+        satelliteLayer.on('loading', function() {
+            tilesLoading++;
+            console.log('Loading satellite tiles...');
+        });
+        
+        satelliteLayer.on('load', function() {
+            tilesLoaded++;
+            console.log('Satellite tiles loaded successfully!');
+        });
+        
+        satelliteLayer.on('tileerror', function(error) {
+            console.error('Error loading satellite tile:', error);
+        });
+        
+        // Log tile service info
+        console.log('ESRI World Imagery service initialized');
+        console.log('Map center:', map.getCenter());
+        console.log('Current zoom:', map.getZoom());
+        
+        // Add zoom event listener
+        map.on('zoomend', function() {
+            console.log('Zoom level:', map.getZoom());
+        });
+    </script>
+</body>
+</html>

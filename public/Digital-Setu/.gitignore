@@ -1,0 +1,28 @@
+# Claude-specific files
+.claude/
+*.claude
+.claude-*
+
+# Zone Identifier files (Windows security metadata)
+*- Zone.Identifier
+*.Zone.Identifier
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Dependencies (if you add them later)
+node_modules/
+venv/
+
+# Sensitive data
+.env
+*.key
+CLAUDE.md
+
+#files
+transcript/
+interviews/

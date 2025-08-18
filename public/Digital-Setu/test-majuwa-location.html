@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Majuwa Restaurant Location</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map { height: 400px; }
+        #info { 
+            background: #f0f0f0; 
+            padding: 10px; 
+            margin: 10px 0; 
+            font-family: Arial, sans-serif;
+        }
+        .location-marker { font-size: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Test: Traditional Village House in Majuwa</h1>
+    <div id="info">
+        <p><strong>Testing:</strong> Traditional Nepali village house location at Majuwa</p>
+        <p><strong>Coordinates:</strong> 27.724590, 85.224822 (Updated location)</p>
+        <p><strong>Expected:</strong> Village house icon (🏠) showing medium digital access</p>
+        <p><strong>Click the marker:</strong> Should show popup with interview details</p>
+    </div>
+    <div id="map"></div>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize map centered on Majuwa location
+        const map = L.map('map').setView([27.724590, 85.224822], 15);
+        
+        // Add ESRI World Imagery satellite tiles
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+            maxZoom: 18
+        }).addTo(map);
+        
+        // Test location data for Majuwa Village House
+        const majuwaLocation = {
+            id: 6,
+            lat: 27.724590,
+            lng: 85.224822,
+            title: "Digital Access at Majuwa Village House",
+            locationName: "Traditional Village House, Majuwa",
+            interviewCount: "2 residents interviewed",
+            locationType: "village_house",
+            video: "",
+            audio: "",
+            digitalAccess: "medium",
+            stats: {
+                internetSpeed: "TBD",
+                devices: "TBD", 
+                monthlyDataCost: "TBD",
+                digitalSkills: "TBD",
+                onlineServices: "TBD"
+            },
+            story: {
+                quote: "",
+                reality: "",
+                testimonial: "",
+                resident: "2 residents interviewed at Majuwa village house"
+            },
+            context: "First interview site in our digital divide research - traditional Nepali village building"
+        };
+        
+        // Function to get location icon
+        function getLocationIcon(accessLevel, locationType = 'house') {
+            let emoji, className;
+            
+            if (locationType === 'restaurant') {
+                switch(accessLevel) {
+                    case 'high':
+                        emoji = '🍽️';
+                        className = 'location-marker restaurant high-access';
+                        break;
+                    case 'medium':
+                        emoji = '🏪';
+                        className = 'location-marker restaurant medium-access';
+                        break;
+                    case 'low':
+                        emoji = '🏚️';
+                        className = 'location-marker restaurant low-access';
+                        break;
+                    default:
+                        emoji = '🏪';
+                        className = 'location-marker restaurant';
+                }
+            } else if (locationType === 'village_house') {
+                // Traditional Nepali village house icons
+                switch(accessLevel) {
+                    case 'high':
+                        emoji = '🏘️'; // Traditional village with modern amenities
+                        className = 'location-marker village-house high-access';
+                        break;
+                    case 'medium':
+                        emoji = '🏠'; // Traditional village house with some connectivity
+                        className = 'location-marker village-house medium-access';
+                        break;
+                    case 'low':
+                        emoji = '🏚️'; // Traditional structure with limited access
+                        className = 'location-marker village-house low-access';
+                        break;
+                    default:
+                        emoji = '🏠';
+                        className = 'location-marker village-house';
+                }
+            } else {
+                switch(accessLevel) {
+                    case 'high':
+                        emoji = '🏡';
+                        className = 'location-marker house high-access';
+                        break;
+                    case 'medium':
+                        emoji = '🏠';
+                        className = 'location-marker house medium-access';
+                        break;
+                    case 'low':
+                        emoji = '🏚️';
+                        className = 'location-marker house low-access';
+                        break;
+                    default:
+                        emoji = '🏠';
+                        className = 'location-marker house';
+                }
+            }
+            
+            return L.divIcon({
+                html: emoji,
+                iconSize: [30, 30],
+                className: className
+            });
+        }
+        
+        // Create marker for Majuwa Restaurant
+        const marker = L.marker([majuwaLocation.lat, majuwaLocation.lng], { 
+            icon: getLocationIcon(majuwaLocation.digitalAccess, majuwaLocation.locationType) 
+        }).addTo(map);
+        
+        // Add popup with location details
+        const popupContent = `
+            <div style="font-family: Arial, sans-serif;">
+                <h3>${majuwaLocation.title}</h3>
+                <p><strong>Location:</strong> ${majuwaLocation.locationName}</p>
+                <p><strong>Research:</strong> ${majuwaLocation.interviewCount}</p>
+                <p><strong>Access Level:</strong> ${majuwaLocation.digitalAccess.toUpperCase()}</p>
+                <p><strong>Context:</strong> ${majuwaLocation.context}</p>
+                <p><em>Coordinates: ${majuwaLocation.lat}, ${majuwaLocation.lng}</em></p>
+            </div>
+        `;
+        
+        marker.bindPopup(popupContent).openPopup();
+        
+        // Add some existing house locations for context
+        const existingLocations = [
+            { lat: 27.7471, lng: 85.2660, name: "IT Professional's Home", access: "high" },
+            { lat: 27.7466, lng: 85.2656, name: "Elderly Couple", access: "low" },
+            { lat: 27.7473, lng: 85.2663, name: "Student's Home", access: "medium" }
+        ];
+        
+        existingLocations.forEach(loc => {
+            const houseMarker = L.marker([loc.lat, loc.lng], { 
+                icon: getLocationIcon(loc.access, 'house') 
+            }).addTo(map);
+            houseMarker.bindPopup(`<strong>${loc.name}</strong><br>Access: ${loc.access}`);
+        });
+        
+        console.log('Majuwa Restaurant location added successfully');
+        console.log('Location details:', majuwaLocation);
+    </script>
+</body>
+</html>

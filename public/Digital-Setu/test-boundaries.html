@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Current Nepal Boundaries</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map { height: 400px; }
+        #console { 
+            background: #f0f0f0; 
+            padding: 10px; 
+            margin: 10px 0; 
+            height: 200px; 
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nepal Administrative Boundaries Test</h1>
+    <div id="map"></div>
+    <div id="console"></div>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const consoleDiv = document.getElementById('console');
+        function log(message) {
+            console.log(message);
+            consoleDiv.innerHTML += message + '\n';
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+        const map = L.map('map').setView([28.1, 84.1], 7);
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+            maxZoom: 18
+        }).addTo(map);
+
+        async function testBoundaries() {
+            try {
+                log('Testing Official Nepal Boundaries with Disputed Territories...');
+                const officialResponse = await fetch('https://raw.githubusercontent.com/Acesmndr/nepal-geojson/master/generated-geojson/nepal-with-provinces-acesmndr.geojson');
+                if (officialResponse.ok) {
+                    const officialData = await officialResponse.json();
+                    log(`✓ Official Nepal Boundaries: ${officialData.features.length} features loaded`);
+                    
+                    // Check for Kalapani region coordinates
+                    const hasKalapani = JSON.stringify(officialData).includes('80.8') || JSON.stringify(officialData).includes('80.9');
+                    log(`✓ Disputed territories (Kalapani region) included: ${hasKalapani}`);
+                    
+                    // Add to map with highlight for official boundaries
+                    L.geoJSON(officialData, {
+                        style: { color: 'darkgreen', weight: 3, fillOpacity: 0.1 }
+                    }).addTo(map);
+                    
+                    // Find Bagmati Province
+                    const bagmati = officialData.features.find(f => {
+                        const props = f.properties || {};
+                        const name = props.name || props.NAME || props.PROVINCE || '';
+                        return name.toLowerCase().includes('bagmati') || name === '3' || name === 'Province 3';
+                    });
+                    if (bagmati) {
+                        log(`✓ Bagmati Province found: ${JSON.stringify(bagmati.properties)}`);
+                        
+                        // Highlight Bagmati Province
+                        L.geoJSON(bagmati, {
+                            style: { color: 'blue', weight: 2, fillOpacity: 0.2 }
+                        }).addTo(map);
+                    } else {
+                        log('✗ Bagmati Province not found in official data');
+                        log('Available provinces: ' + officialData.features.map(f => {
+                            const props = f.properties || {};
+                            return props.name || props.NAME || props.PROVINCE || 'Unknown';
+                        }).join(', '));
+                    }
+                } else {
+                    log(`✗ Official Nepal Boundaries failed: ${officialResponse.status}`);
+                }
+
+                log('Testing Nepal Municipalities...');
+                const munResponse = await fetch('https://raw.githubusercontent.com/mesaugat/geoJSON-Nepal/master/nepal-municipalities.geojson');
+                if (munResponse.ok) {
+                    const munData = await munResponse.json();
+                    log(`✓ Municipalities: ${munData.features.length} features loaded`);
+                    
+                    // Find Nagarjun
+                    const nagarjun = munData.features.find(f => {
+                        const name = f.properties.MUNICIPALITY || f.properties.NAME || '';
+                        return name.toLowerCase().includes('nagarjun');
+                    });
+                    if (nagarjun) {
+                        log(`✓ Nagarjun Municipality found: ${JSON.stringify(nagarjun.properties)}`);
+                        
+                        // Add to map with highlight
+                        L.geoJSON(nagarjun, {
+                            style: { color: 'red', weight: 3, fillOpacity: 0.3 }
+                        }).addTo(map);
+                        
+                        // Zoom to Nagarjun
+                        const bounds = L.geoJSON(nagarjun).getBounds();
+                        map.fitBounds(bounds);
+                    } else {
+                        log('✗ Nagarjun Municipality not found');
+                        const nagarMunicipalities = munData.features
+                            .map(f => f.properties.MUNICIPALITY || f.properties.NAME)
+                            .filter(name => name && name.toLowerCase().includes('nagar'))
+                            .slice(0, 10);
+                        log('Sample municipalities with "nagar": ' + nagarMunicipalities.join(', '));
+                    }
+                } else {
+                    log(`✗ Municipalities failed: ${munResponse.status}`);
+                }
+
+            } catch (error) {
+                log(`✗ Error: ${error.message}`);
+            }
+        }
+
+        testBoundaries();
+    </script>
+</body>
+</html>

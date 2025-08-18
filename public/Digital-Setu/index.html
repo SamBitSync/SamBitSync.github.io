@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhimdhunga, Nagarjun Storymap</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav id="navbar" class="navbar hidden">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <span class="brand-text">Bhimdhunga Digital Stories</span>
+            </div>
+            <div class="navbar-buttons">
+                <button id="nav-faq" class="nav-btn">FAQ</button>
+                <button id="nav-about" class="nav-btn">About</button>
+                <button id="nav-stories" class="nav-btn">Stories</button>
+                <button id="nav-statistics" class="nav-btn">Statistics</button>
+                <button id="nav-legend" class="nav-btn">Map Legend</button>
+                <button id="nav-reset" class="nav-btn">Reset View</button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Auto-progression Control Panel -->
+    <div id="auto-progression-panel" class="auto-progression-panel" style="display: none;">
+        <div class="progression-info">
+            <div class="current-story-info">
+                <span class="story-counter">Story <span id="current-story-num">1</span> of <span id="total-stories">4</span></span>
+                <h3 id="current-story-title">Loading...</h3>
+                <p id="current-story-theme">Digital Divide Journey</p>
+            </div>
+            <div class="progression-timer">
+                <div class="timer-circle">
+                    <span id="timer-countdown">15</span>
+                </div>
+            </div>
+        </div>
+        <div class="progression-controls">
+            <button id="prev-story-btn" class="progression-btn">
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            <button id="pause-progression-btn" class="progression-btn primary">
+                <i class="fas fa-pause"></i> Pause
+            </button>
+            <button id="next-story-btn" class="progression-btn">
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+            <button id="exit-progression-btn" class="progression-btn secondary">
+                <i class="fas fa-times"></i> Exit Journey
+            </button>
+        </div>
+        <div class="progression-progress">
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Thematic Bridge Overlay -->
+    <div id="thematic-bridge-overlay" class="bridge-overlay" style="display: none;">
+        <div class="bridge-container">
+            <div class="bridge-content">
+                <div class="bridge-icon">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <h3 id="bridge-title">Transitioning...</h3>
+                <p id="bridge-text">Moving between digital divide perspectives...</p>
+                <div class="bridge-progress">
+                    <div class="bridge-progress-bar">
+                        <div id="bridge-progress-fill" class="bridge-progress-fill"></div>
+                    </div>
+                    <span id="bridge-timer">3</span>s
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="map"></div>
+    
+    <!-- Story Mode Character Boxes Overlay -->
+    <div id="story-character-boxes" class="character-boxes-overlay" style="display: none;">
+        <div class="character-boxes-container">
+            <div class="character-boxes-header">
+                <h3>Age Journey: Digital Divide Stories</h3>
+                <p>Discover how age influences digital participation</p>
+            </div>
+            <div class="character-boxes-grid">
+                <div id="character-box-maili" class="character-box locked" data-character="maili">
+                    <div class="character-photo">
+                        <img src="interviews/street interview/street interview 3/Maili Tamang.JPG" alt="Maili Tamang">
+                        <div class="lock-overlay">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                    <div class="character-info">
+                        <h4>Maili Tamang</h4>
+                        <p>58-year-old widow</p>
+                        <div class="character-status">
+                            <span class="status-text">Locked</span>
+                            <div class="timer-display" style="display: none;">
+                                <i class="fas fa-clock"></i>
+                                <span class="timer-text">70s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="character-box-sunita" class="character-box locked" data-character="sunita">
+                    <div class="character-photo">
+                        <img src="interviews/khajaghar/khajaghar 1/Sunita Tamang.JPG" alt="Sunita Tamang">
+                        <div class="lock-overlay">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                    <div class="character-info">
+                        <h4>Sunita Tamang</h4>
+                        <p>45 year old shop owner</p>
+                        <div class="character-status">
+                            <span class="status-text">Locked</span>
+                            <div class="timer-display" style="display: none;">
+                                <i class="fas fa-clock"></i>
+                                <span class="timer-text">60s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="character-box-aman" class="character-box locked" data-character="aman">
+                    <div class="character-photo">
+                        <img src="photos/headshots/Aman Tamang.png" alt="Aman Tamang">
+                        <div class="lock-overlay">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                    <div class="character-info">
+                        <h4>Aman Tamang</h4>
+                        <p>18-year-old Digital Native</p>
+                        <div class="character-status">
+                            <span class="status-text">Locked</span>
+                            <div class="timer-display" style="display: none;">
+                                <i class="fas fa-clock"></i>
+                                <span class="timer-text">35s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="story-progress">
+                <div class="progress-bar">
+                    <div id="story-progress-fill" class="progress-fill"></div>
+                </div>
+                <p class="progress-text">Progress: <span id="progress-count">0</span>/3 stories discovered</p>
+            </div>
+            <button id="exit-story-mode" class="exit-story-btn">
+                <i class="fas fa-times"></i> Exit Story Mode
+            </button>
+        </div>
+    </div>
+    
+    <!-- Area Hint Overlay -->
+    <div id="area-hint-overlay" class="area-hint-overlay" style="display: none;">
+        <div class="hint-container">
+            <div class="hint-content">
+                <h3 id="hint-title">Explore Majuwa Area</h3>
+                <p id="hint-text">Look for Sunita's khajaghar (tea shop) in the Majuwa area. The map will guide you with area highlighting.</p>
+                <button id="hint-understood" class="hint-btn">Got it!</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Story Completion Overlay -->
+    <div id="story-completion-overlay" class="completion-overlay" style="display: none;">
+        <div class="completion-container">
+            <div class="completion-content">
+                <div class="completion-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Age Journey Complete!</h3>
+                <p>You've met three community members whose stories reveal how age influences digital participation. Their experiences show that the digital divide isn't just about access—it's about choice, fear, trust, and life circumstances.</p>
+                <div class="completion-summary">
+                    <div class="summary-item">
+                        <span class="age">58</span>
+                        <span class="name">Maili</span>
+                        <span class="approach">Content without technology</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="age">45</span>
+                        <span class="name">Sunita</span>
+                        <span class="approach">Selective digital learning</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="age">18</span>
+                        <span class="name">Aman</span>
+                        <span class="approach">Digital native integration</span>
+                    </div>
+                </div>
+                <button id="completion-understood" class="completion-btn">Continue Exploring</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ALIN Foundation Splash Screen -->
+    <div id="splash-screen" class="splash-overlay">
+        <div class="splash-container">
+            <div class="logo-section">
+                <img src="ALIN_logo.jpg" alt="All In Foundation" class="alin-logo">
+                <h2 class="foundation-name">All In Foundation</h2>
+            </div>
+            
+            <div class="motto-section">
+                <div class="motto-text">
+                    <span class="check">Check</span>
+                    <span class="your">your</span>
+                    <span class="privilege">privilege</span>
+                    <span class="digital">digital</span>
+                </div>
+            </div>
+            
+            <div class="splash-footer">
+                <p>Exploring Digital Divides in Nepal</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- National Statistics Overlay -->
+    <div id="national-stats-overlay" class="stats-overlay">
+        <div class="stats-container">
+            <div class="stats-header">
+                <h1>Nepal's Digital Divide</h1>
+                <p class="stats-subtitle">Understanding the National Landscape</p>
+            </div>
+            
+            <div class="national-stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">65%</div>
+                    <div class="stat-label">Internet Penetration</div>
+                    <div class="stat-detail">National Average</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">45%</div>
+                    <div class="stat-label">Rural Connectivity</div>
+                    <div class="stat-detail">vs 78% Urban</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">38%</div>
+                    <div class="stat-label">Digital Literacy</div>
+                    <div class="stat-detail">Population with basic digital skills</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">NPR 1,200</div>
+                    <div class="stat-label">Average Monthly Cost</div>
+                    <div class="stat-detail">Internet & Mobile Data</div>
+                </div>
+            </div>
+            
+            <div class="transition-text">
+                <p>But statistics tell only part of the story...</p>
+                <p><strong>Let's explore what digital access really means for families in Bhimdhunga, Nagarjun</strong></p>
+            </div>
+            
+            <div class="data-sources">
+                <h4>Sources:</h4>
+                <ul>
+                    <li>Nepal Telecommunications Authority (NTA) 2023</li>
+                    <li>Central Bureau of Statistics Nepal 2022</li>
+                    <li>World Bank Digital Nepal Report 2023</li>
+                    <li>Digital Literacy Survey Nepal 2023</li>
+                </ul>
+            </div>
+            
+            <div class="continue-prompt">
+                <p class="continue-text">Click anywhere or press any key to continue</p>
+                <div class="continue-indicator">▼</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cinematic Video Overlay -->
+    <div id="cinematic-video-overlay" class="video-overlay">
+        <video id="cinematic-video" autoplay muted>
+            <source src="video/intro/Bhimdhunga_intro.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-controls">
+            <button id="skip-video" class="skip-button">Skip Video</button>
+        </div>
+    </div>
+    
+    <div id="popup-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="popup-header">
+                <h2 id="popup-title">Digital Divide Story</h2>
+                <div class="location-info">
+                    <p id="location-name" class="location-detail">-</p>
+                    <p id="interview-count" class="interview-detail">-</p>
+                </div>
+                <div class="access-indicator">
+                    <span id="access-badge" class="badge">-</span>
+                </div>
+            </div>
+            <div class="popup-body">
+                <!-- Resident Content (hidden for foundation) -->
+                <div id="resident-content" class="resident-content">
+                    <!-- 🎥 SHOWCASE VIDEO (TOP PRIORITY) -->
+                    <div class="showcase-video-section">
+                        <h3 id="showcase-video-heading">🎥 Showcase Video</h3>
+                        <div class="showcase-video-container">
+                            <video id="showcase-video" 
+                                   controls 
+                                   autoplay 
+                                   style="width: 100%; height: 350px; border-radius: 8px; background: #000;">
+                                <source src="" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+
+                    <!-- 👤 PROFILE SECTION (HEADSHOT + INFO) -->
+                    <div class="profile-section">
+                        <div class="headshot-container">
+                            <img id="resident-headshot" src="" alt="Resident Photo" class="headshot-image">
+                        </div>
+                        <div class="profile-info">
+                            <h3 id="resident-name" class="resident-name">-</h3>
+                            <p id="resident-role" class="resident-role">-</p>
+                            <p id="resident-description" class="resident-description">-</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 💬 KEY QUOTES -->
+                    <div class="quotes-section">
+                        <h3>💬 Key Perspectives</h3>
+                        <div class="quotes-grid">
+                            <div class="quote-item">
+                                <div class="quote-icon">🏠</div>
+                                <div class="quote-content">
+                                    <p id="quote-1" class="quote-text">-</p>
+                                    <span class="quote-theme">Traditional Life</span>
+                                </div>
+                                <!-- Hidden photo elements for JS compatibility -->
+                                <img id="photo-1" style="display: none;" src="" alt="">
+                            </div>
+                            <div class="quote-item">
+                                <div class="quote-icon">📱</div>
+                                <div class="quote-content">
+                                    <p id="quote-2" class="quote-text">-</p>
+                                    <span class="quote-theme">Technology Views</span>
+                                </div>
+                                <!-- Hidden photo elements for JS compatibility -->
+                                <img id="photo-2" style="display: none;" src="" alt="">
+                            </div>
+                            <div class="quote-item">
+                                <div class="quote-icon">👶</div>
+                                <div class="quote-content">
+                                    <p id="quote-3" class="quote-text">-</p>
+                                    <span class="quote-theme">Children & Education</span>
+                                </div>
+                                <!-- Hidden photo elements for JS compatibility -->
+                                <img id="photo-3" style="display: none;" src="" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 🎬 OTHER VIDEOS (if any) -->
+                    <div class="video-section">
+                        <h3 id="video-1-heading">🎥 Video 1</h3>
+                        <div class="youtube-container">
+                            <iframe id="youtube-video" 
+                                    width="100%" 
+                                    height="315" 
+                                    src="" 
+                                    frameborder="0" 
+                                    allow="autoplay; encrypted-media" 
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                    
+                    <!-- Video Section 2 (School and Khajaghar 2) -->
+                    <div id="video-2-section" class="video-section" style="display: none;">
+                        <h3 id="video-2-heading">🎥 Video 2</h3>
+                        <div class="youtube-container">
+                            <iframe id="second-video" 
+                                    width="100%" 
+                                    height="315" 
+                                    src="" 
+                                    frameborder="0" 
+                                    allow="autoplay; encrypted-media" 
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                    
+                    <!-- Video Section 3 (Khajaghar 2 only) -->
+                    <div id="video-3-section" class="video-section" style="display: none;">
+                        <h3 id="video-3-heading">🎥 Video 3</h3>
+                        <div class="youtube-container">
+                            <iframe id="third-video" 
+                                    width="100%" 
+                                    height="315" 
+                                    src="" 
+                                    frameborder="0" 
+                                    allow="autoplay; encrypted-media" 
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Foundation-specific content sections (hidden by default) -->
+                <div id="foundation-content" class="foundation-content" style="display: none;">
+                    <!-- Foundation About Section -->
+                    <div class="foundation-about-section">
+                        <div class="foundation-header">
+                            <img id="foundation-logo" src="" alt="Foundation Logo" class="foundation-logo">
+                            <div class="foundation-info">
+                                <h3 id="foundation-name">Foundation Name</h3>
+                                <p id="foundation-mission" class="foundation-mission">Foundation mission statement</p>
+                                <p id="foundation-description" class="foundation-description">Foundation description</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Photos Section -->
+                    <div class="team-section">
+                        <h3>🎯 Research Fellowship Team</h3>
+                        <div class="team-grid" id="team-grid">
+                            <!-- Team members will be dynamically inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- FAQ Section -->
+                    <div class="faq-section">
+                        <h3>❓ Frequently Asked Questions</h3>
+                        <div class="faq-list" id="faq-list">
+                            <!-- FAQ items will be dynamically inserted here -->
+                        </div>
+                    </div>
+ 
+                    <!-- Fellowship Projects Section -->
+                    <div class="projects-section">
+                        <h3>🔬 Other ALIN 2025 Fellowship Projects</h3>
+                        <div class="projects-grid" id="projects-grid">
+                            <!-- Projects will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-vs-reality" id="resident-stats">
+                    <div class="stats-panel">
+                        <h3>📊 Official Digital Statistics</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-label">Internet Speed:</span>
+                                <span class="stat-value" id="internet-speed">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Devices:</span>
+                                <span class="stat-value" id="devices">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Monthly Cost:</span>
+                                <span class="stat-value" id="monthly-cost">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Digital Skills:</span>
+                                <span class="stat-value" id="digital-skills">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Online Services Used:</span>
+                                <span class="stat-value" id="online-services">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
