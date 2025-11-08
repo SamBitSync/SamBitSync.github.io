@@ -25,8 +25,14 @@ const recentProcess = allProcess.slice(0, 2);
     <h1 class="hero-title">Sambit</h1>
     <p class="location">Kathmandu</p>
     <div class="affiliations">
-      <p>Research Intern, Cognitive Science and Psycholinguistics Lab</p>
-      <p>Research and Writing Diploma, The Open Institute</p>
+      <div class="affiliation-card">
+        <span class="position">Research Intern</span>
+        <span class="organization">Cognitive Science and Psycholinguistics Lab</span>
+      </div>
+      <div class="affiliation-card">
+        <span class="position">Research and Writing Diploma</span>
+        <span class="organization">The Open Institute</span>
+      </div>
     </div>
   </div>
 
@@ -138,21 +144,43 @@ const recentProcess = allProcess.slice(0, 2);
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
   }
 
   .affiliations {
     display: flex;
-    flex-direction: column;
-    gap: 0.375rem;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 680px;
+    margin: 0 auto;
   }
 
-  .affiliations p {
+  .affiliation-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    flex: 1;
+    min-width: 280px;
+  }
+
+  .position {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .organization {
     font-size: 0.9375rem;
-    color: var(--text-secondary);
-    font-weight: 400;
-    line-height: 1.5;
-    margin: 0;
+    color: var(--text-primary);
+    font-weight: 500;
+    line-height: 1.4;
   }
 
   .sections-grid {
