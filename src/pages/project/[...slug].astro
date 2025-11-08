@@ -1,0 +1,387 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('project');
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<'project'>;
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+---
+
+<BaseLayout title={`${project.data.title} | Project`} description={project.data.description}>
+  <article class="project">
+    <header class="project-header">
+      {project.data.thumbnail && (
+        <div class="thumbnail">
+          <img src={project.data.thumbnail} alt={project.data.title} />
+        </div>
+      )}
+
+      <div class="header-meta">
+        <span class={`type-badge type-${project.data.type}`}>
+          {project.data.type}
+        </span>
+        <span class={`status-badge status-${project.data.status}`}>
+          {project.data.status}
+        </span>
+        {project.data.featured && (
+          <span class="featured-badge">Featured</span>
+        )}
+      </div>
+
+      <h1>{project.data.title}</h1>
+
+      <div class="project-meta">
+        <time datetime={project.data.date.toISOString()}>
+          {project.data.date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long'
+          })}
+        </time>
+
+        {project.data.collaborators && project.data.collaborators.length > 0 && (
+          <div class="collaborators">
+            <strong>Collaborators:</strong>
+            {project.data.collaborators.map((collaborator, index) => (
+              <span>{collaborator}{index < project.data.collaborators.length - 1 ? ', ' : ''}</span>
+            ))}
+          </div>
+        )}
+
+        {project.data.methodology && project.data.methodology.length > 0 && (
+          <div class="methodology">
+            <strong>Methods:</strong>
+            {project.data.methodology.map((method) => (
+              <span class="method-tag">{method}</span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {project.data.outputs && project.data.outputs.length > 0 && (
+        <div class="outputs">
+          {project.data.outputs.map((output) => (
+            output.url ? (
+              <a href={output.url} class="output-link" target="_blank" rel="noopener noreferrer">
+                {output.label || output.type} →
+              </a>
+            ) : (
+              <span class="output-label">{output.label || output.type}</span>
+            )
+          ))}
+        </div>
+      )}
+    </header>
+
+    <div class="project-content">
+      <Content />
+    </div>
+
+    {project.data.relatedProcess && project.data.relatedProcess.length > 0 && (
+      <aside class="related">
+        <h3>Related Process Entries</h3>
+        <ul>
+          {project.data.relatedProcess.map((entry) => (
+            <li><a href={`/process/${entry}`}>{entry}</a></li>
+          ))}
+        </ul>
+      </aside>
+    )}
+
+    <nav class="project-nav">
+      <a href="/project" class="back-link">← Back to Projects</a>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .project {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .project-header {
+    margin-bottom: 3rem;
+  }
+
+  .thumbnail {
+    width: 100%;
+    max-height: 400px;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+    background: var(--bg);
+  }
+
+  .thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .type-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .type-badge.type-research {
+    background: #3b82f620;
+    color: #3b82f6;
+  }
+
+  .type-badge.type-tool {
+    background: #8b5cf620;
+    color: #8b5cf6;
+  }
+
+  .type-badge.type-paper {
+    background: #10b98120;
+    color: #10b981;
+  }
+
+  .type-badge.type-application {
+    background: #f59e0b20;
+    color: #f59e0b;
+  }
+
+  .type-badge.type-storymap {
+    background: #ec489920;
+    color: #ec4899;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+  }
+
+  .status-badge.status-completed {
+    background: #10b98120;
+    color: #10b981;
+    border: 1px solid #10b98140;
+  }
+
+  .status-badge.status-published {
+    background: #3b82f620;
+    color: #3b82f6;
+    border: 1px solid #3b82f640;
+  }
+
+  .status-badge.status-deployed {
+    background: #8b5cf620;
+    color: #8b5cf6;
+    border: 1px solid #8b5cf640;
+  }
+
+  .featured-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    background: #fbbf2420;
+    color: #fbbf24;
+    border: 1px solid #fbbf2440;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .project-header h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-meta {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .collaborators,
+  .methodology {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .collaborators strong,
+  .methodology strong {
+    color: var(--text-primary);
+  }
+
+  .method-tag {
+    font-size: 0.8125rem;
+    padding: 0.125rem 0.5rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 0.25rem;
+    font-family: var(--font-mono);
+  }
+
+  .outputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--bg);
+    border-radius: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .output-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .output-link:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+  }
+
+  .output-label {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .project-content {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    margin-bottom: 3rem;
+  }
+
+  .project-content :global(h2) {
+    font-size: 1.75rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+  }
+
+  .project-content :global(h3) {
+    font-size: 1.375rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .project-content :global(ul),
+  .project-content :global(ol) {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .project-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .project-content :global(blockquote) {
+    border-left: 3px solid var(--accent);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .project-content :global(img),
+  .project-content :global(figure) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+  }
+
+  .project-content :global(figcaption) {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+  }
+
+  .related {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin: 3rem 0;
+  }
+
+  .related h3 {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+  }
+
+  .related ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .related li {
+    margin-bottom: 0.5rem;
+  }
+
+  .project-nav {
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .back-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.9375rem;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .project-header h1 {
+      font-size: 2rem;
+    }
+
+    .thumbnail {
+      max-height: 250px;
+    }
+
+    .project-content {
+      font-size: 1rem;
+    }
+
+    .project-content :global(h2) {
+      font-size: 1.5rem;
+    }
+
+    .project-content :global(h3) {
+      font-size: 1.25rem;
+    }
+  }
+</style>

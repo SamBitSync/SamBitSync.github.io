@@ -1,0 +1,249 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const meta = await getCollection('meta');
+  return meta.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'meta'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout title={`${post.data.title} | Meta`} description={post.data.description}>
+  <article class="post">
+    <header class="post-header">
+      <div class="header-meta">
+        <span class="framework">{post.data.framework}</span>
+        <span class={`maturity-badge maturity-${post.data.maturity}`}>
+          {post.data.maturity}
+        </span>
+      </div>
+
+      <h1>{post.data.title}</h1>
+
+      <div class="post-meta">
+        <time datetime={post.data.date.toISOString()}>
+          {post.data.date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}
+        </time>
+      </div>
+
+      {post.data.thinkers && post.data.thinkers.length > 0 && (
+        <div class="thinkers">
+          <strong>Key thinkers:</strong>
+          {post.data.thinkers.map((thinker, index) => (
+            <span>{thinker}{index < post.data.thinkers.length - 1 ? ', ' : ''}</span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <div class="post-content">
+      <Content />
+    </div>
+
+    {post.data.relatedMaps && post.data.relatedMaps.length > 0 && (
+      <aside class="connections">
+        <h3>Related Maps</h3>
+        <ul>
+          {post.data.relatedMaps.map((map) => (
+            <li><a href={`/${map}`}>{map}</a></li>
+          ))}
+        </ul>
+      </aside>
+    )}
+
+    <nav class="post-nav">
+      <a href="/meta" class="back-link">← Back to Meta</a>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .framework {
+    font-size: 0.9375rem;
+    color: var(--accent);
+    font-weight: 500;
+    font-family: var(--font-mono);
+  }
+
+  .maturity-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .maturity-draft {
+    background: #f59e0b20;
+    color: #f59e0b;
+    border: 1px solid #f59e0b40;
+  }
+
+  .maturity-working {
+    background: #3b82f620;
+    color: #3b82f6;
+    border: 1px solid #3b82f640;
+  }
+
+  .maturity-established {
+    background: #10b98120;
+    color: #10b981;
+    border: 1px solid #10b98140;
+  }
+
+  .post-header h1 {
+    font-size: 2.25rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .post-meta {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  .thinkers {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+  }
+
+  .thinkers strong {
+    font-weight: 500;
+    margin-right: 0.5rem;
+  }
+
+  .post-content {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    margin-bottom: 3rem;
+  }
+
+  .post-content :global(h2) {
+    font-size: 1.75rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+  }
+
+  .post-content :global(h3) {
+    font-size: 1.375rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-content :global(ul),
+  .post-content :global(ol) {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .post-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .post-content :global(blockquote) {
+    border-left: 3px solid var(--accent);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .post-content :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+  }
+
+  .connections {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin: 3rem 0;
+  }
+
+  .connections h3 {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+  }
+
+  .connections ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .connections li {
+    margin-bottom: 0.5rem;
+  }
+
+  .post-nav {
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .back-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.9375rem;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .post-header h1 {
+      font-size: 1.875rem;
+    }
+
+    .post-content {
+      font-size: 1rem;
+    }
+
+    .post-content :global(h2) {
+      font-size: 1.5rem;
+    }
+
+    .post-content :global(h3) {
+      font-size: 1.25rem;
+    }
+  }
+</style>

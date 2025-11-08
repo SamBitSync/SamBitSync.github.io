@@ -1,91 +1,80 @@
 import { defineCollection, z } from 'astro:content';
 
-const researchCollection = defineCollection({
+// Maps: Cross-domain blog posts exploring connections, patterns, and conceptual mappings
+const mapsCollection = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
     description: z.string(),
     date: z.date(),
-    status: z.enum(['ongoing', 'completed', 'published']),
-    methodology: z.array(z.string()),
+    domains: z.array(z.string()), // e.g., ["cognitive-science", "complexity", "epistemology"]
+    patterns: z.array(z.string()).optional(), // Pattern types being explored
+    connections: z.array(z.string()).optional(), // Links to other content
+    diagram: z.string().optional(), // Path to Excalidraw file
+    visualType: z.array(z.enum(['diagram', 'animation', 'data-viz', 'interactive'])).optional(),
+    tags: z.array(z.string()).optional(),
+  }),
+});
+
+// Meta: Epistemological framework pieces (critical realism, Strevens, Keller, Bayesian epistemology)
+const metaCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.date(),
+    framework: z.string(), // e.g., "critical-realism", "bayesian-epistemology"
+    thinkers: z.array(z.string()).optional(), // ["Strevens", "Keller", etc.]
+    relatedMaps: z.array(z.string()).optional(), // Connections to Maps posts
+    maturity: z.enum(['draft', 'working', 'established']),
+    tags: z.array(z.string()).optional(),
+    diagram: z.string().optional(),
+  }),
+});
+
+// Process: Lab notebook documenting ongoing work across three dimensions
+const processCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.date(),
+    dimension: z.enum(['empirical', 'formal', 'implementation']), // Primary dimension
+    project: z.string().optional(), // Link to Project if applicable
+    status: z.enum(['in-progress', 'blocked', 'completed']),
+    tools: z.array(z.string()).optional(), // e.g., ["mousetracking", "Excalidraw", "R"]
+    visualType: z.array(z.enum(['diagram', 'data-viz', 'code', 'animation'])).optional(),
+    tags: z.array(z.string()).optional(),
+    diagram: z.string().optional(),
+  }),
+});
+
+// Project: Portfolio of completed research outputs and polished deliverables
+const projectCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.date(),
+    type: z.enum(['research', 'tool', 'paper', 'application', 'storymap']),
+    status: z.enum(['completed', 'published', 'deployed']),
     collaborators: z.array(z.string()).optional(),
-    tags: z.array(z.string()),
-    confidence: z.enum(['exploratory', 'developing', 'established']),
-    connections: z.array(z.string()).optional(),
-  }),
-});
-
-const frameworksCollection = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.date(),
-    domain: z.array(z.string()),
-    scope: z.enum(['local', 'domain-specific', 'universal']),
-    epistemology: z.string(),
-    applications: z.array(z.string()),
-    tags: z.array(z.string()),
-    maturity: z.enum(['hypothesis', 'framework', 'theory']),
-    connections: z.array(z.string()).optional(),
-  }),
-});
-
-const notesCollection = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    date: z.date(),
-    tags: z.array(z.string()),
-    type: z.enum(['atomic', 'synthesis', 'question', 'observation']),
-    connections: z.array(z.string()).optional(),
-    confidence: z.enum(['speculation', 'working-hypothesis', 'established']),
-  }),
-});
-
-const applicationsCollection = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    institution: z.string(),
-    program: z.string(),
-    deadline: z.date(),
-    status: z.enum(['draft', 'submitted', 'accepted', 'declined']),
-    materials: z.array(z.string()),
-  }),
-});
-
-const bridgesCollection = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.date(),
-    cultural_contexts: z.array(z.string()),
-    domains: z.array(z.string()),
-    insights: z.array(z.string()),
-    tags: z.array(z.string()),
-  }),
-});
-
-const synthesisCollection = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.date(),
-    integrates: z.array(z.string()),
-    methodology: z.string(),
-    implications: z.array(z.string()),
-    tags: z.array(z.string()),
+    methodology: z.array(z.string()).optional(),
+    outputs: z.array(z.object({
+      type: z.string(), // "paper", "github", "demo", "website", etc.
+      url: z.string().optional(),
+      label: z.string().optional(),
+    })),
+    relatedProcess: z.array(z.string()).optional(), // Links to Process posts
+    tags: z.array(z.string()).optional(),
+    featured: z.boolean().optional(), // For highlighting key projects
+    thumbnail: z.string().optional(), // Path to preview image
   }),
 });
 
 export const collections = {
-  'research': researchCollection,
-  'frameworks': frameworksCollection,
-  'notes': notesCollection,
-  'applications': applicationsCollection,
-  'bridges': bridgesCollection,
-  'synthesis': synthesisCollection,
+  'maps': mapsCollection,
+  'meta': metaCollection,
+  'process': processCollection,
+  'project': projectCollection,
 };

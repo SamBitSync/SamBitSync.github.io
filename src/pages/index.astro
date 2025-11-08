@@ -1,368 +1,170 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
-
-// Get recent content across all collections
-const recentResearch = (await getCollection('research'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 2);
-
-const recentFrameworks = (await getCollection('frameworks'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 2);
-
-const recentNotes = (await getCollection('notes'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3);
 ---
 
-<BaseLayout 
-  title="Sambit Maps · Systems" 
-  description="Academic research in complexity science, epistemology, and knowledge systems"
-  mode="academic"
->
+<BaseLayout title="Sambit">
   <div class="hero">
-    <div class="hero-content">
-      <h1 class="hero-title">Hi, I'm Sambit</h1>
-      <h2 class="hero-subtitle">Exploring incommensurable connections</h2>
-      <p class="hero-description">
-        I'm currently working on how trilingual people manage three languages in their heads, 
-        writing about what it's like doing cognitive science research in Nepal, and teaching 
-        myself computational modeling because I'm curious how different approaches to understanding 
-        complex things actually connect.
+    <h1>Sambit</h1>
+    <p class="tagline">
+      Cognitive science research intern building toward symbolic systems
+    </p>
+  </div>
+
+  <div class="intro">
+    <p>
+      This site serves three purposes: portfolio for graduate applications,
+      external memory system (compensating for SDAM), and demonstration of
+      epistemic practice grounded in actual research.
+    </p>
+  </div>
+
+  <div class="sections">
+    <section class="section-card">
+      <h2><a href="/maps">Maps</a></h2>
+      <p>
+        Cross-domain connections, pattern synthesis, and conceptual mappings.
+        Exploring how ideas from different fields illuminate each other.
       </p>
-      
-      <div class="hero-meta">
-        <span class="current-work">Research Intern</span>
-        <span class="learning-focus">Cognitive Science & Complex Systems</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="content-preview">
-    <section class="preview-section">
-      <div class="section-header">
-        <h3>What I'm Working On</h3>
-        <a href="/research" class="section-link">See all current work →</a>
-      </div>
-      
-      <div class="content-grid">
-        {recentResearch.map((item) => (
-          <article class="content-card research-card">
-            <div class="card-meta">
-              <span class="card-type">Research</span>
-              <span class="card-status">{item.data.status}</span>
-            </div>
-            <h4><a href={`/research/${item.slug}`}>{item.data.title}</a></h4>
-            <p class="card-description">{item.data.description}</p>
-            <div class="card-tags">
-              {item.data.methodology.slice(0, 2).map(method => (
-                <span class="tag methodology-tag">{method}</span>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
     </section>
 
-    <section class="preview-section">
-      <div class="section-header">
-        <h3>Things I'm Learning</h3>
-        <a href="/frameworks" class="section-link">See what I'm figuring out →</a>
-      </div>
-      
-      <div class="content-grid">
-        {recentFrameworks.map((item) => (
-          <article class="content-card framework-card">
-            <div class="card-meta">
-              <span class="card-type">Framework</span>
-              <span class="card-maturity">{item.data.maturity}</span>
-            </div>
-            <h4><a href={`/frameworks/${item.slug}`}>{item.data.title}</a></h4>
-            <p class="card-description">{item.data.description}</p>
-            <div class="card-tags">
-              {item.data.domain.slice(0, 2).map(domain => (
-                <span class="tag domain-tag">{domain}</span>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
+    <section class="section-card">
+      <h2><a href="/meta">Meta</a></h2>
+      <p>
+        Epistemological frameworks, philosophy of science, and methodological foundations.
+        The thinking about thinking that grounds the research.
+      </p>
     </section>
 
-    <section class="preview-section">
-      <div class="section-header">
-        <h3>Random Thoughts</h3>
-        <a href="/notes" class="section-link">Browse my notes →</a>
-      </div>
-      
-      <div class="notes-list">
-        {recentNotes.map((note) => (
-          <article class="note-item">
-            <div class="note-meta">
-              <span class="note-type">{note.data.type}</span>
-              <span class="note-confidence">{note.data.confidence}</span>
-            </div>
-            <h5><a href={`/notes/${note.slug}`}>{note.data.title}</a></h5>
-            <div class="note-tags">
-              {note.data.tags.slice(0, 3).map(tag => (
-                <span class="tag note-tag">{tag}</span>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
+    <section class="section-card">
+      <h2><a href="/process">Process</a></h2>
+      <p>
+        Lab notebook documenting ongoing work across empirical, formal, and
+        implementation dimensions. Work in progress, not just polished outputs.
+      </p>
+    </section>
+
+    <section class="section-card">
+      <h2><a href="/project">Project</a></h2>
+      <p>
+        Portfolio of completed research outputs and polished deliverables.
+        Finished work ready for the world.
+      </p>
     </section>
   </div>
+
+  <footer class="home-footer">
+    <p>
+      Currently: Cognitive science research intern (trilingual psycholinguistics,
+      mousetracking, eye-tracking). Building toward Stanford Symbolic Systems.
+    </p>
+  </footer>
 </BaseLayout>
 
 <style>
   .hero {
     text-align: center;
-    padding: 4rem 0;
-    border-bottom: 1px solid var(--secondary);
+    margin: 4rem 0 3rem;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .tagline {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+  }
+
+  .intro {
+    max-width: 650px;
+    margin: 0 auto 4rem;
+    text-align: center;
+    padding: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+  }
+
+  .intro p {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  .sections {
+    display: grid;
+    gap: 1.5rem;
     margin-bottom: 4rem;
   }
 
-  .hero-title {
-    font-family: var(--font-serif);
-    font-size: 3.5rem;
-    font-weight: 600;
-    color: var(--primary);
-    margin-bottom: 0.5rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1.5rem;
-    color: var(--secondary);
-    font-weight: 400;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-description {
-    max-width: 600px;
-    margin: 0 auto 2rem auto;
-    font-size: 1.125rem;
-    line-height: 1.7;
-    color: var(--secondary);
-  }
-
-  .hero-meta {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    font-size: 0.875rem;
-  }
-
-  .academic-status, .research-focus {
-    padding: 0.375rem 0.75rem;
+  .section-card {
+    padding: 2rem;
     background: var(--surface);
-    border: 1px solid var(--secondary);
-    border-radius: 0.375rem;
-    color: var(--primary);
-  }
-
-  .mode-hint {
-    margin-top: 2rem;
-  }
-
-  .explore-toggle {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--border);
     border-radius: 0.5rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: opacity 0.2s ease;
+    transition: all 0.2s ease;
   }
 
-  .explore-toggle:hover {
-    opacity: 0.9;
+  .section-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
   }
 
-  .content-preview {
-    display: grid;
-    gap: 4rem;
-  }
-
-  .preview-section {
-    display: grid;
-    gap: 1.5rem;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--accent);
-    padding-bottom: 0.5rem;
-  }
-
-  .section-header h3 {
-    font-family: var(--font-serif);
+  .section-card h2 {
     font-size: 1.75rem;
-    color: var(--primary);
+    margin: 0 0 0.75rem 0;
+  }
+
+  .section-card h2 a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .section-card h2 a:hover {
+    color: var(--accent);
+  }
+
+  .section-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
     margin: 0;
   }
 
-  .section-link {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.875rem;
-  }
-
-  .section-link:hover {
-    text-decoration: underline;
-  }
-
-  .content-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .content-card {
-    background: var(--surface);
-    border: 1px solid var(--secondary);
+  .home-footer {
+    text-align: center;
+    padding: 2rem;
+    background: var(--bg);
     border-radius: 0.5rem;
-    padding: 1.5rem;
-    transition: border-color 0.2s ease;
+    margin-top: 3rem;
   }
 
-  .content-card:hover {
-    border-color: var(--accent);
-  }
-
-  .card-meta {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    font-size: 0.75rem;
-  }
-
-  .card-type {
-    background: var(--accent);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-weight: 500;
-  }
-
-  .card-status, .card-maturity {
-    background: var(--bg);
-    color: var(--secondary);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    border: 1px solid var(--secondary);
-  }
-
-  .content-card h4 {
-    margin: 0 0 0.75rem 0;
-    font-size: 1.125rem;
-  }
-
-  .content-card h4 a {
-    color: var(--primary);
-    text-decoration: none;
-  }
-
-  .content-card h4 a:hover {
-    color: var(--accent);
-  }
-
-  .card-description {
-    color: var(--secondary);
+  .home-footer p {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
     line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-
-  .card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.375rem;
-  }
-
-  .tag {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    background: var(--bg);
-    color: var(--secondary);
-    border: 1px solid var(--secondary);
-  }
-
-  .notes-list {
-    display: grid;
-    gap: 1rem;
-  }
-
-  .note-item {
-    background: var(--surface);
-    border-left: 3px solid var(--accent);
-    padding: 1rem 1.5rem;
-    border-radius: 0 0.375rem 0.375rem 0;
-  }
-
-  .note-meta {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 0.75rem;
-  }
-
-  .note-type, .note-confidence {
-    background: var(--bg);
-    color: var(--secondary);
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
-    border: 1px solid var(--secondary);
-  }
-
-  .note-item h5 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-  }
-
-  .note-item h5 a {
-    color: var(--primary);
-    text-decoration: none;
-  }
-
-  .note-item h5 a:hover {
-    color: var(--accent);
-  }
-
-  .note-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-  }
-
-  .note-tag {
-    font-size: 0.6875rem;
   }
 
   @media (max-width: 768px) {
-    .hero-title {
-      font-size: 2.5rem;
+    .hero h1 {
+      font-size: 2.25rem;
     }
-    
-    .hero-meta {
-      flex-direction: column;
-      gap: 0.5rem;
+
+    .tagline {
+      font-size: 1.125rem;
     }
-    
-    .section-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
+
+    .intro {
+      padding: 1.5rem;
+      margin-bottom: 3rem;
     }
-    
-    .content-grid {
-      grid-template-columns: 1fr;
+
+    .section-card {
+      padding: 1.5rem;
+    }
+
+    .section-card h2 {
+      font-size: 1.5rem;
     }
   }
 </style>
