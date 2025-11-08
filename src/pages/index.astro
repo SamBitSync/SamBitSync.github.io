@@ -23,15 +23,6 @@ const recentProcess = allProcess.slice(0, 2);
 <BaseLayout title="Sambit">
   <div class="hero">
     <h1 class="hero-title">Sambit</h1>
-    <p class="hero-tagline">
-      Trilingual cognition researcher exploring how minds manage complexity
-    </p>
-    <div class="hero-description">
-      <p>
-        Portfolio for grad applications · External memory for SDAM ·
-        Epistemic practice made visible
-      </p>
-    </div>
   </div>
 
   <div class="sections-grid">
@@ -39,7 +30,7 @@ const recentProcess = allProcess.slice(0, 2);
       <div class="section-accent"></div>
       <div class="section-icon">◈</div>
       <h2>Maps</h2>
-      <p>Where complexity science meets cognitive architecture, Bayesian minds meet Nepali contexts</p>
+      <p>Cross-domain connections, pattern synthesis, and conceptual mappings</p>
       <span class="section-count">{allMaps.length} {allMaps.length === 1 ? 'post' : 'posts'}</span>
     </a>
 
@@ -47,7 +38,7 @@ const recentProcess = allProcess.slice(0, 2);
       <div class="section-accent"></div>
       <div class="section-icon">⊕</div>
       <h2>Meta</h2>
-      <p>Critical realism, Strevens on depth, Bayesian epistemology—the foundations under the research</p>
+      <p>Epistemological frameworks, philosophy of science, and methodological foundations</p>
       <span class="section-count">{allMeta.length} {allMeta.length === 1 ? 'framework' : 'frameworks'}</span>
     </a>
 
@@ -55,7 +46,7 @@ const recentProcess = allProcess.slice(0, 2);
       <div class="section-accent"></div>
       <div class="section-icon">⟲</div>
       <h2>Process</h2>
-      <p>Mousetracking pipelines, EEG preprocessing, computational models—the actual work, unpolished</p>
+      <p>Documenting ongoing work across empirical, formal, and implementation dimensions</p>
       <span class="section-count">{allProcess.length} {allProcess.length === 1 ? 'entry' : 'entries'}</span>
     </a>
 
@@ -63,7 +54,7 @@ const recentProcess = allProcess.slice(0, 2);
       <div class="section-accent"></div>
       <div class="section-icon">◆</div>
       <h2>Project</h2>
-      <p>Digital Setu storymaps, trilingual switching studies, Nepal science writing—finished work</p>
+      <p>Portfolio of completed work and research outputs</p>
       <span class="section-count">{allProjects.length} {allProjects.length === 1 ? 'project' : 'projects'}</span>
     </a>
   </div>
@@ -118,21 +109,12 @@ const recentProcess = allProcess.slice(0, 2);
       )}
     </div>
   )}
-
-  <div class="about-brief">
-    <p>
-      <strong>Currently:</strong> Research intern at cognitive science lab in Kathmandu
-      (trilingual psycholinguistics, mousetracking, eye-tracking) ·
-      Building toward Stanford Symbolic Systems ·
-      Compensating for SDAM through external scaffolding
-    </p>
-  </div>
 </BaseLayout>
 
 <style>
   .hero {
     text-align: center;
-    margin: 3rem 0 5rem;
+    margin: 4rem 0 5rem;
     max-width: 720px;
     margin-left: auto;
     margin-right: auto;
@@ -141,31 +123,11 @@ const recentProcess = allProcess.slice(0, 2);
   .hero-title {
     font-size: 4rem;
     font-weight: 700;
-    margin-bottom: 1rem;
     letter-spacing: -0.04em;
     background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-  }
-
-  .hero-tagline {
-    font-size: 1.375rem;
-    color: var(--text-secondary);
-    font-weight: 400;
-    margin-bottom: 2rem;
-    line-height: 1.5;
-  }
-
-  .hero-description {
-    margin-top: 2.5rem;
-  }
-
-  .hero-description p {
-    font-size: 0.9375rem;
-    line-height: 1.7;
-    color: var(--text-tertiary);
-    font-style: italic;
   }
 
   .sections-grid {
@@ -405,47 +367,9 @@ const recentProcess = allProcess.slice(0, 2);
     font-weight: 500;
   }
 
-  .about-brief {
-    margin-top: 6rem;
-    padding: 2.5rem;
-    background: linear-gradient(135deg, var(--surface) 0%, var(--bg) 100%);
-    border: 1px solid var(--border);
-    border-radius: 1rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .about-brief::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
-  }
-
-  .about-brief p {
-    color: var(--text-secondary);
-    font-size: 0.9375rem;
-    line-height: 1.8;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  .about-brief strong {
-    color: var(--text-primary);
-    font-weight: 600;
-  }
-
   @media (max-width: 768px) {
     .hero-title {
       font-size: 2.75rem;
-    }
-
-    .hero-tagline {
-      font-size: 1.1875rem;
     }
 
     .sections-grid {
