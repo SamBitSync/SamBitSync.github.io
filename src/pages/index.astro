@@ -1,170 +1,402 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Get recent content
+const allMaps = (await getCollection('maps')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const allMeta = (await getCollection('meta')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const allProcess = (await getCollection('process')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const allProjects = (await getCollection('project')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const recentMaps = allMaps.slice(0, 2);
+const recentProcess = allProcess.slice(0, 2);
 ---
 
 <BaseLayout title="Sambit">
   <div class="hero">
-    <h1>Sambit</h1>
-    <p class="tagline">
+    <h1 class="hero-title">Sambit</h1>
+    <p class="hero-tagline">
       Cognitive science research intern building toward symbolic systems
     </p>
+    <div class="hero-description">
+      <p>
+        This site serves as portfolio, external memory system, and demonstration
+        of epistemic practice grounded in actual research.
+      </p>
+    </div>
   </div>
 
-  <div class="intro">
+  <div class="sections-grid">
+    <a href="/maps" class="section-card maps">
+      <div class="section-icon">◈</div>
+      <h2>Maps</h2>
+      <p>Cross-domain connections and pattern synthesis</p>
+      <span class="section-count">{allMaps.length} {allMaps.length === 1 ? 'post' : 'posts'}</span>
+    </a>
+
+    <a href="/meta" class="section-card meta">
+      <div class="section-icon">⊕</div>
+      <h2>Meta</h2>
+      <p>Epistemological frameworks and philosophy of science</p>
+      <span class="section-count">{allMeta.length} {allMeta.length === 1 ? 'framework' : 'frameworks'}</span>
+    </a>
+
+    <a href="/process" class="section-card process">
+      <div class="section-icon">⟲</div>
+      <h2>Process</h2>
+      <p>Lab notebook across empirical, formal, implementation</p>
+      <span class="section-count">{allProcess.length} {allProcess.length === 1 ? 'entry' : 'entries'}</span>
+    </a>
+
+    <a href="/project" class="section-card project">
+      <div class="section-icon">◆</div>
+      <h2>Project</h2>
+      <p>Completed research outputs and deliverables</p>
+      <span class="section-count">{allProjects.length} {allProjects.length === 1 ? 'project' : 'projects'}</span>
+    </a>
+  </div>
+
+  {(recentMaps.length > 0 || recentProcess.length > 0) && (
+    <div class="recent-work">
+      <h2 class="recent-title">Recent Work</h2>
+
+      {recentMaps.length > 0 && (
+        <div class="recent-section">
+          <h3 class="recent-section-title">Maps</h3>
+          <div class="recent-posts">
+            {recentMaps.map((post) => (
+              <article class="recent-card">
+                <a href={`/maps/${post.slug}`} class="recent-link">
+                  <h4>{post.data.title}</h4>
+                  <p>{post.data.description}</p>
+                  <div class="recent-meta">
+                    {post.data.domains && post.data.domains.slice(0, 2).map((domain) => (
+                      <span class="meta-tag">{domain}</span>
+                    ))}
+                  </div>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {recentProcess.length > 0 && (
+        <div class="recent-section">
+          <h3 class="recent-section-title">Process</h3>
+          <div class="recent-posts">
+            {recentProcess.map((post) => (
+              <article class="recent-card">
+                <a href={`/process/${post.slug}`} class="recent-link">
+                  <div class="process-badges">
+                    <span class={`badge dimension-${post.data.dimension}`}>
+                      {post.data.dimension}
+                    </span>
+                    <span class={`badge status-${post.data.status}`}>
+                      {post.data.status}
+                    </span>
+                  </div>
+                  <h4>{post.data.title}</h4>
+                  <p>{post.data.description}</p>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )}
+
+  <div class="about-brief">
     <p>
-      This site serves three purposes: portfolio for graduate applications,
-      external memory system (compensating for SDAM), and demonstration of
-      epistemic practice grounded in actual research.
-    </p>
-  </div>
-
-  <div class="sections">
-    <section class="section-card">
-      <h2><a href="/maps">Maps</a></h2>
-      <p>
-        Cross-domain connections, pattern synthesis, and conceptual mappings.
-        Exploring how ideas from different fields illuminate each other.
-      </p>
-    </section>
-
-    <section class="section-card">
-      <h2><a href="/meta">Meta</a></h2>
-      <p>
-        Epistemological frameworks, philosophy of science, and methodological foundations.
-        The thinking about thinking that grounds the research.
-      </p>
-    </section>
-
-    <section class="section-card">
-      <h2><a href="/process">Process</a></h2>
-      <p>
-        Lab notebook documenting ongoing work across empirical, formal, and
-        implementation dimensions. Work in progress, not just polished outputs.
-      </p>
-    </section>
-
-    <section class="section-card">
-      <h2><a href="/project">Project</a></h2>
-      <p>
-        Portfolio of completed research outputs and polished deliverables.
-        Finished work ready for the world.
-      </p>
-    </section>
-  </div>
-
-  <footer class="home-footer">
-    <p>
-      Currently: Cognitive science research intern (trilingual psycholinguistics,
+      <strong>Currently:</strong> Research intern in cognitive science (trilingual psycholinguistics,
       mousetracking, eye-tracking). Building toward Stanford Symbolic Systems.
     </p>
-  </footer>
+  </div>
 </BaseLayout>
 
 <style>
   .hero {
     text-align: center;
-    margin: 4rem 0 3rem;
+    margin: 2rem 0 4rem;
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .hero h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.03em;
   }
 
-  .tagline {
+  .hero-tagline {
     font-size: 1.25rem;
     color: var(--text-secondary);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
   }
 
-  .intro {
-    max-width: 650px;
-    margin: 0 auto 4rem;
-    text-align: center;
-    padding: 2rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
+  .hero-description {
+    margin-top: 2rem;
   }
 
-  .intro p {
+  .hero-description p {
     font-size: 1.0625rem;
     line-height: 1.7;
     color: var(--text-secondary);
   }
 
-  .sections {
+  .sections-grid {
     display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
-    margin-bottom: 4rem;
+    margin-bottom: 5rem;
   }
 
   .section-card {
+    position: relative;
     padding: 2rem;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+
+  .section-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .section-card:hover::before {
+    transform: scaleX(1);
   }
 
   .section-card:hover {
     border-color: var(--accent);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+  }
+
+  .section-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+
+  .section-card:hover .section-icon {
+    opacity: 1;
   }
 
   .section-card h2 {
-    font-size: 1.75rem;
-    margin: 0 0 0.75rem 0;
-  }
-
-  .section-card h2 a {
-    color: var(--text-primary);
-    text-decoration: none;
-  }
-
-  .section-card h2 a:hover {
-    color: var(--accent);
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
   }
 
   .section-card p {
     color: var(--text-secondary);
+    font-size: 0.9375rem;
     line-height: 1.6;
-    margin: 0;
+    margin-bottom: 1rem;
   }
 
-  .home-footer {
+  .section-count {
+    display: inline-block;
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .recent-work {
+    margin: 5rem 0;
+  }
+
+  .recent-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 3rem;
     text-align: center;
-    padding: 2rem;
-    background: var(--bg);
-    border-radius: 0.5rem;
-    margin-top: 3rem;
   }
 
-  .home-footer p {
+  .recent-section {
+    margin-bottom: 3rem;
+  }
+
+  .recent-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.875rem;
+  }
+
+  .recent-posts {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .recent-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.625rem;
+    padding: 1.75rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .recent-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow);
+  }
+
+  .recent-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .process-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .badge {
+    font-size: 0.6875rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .dimension-empirical {
+    background: #10b98120;
+    color: #10b981;
+  }
+
+  .dimension-formal {
+    background: #3b82f620;
+    color: #3b82f6;
+  }
+
+  .dimension-implementation {
+    background: #8b5cf620;
+    color: #8b5cf6;
+  }
+
+  .status-in-progress {
+    background: #f59e0b20;
+    color: #f59e0b;
+  }
+
+  .status-blocked {
+    background: #ef444420;
+    color: #ef4444;
+  }
+
+  .status-completed {
+    background: #10b98120;
+    color: #10b981;
+  }
+
+  .recent-card h4 {
+    font-size: 1.125rem;
+    margin: 0 0 0.625rem 0;
+    font-weight: 600;
+  }
+
+  .recent-card p {
     color: var(--text-secondary);
     font-size: 0.9375rem;
     line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+
+  .recent-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .meta-tag {
+    font-size: 0.8125rem;
+    padding: 0.25rem 0.625rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 0.25rem;
+    color: var(--text-secondary);
+  }
+
+  .about-brief {
+    margin-top: 5rem;
+    padding: 2rem;
+    background: var(--bg);
+    border-radius: 0.75rem;
+    text-align: center;
+  }
+
+  .about-brief p {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  .about-brief strong {
+    color: var(--text-primary);
   }
 
   @media (max-width: 768px) {
-    .hero h1 {
-      font-size: 2.25rem;
+    .hero-title {
+      font-size: 2.5rem;
     }
 
-    .tagline {
+    .hero-tagline {
       font-size: 1.125rem;
     }
 
-    .intro {
-      padding: 1.5rem;
-      margin-bottom: 3rem;
+    .sections-grid {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    .recent-title {
+      font-size: 1.75rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: 2rem;
     }
 
     .section-card {
       padding: 1.5rem;
-    }
-
-    .section-card h2 {
-      font-size: 1.5rem;
     }
   }
 </style>
