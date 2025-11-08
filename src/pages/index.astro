@@ -25,14 +25,8 @@ const recentProcess = allProcess.slice(0, 2);
     <h1 class="hero-title">Sambit</h1>
     <p class="location">Kathmandu</p>
     <div class="affiliations">
-      <div class="affiliation-card">
-        <span class="position">Research Intern</span>
-        <span class="organization">Cognitive Science and Psycholinguistics Lab</span>
-      </div>
-      <div class="affiliation-card">
-        <span class="position">Research and Writing Diploma</span>
-        <span class="organization">The Open Institute for Social Science</span>
-      </div>
+      <p class="affiliation-line">interning@cognitive_science_psycholinguistics_lab</p>
+      <p class="affiliation-line">research_&_writing_diploma@the_open_institute_for_social_science</p>
     </div>
   </div>
 
@@ -150,51 +144,18 @@ const recentProcess = allProcess.slice(0, 2);
   .affiliations {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    max-width: 560px;
+    gap: 0.5rem;
+    max-width: 680px;
     margin: 0 auto;
   }
 
-  .affiliation-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.375rem;
-    padding: 1.125rem 1.5rem;
-    background: linear-gradient(135deg, var(--surface) 0%, var(--bg) 100%);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    border-radius: 0.5rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .affiliation-card:first-child {
-    border-left-color: #2563eb;
-  }
-
-  .affiliation-card:last-child {
-    border-left-color: #7c3aed;
-  }
-
-  .affiliation-card:hover {
-    border-left-width: 4px;
-    box-shadow: var(--shadow-md);
-    transform: translateX(2px);
-  }
-
-  .position {
-    font-size: 0.6875rem;
-    color: var(--text-tertiary);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .organization {
-    font-size: 1rem;
-    color: var(--text-primary);
-    font-weight: 500;
-    line-height: 1.45;
-    font-family: 'Crimson Pro', Georgia, serif;
+  .affiliation-line {
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+    font-weight: 400;
   }
 
   .sections-grid {
