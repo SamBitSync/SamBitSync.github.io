@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const meta = (await getCollection('meta')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+  (a, b) => a.data.title.localeCompare(b.data.title)
 );
 ---
 
@@ -13,37 +13,23 @@ const meta = (await getCollection('meta')).sort(
     <p class="lead">Epistemological frameworks, philosophy of science, and methodological foundations</p>
   </header>
 
-  <div class="posts-list">
-    {meta.map((post) => (
-      <article class="post-item">
-        <a href={`/meta/${post.id}`} class="post-link">
-          <div class="post-main">
-            <h2>{post.data.title}</h2>
-            <p class="post-description">{post.data.description}</p>
-
-            <div class="post-meta">
-              <span class="framework">{post.data.framework}</span>
-              <span class="maturity-badge maturity-{post.data.maturity}">
-                {post.data.maturity}
-              </span>
-            </div>
-
-            {post.data.thinkers && post.data.thinkers.length > 0 && (
-              <div class="thinkers">
-                <span class="label">Key thinkers:</span>
-                {post.data.thinkers.map((thinker, index) => (
-                  <span>{thinker}{index < post.data.thinkers.length - 1 ? ', ' : ''}</span>
-                ))}
-              </div>
+  <div class="reference-list">
+    {meta.map((entry) => (
+      <article class="reference-entry">
+        <a href={`/meta/${entry.id}`} class="entry-link">
+          <div class="entry-header">
+            <h2 class="framework-name">{entry.data.framework}</h2>
+            {entry.data.thinkers && entry.data.thinkers.length > 0 && (
+              <p class="thinkers">
+                {entry.data.thinkers.join(' · ')}
+              </p>
             )}
           </div>
 
-          <time datetime={post.data.date.toISOString()}>
-            {post.data.date.toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'short'
-            })}
-          </time>
+          <div class="entry-content">
+            <h3 class="entry-title">{entry.data.title}</h3>
+            <p class="entry-description">{entry.data.description}</p>
+          </div>
         </a>
       </article>
     ))}
@@ -51,7 +37,7 @@ const meta = (await getCollection('meta')).sort(
 
   {meta.length === 0 && (
     <div class="empty-state">
-      <p>No framework pieces yet. Check back soon.</p>
+      <p>No framework entries yet. Check back soon.</p>
     </div>
   )}
 </BaseLayout>
@@ -67,106 +53,77 @@ const meta = (await getCollection('meta')).sort(
     margin-top: 0.5rem;
   }
 
-  .posts-list {
+  .reference-list {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2.5rem;
   }
 
-  .post-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    transition: border-color 0.2s ease, transform 0.2s ease;
+  .reference-entry {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .post-item:hover {
-    border-color: var(--accent);
-    transform: translateX(4px);
+  .reference-entry:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
   }
 
-  .post-link {
+  .reference-entry:hover {
+    padding-left: 1rem;
+  }
+
+  .entry-link {
     text-decoration: none;
     color: inherit;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 2rem;
+    display: block;
   }
 
-  .post-main {
-    flex: 1;
-  }
-
-  .post-item h2 {
-    font-size: 1.25rem;
-    margin: 0 0 0.5rem 0;
-    color: var(--text-primary);
-  }
-
-  .post-description {
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-    line-height: 1.5;
-  }
-
-  .post-meta {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+  .entry-header {
     margin-bottom: 0.75rem;
   }
 
-  .framework {
-    font-size: 0.875rem;
-    color: var(--accent);
-    font-weight: 500;
+  .framework-name {
     font-family: var(--font-mono);
-  }
-
-  .maturity-badge {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.625rem;
-    border-radius: 0.25rem;
-    font-weight: 500;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 0 0 0.375rem 0;
+    letter-spacing: -0.01em;
     text-transform: uppercase;
-    letter-spacing: 0.025em;
-  }
-
-  .maturity-draft {
-    background: #f59e0b20;
-    color: #f59e0b;
-    border: 1px solid #f59e0b40;
-  }
-
-  .maturity-working {
-    background: #3b82f620;
-    color: #3b82f6;
-    border: 1px solid #3b82f640;
-  }
-
-  .maturity-established {
-    background: #10b98120;
-    color: #10b981;
-    border: 1px solid #10b98140;
   }
 
   .thinkers {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    margin: 0;
+    font-style: italic;
+    letter-spacing: 0.01em;
   }
 
-  .thinkers .label {
-    font-weight: 500;
-    margin-right: 0.5rem;
+  .entry-content {
+    margin-top: 0.5rem;
   }
 
-  .post-link time {
-    font-size: 0.875rem;
+  .entry-title {
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.625rem 0;
+    line-height: 1.3;
+    font-family: var(--font-serif);
+  }
+
+  .entry-link:hover .entry-title {
+    color: var(--accent);
+  }
+
+  .entry-description {
     color: var(--text-secondary);
-    white-space: nowrap;
-    flex-shrink: 0;
+    line-height: 1.6;
+    margin: 0;
+    font-size: 0.9375rem;
   }
 
   .empty-state {
@@ -180,13 +137,16 @@ const meta = (await getCollection('meta')).sort(
       margin-bottom: 2rem;
     }
 
-    .post-link {
-      flex-direction: column;
-      gap: 1rem;
+    .reference-list {
+      gap: 2rem;
     }
 
-    .post-link time {
-      align-self: flex-start;
+    .reference-entry {
+      padding-bottom: 1.5rem;
+    }
+
+    .entry-title {
+      font-size: 1.25rem;
     }
   }
 </style>
