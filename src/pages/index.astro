@@ -74,7 +74,7 @@ const recentProcess = allProcess.slice(0, 2);
           <div class="recent-posts">
             {recentMaps.map((post) => (
               <article class="recent-card">
-                <a href={`/maps/${post.slug}`} class="recent-link">
+                <a href={`/maps/${post.id}`} class="recent-link">
                   <h4>{post.data.title}</h4>
                   <p>{post.data.description}</p>
                   <div class="recent-meta">
@@ -95,7 +95,7 @@ const recentProcess = allProcess.slice(0, 2);
           <div class="recent-posts">
             {recentProcess.map((post) => (
               <article class="recent-card">
-                <a href={`/process/${post.slug}`} class="recent-link">
+                <a href={`/process/${post.id}`} class="recent-link">
                   <div class="process-badges">
                     <span class={`badge dimension-${post.data.dimension}`}>
                       {post.data.dimension}

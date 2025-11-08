@@ -16,7 +16,7 @@ const maps = (await getCollection('maps')).sort(
   <div class="posts-grid">
     {maps.map((post) => (
       <article class="post-card">
-        <a href={`/maps/${post.slug}`} class="post-link">
+        <a href={`/maps/${post.id}`} class="post-link">
           {post.data.visualType && post.data.visualType.length > 0 && (
             <div class="visual-indicators">
               {post.data.visualType.map((type) => (

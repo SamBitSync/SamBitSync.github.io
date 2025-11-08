@@ -33,7 +33,7 @@ const implementation = process.filter(p => p.data.dimension === 'implementation'
   <div class="posts-list">
     {process.map((post) => (
       <article class={`post-item dimension-${post.data.dimension}`} data-dimension={post.data.dimension}>
-        <a href={`/process/${post.slug}`} class="post-link">
+        <a href={`/process/${post.id}`} class="post-link">
           <div class="post-main">
             <div class="post-header-meta">
               <span class={`dimension-badge dimension-${post.data.dimension}`}>
