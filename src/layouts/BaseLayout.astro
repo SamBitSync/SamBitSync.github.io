@@ -29,6 +29,19 @@ const { title, description = "Sambit's portfolio and external memory system - co
 </head>
 
 <body>
+  <script is:inline>
+    // Theme initialization - runs before page render to prevent flash
+    (function() {
+      const getTheme = () => {
+        const stored = localStorage.getItem('theme');
+        if (stored) return stored;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      };
+
+      document.documentElement.setAttribute('data-theme', getTheme());
+    })();
+  </script>
+
   <div id="app">
     <header class="header">
       <nav class="nav">
@@ -39,6 +52,15 @@ const { title, description = "Sambit's portfolio and external memory system - co
           <a href="/meta" class="nav-link">Meta</a>
           <a href="/process" class="nav-link">Process</a>
           <a href="/project" class="nav-link">Project</a>
+          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+            <svg class="sun-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M10 2V4M10 16V18M18 10H16M4 10H2M15.657 4.343L14.243 5.757M5.757 14.243L4.343 15.657M15.657 15.657L14.243 14.243M5.757 5.757L4.343 4.343" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <svg class="moon-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
       </nav>
     </header>
@@ -51,6 +73,36 @@ const { title, description = "Sambit's portfolio and external memory system - co
       <p>Work in progress, thoughts subject to change</p>
     </footer>
   </div>
+
+  <script>
+    // Theme toggle handler
+    const themeToggle = document.getElementById('theme-toggle');
+
+    function updateTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const html = document.documentElement;
+
+      // Update icons
+      if (currentTheme === 'dark') {
+        themeToggle?.classList.add('dark');
+      } else {
+        themeToggle?.classList.remove('dark');
+      }
+    }
+
+    themeToggle?.addEventListener('click', () => {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateTheme();
+    });
+
+    // Initialize
+    updateTheme();
+  </script>
 </body>
 </html>
 
@@ -91,9 +143,9 @@ const { title, description = "Sambit's portfolio and external memory system - co
     --max-width-wide: 1200px;
   }
 
-  /* Dark mode */
+  /* Dark mode - auto-detect */
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
       --bg: #0a0a0a;
       --bg-elevated: #141414;
       --surface: #141414;
@@ -111,6 +163,26 @@ const { title, description = "Sambit's portfolio and external memory system - co
       --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
       --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.6);
     }
+  }
+
+  /* Dark mode - manual override */
+  [data-theme="dark"] {
+    --bg: #0a0a0a;
+    --bg-elevated: #141414;
+    --surface: #141414;
+    --surface-elevated: #1f1f1f;
+    --text-primary: #ededed;
+    --text-secondary: #a3a3a3;
+    --text-tertiary: #737373;
+    --border: #262626;
+    --border-subtle: #1a1a1a;
+    --accent: #60a5fa;
+    --accent-hover: #93c5fd;
+    --accent-subtle: #1e3a8a;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.5), 0 1px 2px -1px rgb(0 0 0 / 0.5);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.6);
   }
 
   /* Base Styles */
@@ -199,6 +271,51 @@ const { title, description = "Sambit's portfolio and external memory system - co
 
   .nav-link:hover::after {
     transform: scaleX(1);
+  }
+
+  /* Theme Toggle */
+  .theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .theme-toggle:hover {
+    color: var(--text-primary);
+    background: var(--surface-elevated);
+  }
+
+  .theme-toggle svg {
+    position: absolute;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .theme-toggle .sun-icon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+
+  .theme-toggle .moon-icon {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0);
+  }
+
+  .theme-toggle.dark .sun-icon {
+    opacity: 0;
+    transform: rotate(90deg) scale(0);
+  }
+
+  .theme-toggle.dark .moon-icon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
   }
 
   /* Main Content */
