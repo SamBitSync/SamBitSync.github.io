@@ -24,42 +24,46 @@ const recentProcess = allProcess.slice(0, 2);
   <div class="hero">
     <h1 class="hero-title">Sambit</h1>
     <p class="hero-tagline">
-      Cognitive science research intern building toward symbolic systems
+      Trilingual cognition researcher exploring how minds manage complexity
     </p>
     <div class="hero-description">
       <p>
-        This site serves as portfolio, external memory system, and demonstration
-        of epistemic practice grounded in actual research.
+        Portfolio for grad applications · External memory for SDAM ·
+        Epistemic practice made visible
       </p>
     </div>
   </div>
 
   <div class="sections-grid">
     <a href="/maps" class="section-card maps">
+      <div class="section-accent"></div>
       <div class="section-icon">◈</div>
       <h2>Maps</h2>
-      <p>Cross-domain connections and pattern synthesis</p>
+      <p>Where complexity science meets cognitive architecture, Bayesian minds meet Nepali contexts</p>
       <span class="section-count">{allMaps.length} {allMaps.length === 1 ? 'post' : 'posts'}</span>
     </a>
 
     <a href="/meta" class="section-card meta">
+      <div class="section-accent"></div>
       <div class="section-icon">⊕</div>
       <h2>Meta</h2>
-      <p>Epistemological frameworks and philosophy of science</p>
+      <p>Critical realism, Strevens on depth, Bayesian epistemology—the foundations under the research</p>
       <span class="section-count">{allMeta.length} {allMeta.length === 1 ? 'framework' : 'frameworks'}</span>
     </a>
 
     <a href="/process" class="section-card process">
+      <div class="section-accent"></div>
       <div class="section-icon">⟲</div>
       <h2>Process</h2>
-      <p>Lab notebook across empirical, formal, implementation</p>
+      <p>Mousetracking pipelines, EEG preprocessing, computational models—the actual work, unpolished</p>
       <span class="section-count">{allProcess.length} {allProcess.length === 1 ? 'entry' : 'entries'}</span>
     </a>
 
     <a href="/project" class="section-card project">
+      <div class="section-accent"></div>
       <div class="section-icon">◆</div>
       <h2>Project</h2>
-      <p>Completed research outputs and deliverables</p>
+      <p>Digital Setu storymaps, trilingual switching studies, Nepal science writing—finished work</p>
       <span class="section-count">{allProjects.length} {allProjects.length === 1 ? 'project' : 'projects'}</span>
     </a>
   </div>
@@ -117,8 +121,10 @@ const recentProcess = allProcess.slice(0, 2);
 
   <div class="about-brief">
     <p>
-      <strong>Currently:</strong> Research intern in cognitive science (trilingual psycholinguistics,
-      mousetracking, eye-tracking). Building toward Stanford Symbolic Systems.
+      <strong>Currently:</strong> Research intern at cognitive science lab in Kathmandu
+      (trilingual psycholinguistics, mousetracking, eye-tracking) ·
+      Building toward Stanford Symbolic Systems ·
+      Compensating for SDAM through external scaffolding
     </p>
   </div>
 </BaseLayout>
@@ -126,152 +132,190 @@ const recentProcess = allProcess.slice(0, 2);
 <style>
   .hero {
     text-align: center;
-    margin: 2rem 0 4rem;
-    max-width: 680px;
+    margin: 3rem 0 5rem;
+    max-width: 720px;
     margin-left: auto;
     margin-right: auto;
   }
 
   .hero-title {
-    font-size: 3.5rem;
+    font-size: 4rem;
     font-weight: 700;
-    margin-bottom: 0.75rem;
-    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .hero-tagline {
-    font-size: 1.25rem;
+    font-size: 1.375rem;
     color: var(--text-secondary);
     font-weight: 400;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
   }
 
   .hero-description {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
   }
 
   .hero-description p {
-    font-size: 1.0625rem;
+    font-size: 0.9375rem;
     line-height: 1.7;
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
+    font-style: italic;
   }
 
   .sections-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 5rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 6rem;
   }
 
   .section-card {
     position: relative;
-    padding: 2rem;
+    padding: 2.5rem;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 0.75rem;
+    border-radius: 1rem;
     text-decoration: none;
     color: inherit;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
   }
 
-  .section-card::before {
-    content: '';
+  .section-accent {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--accent);
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .section-card:hover::before {
+  .section-card.maps .section-accent {
+    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+  }
+
+  .section-card.meta .section-accent {
+    background: linear-gradient(90deg, #7c3aed 0%, #8b5cf6 100%);
+  }
+
+  .section-card.process .section-accent {
+    background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+  }
+
+  .section-card.project .section-accent {
+    background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+  }
+
+  .section-card:hover .section-accent {
     transform: scaleX(1);
   }
 
   .section-card:hover {
     border-color: var(--accent);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-6px);
   }
 
   .section-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.6;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
   }
 
   .section-card:hover .section-icon {
     opacity: 1;
+    transform: scale(1.1);
   }
 
   .section-card h2 {
-    font-size: 1.5rem;
-    margin: 0 0 0.5rem 0;
+    font-size: 1.75rem;
+    margin: 0 0 1rem 0;
     font-weight: 600;
   }
 
   .section-card p {
     color: var(--text-secondary);
-    font-size: 0.9375rem;
+    font-size: 1rem;
     line-height: 1.6;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    min-height: 3.2rem;
   }
 
   .section-count {
     display: inline-block;
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     color: var(--text-tertiary);
-    font-weight: 500;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
   }
 
   .recent-work {
-    margin: 5rem 0;
+    margin: 6rem 0;
   }
 
   .recent-title {
-    font-size: 2rem;
+    font-size: 2.25rem;
     font-weight: 600;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     text-align: center;
+    position: relative;
+  }
+
+  .recent-title::after {
+    content: '';
+    position: absolute;
+    bottom: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
   }
 
   .recent-section {
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
   }
 
   .recent-section-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1.25rem;
-    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text-tertiary);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 0.875rem;
+    letter-spacing: 0.1em;
   }
 
   .recent-posts {
     display: grid;
-    gap: 1.25rem;
+    gap: 1.5rem;
   }
 
   .recent-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 0.625rem;
-    padding: 1.75rem;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 3px solid var(--accent);
+    border-radius: 0.5rem;
+    padding: 2rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .recent-card:hover {
-    border-color: var(--accent);
-    box-shadow: var(--shadow);
+    border-left-width: 5px;
+    box-shadow: var(--shadow-md);
+    transform: translateX(4px);
   }
 
   .recent-link {
@@ -282,60 +326,67 @@ const recentProcess = allProcess.slice(0, 2);
 
   .process-badges {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.625rem;
     margin-bottom: 1rem;
   }
 
   .badge {
     font-size: 0.6875rem;
-    padding: 0.25rem 0.625rem;
-    border-radius: 0.25rem;
-    font-weight: 600;
+    padding: 0.3125rem 0.75rem;
+    border-radius: 0.3125rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.05em;
   }
 
   .dimension-empirical {
-    background: #10b98120;
+    background: linear-gradient(135deg, #10b98120 0%, #10b98140 100%);
     color: #10b981;
+    border: 1px solid #10b98140;
   }
 
   .dimension-formal {
-    background: #3b82f620;
+    background: linear-gradient(135deg, #3b82f620 0%, #3b82f640 100%);
     color: #3b82f6;
+    border: 1px solid #3b82f640;
   }
 
   .dimension-implementation {
-    background: #8b5cf620;
+    background: linear-gradient(135deg, #8b5cf620 0%, #8b5cf640 100%);
     color: #8b5cf6;
+    border: 1px solid #8b5cf640;
   }
 
   .status-in-progress {
-    background: #f59e0b20;
+    background: linear-gradient(135deg, #f59e0b20 0%, #f59e0b40 100%);
     color: #f59e0b;
+    border: 1px solid #f59e0b40;
   }
 
   .status-blocked {
-    background: #ef444420;
+    background: linear-gradient(135deg, #ef444420 0%, #ef444440 100%);
     color: #ef4444;
+    border: 1px solid #ef444440;
   }
 
   .status-completed {
-    background: #10b98120;
+    background: linear-gradient(135deg, #10b98120 0%, #10b98140 100%);
     color: #10b981;
+    border: 1px solid #10b98140;
   }
 
   .recent-card h4 {
-    font-size: 1.125rem;
-    margin: 0 0 0.625rem 0;
+    font-size: 1.25rem;
+    margin: 0 0 0.75rem 0;
     font-weight: 600;
+    line-height: 1.3;
   }
 
   .recent-card p {
     color: var(--text-secondary);
     font-size: 0.9375rem;
-    line-height: 1.6;
-    margin-bottom: 0.75rem;
+    line-height: 1.65;
+    margin-bottom: 1rem;
   }
 
   .recent-meta {
@@ -346,57 +397,82 @@ const recentProcess = allProcess.slice(0, 2);
 
   .meta-tag {
     font-size: 0.8125rem;
-    padding: 0.25rem 0.625rem;
+    padding: 0.375rem 0.75rem;
     background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: 0.25rem;
+    border-radius: 0.375rem;
     color: var(--text-secondary);
+    font-weight: 500;
   }
 
   .about-brief {
-    margin-top: 5rem;
-    padding: 2rem;
-    background: var(--bg);
-    border-radius: 0.75rem;
+    margin-top: 6rem;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, var(--surface) 0%, var(--bg) 100%);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-brief::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
   }
 
   .about-brief p {
     color: var(--text-secondary);
     font-size: 0.9375rem;
-    line-height: 1.7;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
   }
 
   .about-brief strong {
     color: var(--text-primary);
+    font-weight: 600;
   }
 
   @media (max-width: 768px) {
     .hero-title {
-      font-size: 2.5rem;
+      font-size: 2.75rem;
     }
 
     .hero-tagline {
-      font-size: 1.125rem;
+      font-size: 1.1875rem;
     }
 
     .sections-grid {
       grid-template-columns: 1fr;
-      gap: 1.25rem;
+      gap: 1.5rem;
+    }
+
+    .section-card p {
+      min-height: auto;
     }
 
     .recent-title {
-      font-size: 1.75rem;
+      font-size: 1.875rem;
     }
   }
 
   @media (max-width: 480px) {
     .hero-title {
-      font-size: 2rem;
+      font-size: 2.25rem;
     }
 
     .section-card {
-      padding: 1.5rem;
+      padding: 2rem;
+    }
+
+    .section-icon {
+      font-size: 2.5rem;
     }
   }
 </style>
