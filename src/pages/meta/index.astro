@@ -22,9 +22,6 @@ const meta = (await getCollection('meta')).sort(
         <dd class="framework-def">
           <a href={`/meta/${entry.id}`}>
             <span class="def-text">{entry.data.title}</span>
-            {entry.data.thinkers && entry.data.thinkers.length > 0 && (
-              <span class="thinkers">— {entry.data.thinkers.join(', ')}</span>
-            )}
           </a>
         </dd>
       </div>
@@ -111,13 +108,6 @@ const meta = (await getCollection('meta')).sort(
 
   .framework-def a:hover .def-text {
     color: var(--accent);
-  }
-
-  .thinkers {
-    color: var(--text-tertiary);
-    font-size: 0.875rem;
-    font-style: italic;
-    margin-left: 0.625rem;
   }
 
   .empty-state {
