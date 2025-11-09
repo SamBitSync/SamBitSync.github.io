@@ -30,7 +30,7 @@ const categories = Object.keys(metaByCategory).sort();
   </header>
 
   <aside class="pluralism-note">
-    Some frameworks below may appear to contradict. But given reality's stratification and complexity (Critical Realism) and that every model leaves residuals (Residual Reality), different frameworks are needed to illuminate different facets. Pluralism over unity.
+    Some frameworks below may appear to contradict. But given reality's stratification and complexity (<span class="framework-ref">Critical Realism</span>) and that every model leaves residuals (<span class="framework-ref">Residual Reality</span>), different frameworks are needed to illuminate different facets. Pluralism over unity.
   </aside>
 
   {categories.map((category, idx) => (
@@ -82,6 +82,13 @@ const categories = Object.keys(metaByCategory).sort();
     padding: 1rem 1.5rem;
     border-left: 3px solid var(--border);
     background: var(--surface);
+  }
+
+  .framework-ref {
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 0.875rem;
+    color: var(--text-primary);
   }
 
   .category-section {
