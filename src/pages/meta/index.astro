@@ -82,11 +82,18 @@ const categories = Object.keys(metaByCategory).sort();
     font-style: italic;
     margin: 2.5rem 0 0 0;
     padding: 1.5rem 2rem;
-    border: 1px solid var(--border);
-    border-left: 4px solid color-mix(in srgb, var(--accent) 60%, var(--border));
+    border: 1px solid rgb(234, 179, 8, 0.3);
+    border-left: 4px solid rgb(234, 179, 8);
     border-radius: 6px;
-    background: color-mix(in srgb, var(--surface) 80%, var(--accent) 3%);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    background: rgb(254, 252, 232);
+    box-shadow: 0 2px 8px rgba(234, 179, 8, 0.08);
+  }
+
+  [data-theme="dark"] .pluralism-note {
+    border: 1px solid rgb(234, 179, 8, 0.25);
+    border-left: 4px solid rgb(234, 179, 8, 0.8);
+    background: rgb(39, 35, 20);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   .category-section {
