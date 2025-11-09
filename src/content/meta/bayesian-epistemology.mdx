@@ -1,0 +1,161 @@
+---
+title: "Probability as degree of belief and epistemic uncertainty, not objective frequency in the world"
+description: "Bayesian framework for rational belief revision where probability measures confidence, updated by evidence"
+date: 2024-11-09T00:00:00Z
+framework: "Bayesian Epistemology"
+category: "Epistemology & Ontology"
+thinkers: ["Thomas Bayes", "Frank Ramsey", "Leonard Savage", "E.T. Jaynes"]
+maturity: "working"
+tags: ["epistemology", "probability", "inference", "rationality"]
+---
+
+# Bayesian Epistemology
+
+## The Core Idea
+
+**Probability is not about the world - it's about our beliefs.**
+
+Traditional (frequentist) view: Probability = long-run frequency. "50% chance of heads" means in infinite flips, half are heads.
+
+Bayesian view: Probability = degree of belief. "50% credence in heads" means you're maximally uncertain which outcome will occur.
+
+**Beliefs should be:**
+1. Represented as probabilities (degrees of confidence from 0 to 1)
+2. Coherent (satisfy probability axioms)
+3. Updated by Bayes' rule when you get evidence
+
+## Bayes' Rule
+
+The fundamental equation for rational belief updating:
+
+```
+P(H|E) = P(E|H) × P(H) / P(E)
+```
+
+- **P(H)**: Prior probability of hypothesis H (before seeing evidence)
+- **P(E|H)**: Likelihood of evidence E given H is true
+- **P(H|E)**: Posterior probability of H (after seeing evidence)
+- **P(E)**: Marginal probability of evidence
+
+**In words:** Your new belief = (how well H predicts E) × (your old belief) / (how expected E was overall)
+
+## Why This Matters
+
+### Against Binary Belief
+Don't just believe/disbelieve. Have graded confidence. "I'm 70% confident it will rain."
+
+### Incorporates Priors
+You don't start from scratch each time. Prior knowledge matters. Rational updating preserves what you already knew while adapting to new evidence.
+
+### Formal Rationality
+Clear normative standard for belief revision. You can be objectively wrong about how to update beliefs.
+
+### Quantifies Uncertainty
+Make uncertainty explicit. Forces precision about confidence levels.
+
+## Epistemic vs. Objective Probability
+
+**Crucial distinction:**
+
+**Objective (frequentist):** Probability is property of world
+- Dice have objective probabilities
+- Repeatable experiments have limiting frequencies
+- Only meaningful for physical processes
+
+**Epistemic (Bayesian):** Probability is state of knowledge
+- You can have probability about anything (even one-time events)
+- "Probability Napoleon won at Waterloo" makes sense (your uncertainty about history)
+- Subjective but constrained by rationality
+
+**This is why Bayesian epistemology is powerful:**
+- Can reason about unique events ("will this specific startup succeed?")
+- Can update beliefs about theories, hypotheses, historical events
+- Not limited to repeatable experiments
+
+## Application to Research
+
+### Study Design
+- Specify prior beliefs explicitly
+- Design experiments to maximize expected information gain
+- Smaller samples okay if you have strong priors + high-quality data
+
+### Statistical Inference
+Bayesian statistics vs. frequentist:
+- **Frequentist:** p-values, confidence intervals (what would happen in hypothetical repetitions)
+- **Bayesian:** Posterior distributions, credible intervals (what you should believe given the data)
+
+Bayesian answers the question you actually care about: "What should I believe about this parameter?"
+
+### Model Comparison
+Use Bayes factors to compare hypotheses:
+- How much more likely is the data under H1 vs. H2?
+- Automatically penalizes complexity (Occam's razor falls out of Bayes' rule)
+
+### Sequential Updating
+Update beliefs as data accumulates:
+- Today's posterior = tomorrow's prior
+- No need to wait for "large N"
+- Continuous learning process
+
+## Connection to My Work
+
+This framework shapes:
+- **Inference:** How to draw conclusions from limited data
+- **Uncertainty quantification:** Explicit about confidence in claims
+- **Model building:** Prior specification, hierarchical models
+- **Learning:** Belief updating in second language acquisition
+
+Examples:
+- Bilingual language choice: Bayesian inference about which language to use given context
+- Translation confidence: Posterior probability distributions over translations
+- Grammaticality judgments: Graded acceptability as posterior probabilities
+- Experimental analysis: Bayesian mixed-effects models for multilingual data
+
+## Critiques and Limitations
+
+### Subjectivity of Priors
+Different people have different priors. Is this rational disagreement?
+- **Response:** Priors reflect different background knowledge. With enough data, posteriors converge.
+
+### Where Do Priors Come From?
+If you need priors to start, isn't this circular?
+- **Response:** Priors come from previous inquiry, evolution, general principles. Ultimately some priors are bedrock.
+
+### Computational Intractability
+Exact Bayesian inference often impossible to compute.
+- **Response:** Approximations (MCMC, variational inference) work well in practice.
+
+### Doesn't Capture All Rationality
+Not all rational belief revision is Bayesian. What about non-probabilistic reasoning?
+- **Response:** Bayesianism is normative for uncertainty, not all reasoning.
+
+## Relation to Other Frameworks
+
+- **Critical Realism:** Bayesian inference about unobservable mechanisms in Real domain
+- **Predictive Processing:** Brain implements approximate Bayesian inference
+- **Computationalism:** Bayesian inference as computational process
+- **Methodological Individualism:** Individual agents as Bayesian reasoners
+- **Hard to Vary:** Good explanations have low prior probability but high likelihood given data
+
+## Variants
+
+### Subjective Bayesianism (Ramsey, de Finetti)
+Probabilities are purely subjective degrees of belief. Only constraint is coherence.
+
+### Objective Bayesianism (Jaynes)
+Probabilities should reflect objective constraints (MaxEnt principle). Unique rational prior given information.
+
+### Empirical Bayes
+Estimate priors from data itself. Hybrid of Bayesian and frequentist.
+
+### Bayesian Decision Theory
+Extend to actions: Choose action that maximizes expected utility given beliefs.
+
+## Key Sources
+
+- Bayes, T. (1763). "An Essay Towards Solving a Problem in the Doctrine of Chances"
+- Ramsey, F. P. (1926). "Truth and Probability"
+- Savage, L. J. (1954). *The Foundations of Statistics*
+- Jaynes, E. T. (2003). *Probability Theory: The Logic of Science*
+- Howson, C., & Urbach, P. (2006). *Scientific Reasoning: The Bayesian Approach*
+- Tenenbaum, J. B., et al. (2011). "How to Grow a Mind: Statistics, Structure, and Abstraction"
