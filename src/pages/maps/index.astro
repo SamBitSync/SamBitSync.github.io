@@ -611,12 +611,16 @@ const uniquePatterns = Array.from(allPatterns).sort();
 
   /* Multi-select dropdown items */
   .multiselect-item.selected {
-    background: var(--accent);
     color: white;
     font-weight: 500;
   }
 
-  .multiselect-item.selected:hover {
+  /* Pattern items use default accent color */
+  [data-filter="patterns"] .multiselect-item.selected {
+    background: var(--accent);
+  }
+
+  [data-filter="patterns"] .multiselect-item.selected:hover {
     background: var(--accent-hover);
   }
 
