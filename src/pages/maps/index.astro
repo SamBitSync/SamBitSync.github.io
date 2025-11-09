@@ -299,6 +299,12 @@ const uniquePatterns = Array.from(allPatterns).sort();
   function createFilterChip(value, filterType, label) {
     const chip = document.createElement('button');
     chip.className = 'filter-chip';
+
+    // Add aspect-specific class for colored chips
+    if (filterType === 'aspects') {
+      chip.classList.add(`filter-chip-${value}`);
+    }
+
     chip.innerHTML = `
       ${label}
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -536,6 +542,71 @@ const uniquePatterns = Array.from(allPatterns).sort();
   .filter-chip svg {
     width: 12px;
     height: 12px;
+  }
+
+  /* Colored filter chips matching aspect colors */
+  .filter-chip-cognition {
+    background: rgb(59, 130, 246);
+  }
+
+  .filter-chip-cognition:hover {
+    background: rgb(37, 99, 235);
+  }
+
+  .filter-chip-computation {
+    background: rgb(6, 182, 212);
+  }
+
+  .filter-chip-computation:hover {
+    background: rgb(8, 145, 178);
+  }
+
+  .filter-chip-code {
+    background: rgb(34, 197, 94);
+  }
+
+  .filter-chip-code:hover {
+    background: rgb(22, 163, 74);
+  }
+
+  .filter-chip-culture {
+    background: rgb(236, 72, 153);
+  }
+
+  .filter-chip-culture:hover {
+    background: rgb(219, 39, 119);
+  }
+
+  .filter-chip-complexity {
+    background: rgb(139, 92, 246);
+  }
+
+  .filter-chip-complexity:hover {
+    background: rgb(124, 58, 237);
+  }
+
+  .filter-chip-constraint {
+    background: rgb(245, 158, 11);
+  }
+
+  .filter-chip-constraint:hover {
+    background: rgb(217, 119, 6);
+  }
+
+  .filter-chip-causation {
+    background: rgb(239, 68, 68);
+  }
+
+  .filter-chip-causation:hover {
+    background: rgb(220, 38, 38);
+  }
+
+  .filter-chip-coordination {
+    background: rgb(20, 184, 166);
+  }
+
+  .filter-chip-coordination:hover {
+    background: rgb(17, 148, 133);
   }
 
   /* Multi-select dropdown items */
