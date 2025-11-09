@@ -26,8 +26,12 @@ const categories = Object.keys(metaByCategory).sort();
 <BaseLayout title="Meta | Sambit">
   <header class="page-header">
     <h1>Meta</h1>
-    <p class="lead">Meta frameworks: epistemology, philosophy of science, methodology, and heuristics that I draw on</p>
+    <p class="lead">Meta frameworks that shape my thinking: epistemology, philosophy of science, philosophy of mind, methodology, and heuristics</p>
   </header>
+
+  <aside class="pluralism-note">
+    Some frameworks below may appear to contradict. But given reality's stratification and complexity (Critical Realism) and that every model leaves residuals (Residual Reality), different frameworks are needed to illuminate different facets. Pluralism over unity.
+  </aside>
 
   {categories.map((category, idx) => (
     <section class="category-section">
@@ -67,6 +71,17 @@ const categories = Object.keys(metaByCategory).sort();
     font-size: 1.125rem;
     color: var(--text-secondary);
     margin-top: 0.5rem;
+  }
+
+  .pluralism-note {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin: -1rem 0 2.5rem 0;
+    padding: 1rem 1.5rem;
+    border-left: 3px solid var(--border);
+    background: var(--surface);
   }
 
   .category-section {
