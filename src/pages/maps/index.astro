@@ -5,6 +5,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 const maps = (await getCollection('maps')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
+
+// Extract unique domains from all maps
+const allDomains = new Set<string>();
+maps.forEach(map => {
+  map.data.domains.forEach(domain => allDomains.add(domain));
+});
+const uniqueDomains = Array.from(allDomains).sort();
 ---
 
 <BaseLayout title="Maps | Sambit">
@@ -45,11 +52,11 @@ const maps = (await getCollection('maps')).sort(
         </button>
         <div class="select-dropdown" hidden>
           <button class="dropdown-item" data-value="">All Domains</button>
-          <button class="dropdown-item" data-value="cognitive-science">Cognitive Science</button>
-          <button class="dropdown-item" data-value="cognitive-architecture">Cognitive Architecture</button>
-          <button class="dropdown-item" data-value="complexity-science">Complexity Science</button>
-          <button class="dropdown-item" data-value="systems-thinking">Systems Thinking</button>
-          <button class="dropdown-item" data-value="epistemology">Epistemology</button>
+          {uniqueDomains.map(domain => (
+            <button class="dropdown-item" data-value={domain.toLowerCase().replace(/\s+/g, '-')}>
+              {domain}
+            </button>
+          ))}
         </div>
       </div>
     </div>
