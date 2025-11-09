@@ -1,0 +1,185 @@
+---
+title: "The brain as a prediction machine that minimizes surprise through hierarchical inference"
+description: "Perception, action, and cognition as continuous prediction and prediction-error correction"
+date: 2024-11-09T00:00:00Z
+framework: "Predictive Processing"
+category: "Theories of Cognition"
+thinkers: ["Karl Friston", "Andy Clark", "Jakob Hohwy", "Anil Seth"]
+maturity: "working"
+tags: ["cognitive-science", "neuroscience", "bayesian-brain", "active-inference"]
+---
+
+# Predictive Processing
+
+## The Core Idea
+
+**The brain is fundamentally a prediction machine.** All cognition - perception, action, learning - is about predicting sensory input and minimizing prediction error.
+
+You don't passively receive information. You actively predict what you'll sense, and update predictions when you're wrong.
+
+**Perception = prediction + error correction**
+
+What you experience is your brain's best guess about what's out there, constantly refined by comparing predictions to actual sensory input.
+
+## The Mechanism
+
+### Hierarchical Generative Models
+The brain has multi-level models of the world:
+
+```
+High-level (abstract): "There's a dog"
+    ↓ predicts
+Mid-level (features): "I'll see fur, four legs, tail"
+    ↓ predicts
+Low-level (sensory): "These pixel patterns"
+    ↑
+Actual sensory input
+```
+
+**Top-down:** Higher levels predict lower levels
+**Bottom-up:** Prediction errors propagate upward when predictions fail
+
+### Precision Weighting
+Not all prediction errors matter equally. The brain weights errors by their reliability (precision):
+- High precision error → update your predictions (something's wrong with your model)
+- Low precision error → ignore it (probably just noise)
+
+**Example:** In fog, visual errors have low precision - you trust your prior expectations more than sensory input.
+
+### Active Inference
+You can reduce prediction error two ways:
+1. **Update your model** (perception/learning)
+2. **Change the world** (action)
+
+Action is prediction error minimization through doing, not just thinking.
+
+**Example:** Predict "my arm will be up" → move arm up → prediction fulfilled.
+
+## Why This Matters
+
+### Unified Framework
+Perception, action, learning, attention - all the same process (prediction error minimization) at different timescales.
+
+### Explains Phenomena
+- **Perceptual inference:** Why ambiguous images flip between interpretations
+- **Attention:** Precision weighting determines what you notice
+- **Learning:** Updating generative model based on persistent errors
+- **Hallucinations:** When priors overwhelm sensory input
+- **Action:** Fulfilling proprioceptive predictions
+
+### Bayesian Brain
+Predictive processing is Bayesian inference:
+- Prior beliefs (predictions)
+- Likelihood (sensory evidence)
+- Posterior (updated belief after seeing data)
+
+Brain does probabilistic inference, not logic.
+
+## Application to Research
+
+### Perception Studies
+- Measure prediction vs. error signals in brain
+- Manipulate precision (attention, reliability)
+- Test how priors shape perception
+
+### Language Processing
+- Reading: Predict next word, measure surprise when wrong
+- Comprehension: Generate predictions about meaning, update when violated
+- Production: Predict articulatory/acoustic outcomes, execute to fulfill
+
+**Bilingualism:**
+- Do L1/L2 have different priors?
+- Code-switching as context-dependent precision weighting?
+- Error signals stronger in L2 (less precise predictions)?
+
+### Psychopathology
+- Depression: Overweighted negative priors
+- Autism: Prediction-error processing differences
+- Psychosis: Prior beliefs too strong (hallucinations) or too weak (delusions)
+
+### Computational Modeling
+- Formalize as hierarchical Bayesian inference
+- Fit models to neural/behavioral data
+- Derive predictions about learning rates, attention, perception
+
+## Connection to My Work
+
+This framework shapes:
+- **Language processing:** Prediction-based parsing, anticipatory eye movements, surprisal effects
+- **Bilingual control:** Precision-weighted competition between languages
+- **Code-switching:** Prediction failures trigger language switch?
+- **Learning:** L2 acquisition as building better generative model
+
+Examples:
+- Sentence processing: "The cat sat on the..." → predict "mat", surprised by "ceiling"
+- Translation: Generate predictions in target language, minimize error
+- Accent perception: Prior expectations shape what you hear
+- Multilingual context: Context modulates precision of language-specific predictions
+
+## Critiques and Limitations
+
+### Is Everything Prediction?
+Does predictive processing really explain all cognition, or just some aspects?
+- Maybe perception/action, but does it explain reasoning, planning, memory?
+
+### Computational Tractability
+Exact Bayesian inference is intractable. How does brain approximate it?
+- Various proposals (sampling, variational inference, heuristics)
+
+### Content of Predictions
+What determines the generative model? Where do priors come from?
+- Evolution, development, learning - but this needs explaining
+
+### Action Problem
+Is action really just prediction fulfillment? What about novel actions, exploration?
+- Active inference addresses this but critics say it's incomplete
+
+### Neural Evidence
+Is there enough direct evidence that brain implements hierarchical predictive coding?
+- Some support, but also alternative interpretations of neural data
+
+## Relation to Other Frameworks
+
+- **vs. Computationalism:** Both computational but different: symbols vs. predictions, logic vs. inference
+- **Compatible with Embodied Cognition:** Predictions include body state, action is integral
+- **vs. Extended Mind:** Predictions happen in brain (though environment provides input)
+- **Functionalism:** Predictive processing provides specific functional architecture
+- **Critical Realism:** Generative models are about unobservable reality (Real), tested against observations (Empirical)
+
+## Variants and Extensions
+
+### Free Energy Principle (Friston)
+All life minimizes variational free energy (bound on surprise). Predictive processing follows from thermodynamic imperative to resist entropy.
+
+**Very ambitious:** Explains life itself, not just cognition.
+
+### Predictive Coding
+Specific neural implementation: error units, prediction units, hierarchical message passing.
+
+### Active Inference
+Emphasizes action as prediction fulfillment. Goal-directed behavior emerges from predicting desired states.
+
+### Enactivist Predictive Processing (Kirchhoff, Kiverstein)
+Combines predictive processing with enactive cognition. Predictions shaped by action-perception loops.
+
+## Contemporary Status
+
+**Very influential currently:**
+- Unifies disparate phenomena
+- Explains neuroscience findings
+- Generates testable predictions
+- Connects to machine learning (variational autoencoders)
+
+**But also controversial:**
+- Is it too ambitious?
+- Does it really explain or just redescribe?
+- Can it handle all of cognition?
+
+## Key Sources
+
+- Clark, A. (2013). "Whatever Next? Predictive Brains, Situated Agents, and the Future of Cognitive Science"
+- Clark, A. (2016). *Surfing Uncertainty: Prediction, Action, and the Embodied Mind*
+- Friston, K. (2010). "The Free-Energy Principle: A Unified Brain Theory?"
+- Hohwy, J. (2013). *The Predictive Mind*
+- Seth, A. (2021). *Being You: A New Science of Consciousness*
+- Rao, R., & Ballard, D. (1999). "Predictive Coding in the Visual Cortex"
