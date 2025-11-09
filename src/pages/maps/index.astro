@@ -6,12 +6,12 @@ const maps = (await getCollection('maps')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 
-// Extract unique domains from all maps
-const allDomains = new Set<string>();
+// Extract unique aspects from all maps
+const allAspects = new Set<string>();
 maps.forEach(map => {
-  map.data.domains.forEach(domain => allDomains.add(domain));
+  map.data.aspects.forEach(aspect => allAspects.add(aspect));
 });
-const uniqueDomains = Array.from(allDomains).sort();
+const uniqueAspects = Array.from(allAspects).sort();
 ---
 
 <BaseLayout title="Maps | Sambit">
@@ -42,8 +42,8 @@ const uniqueDomains = Array.from(allDomains).sort();
     </div>
 
     <div class="filter-group">
-      <label class="filter-label">Domain</label>
-      <div class="select-wrapper" data-filter="domain">
+      <label class="filter-label">Aspect</label>
+      <div class="select-wrapper" data-filter="aspect">
         <button class="filter-select" type="button">
           <span class="select-value">All</span>
           <svg class="select-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -51,10 +51,10 @@ const uniqueDomains = Array.from(allDomains).sort();
           </svg>
         </button>
         <div class="select-dropdown" hidden>
-          <button class="dropdown-item" data-value="">All Domains</button>
-          {uniqueDomains.map(domain => (
-            <button class="dropdown-item" data-value={domain.toLowerCase().replace(/\s+/g, '-')}>
-              {domain}
+          <button class="dropdown-item" data-value="">All Aspects</button>
+          {uniqueAspects.map(aspect => (
+            <button class="dropdown-item" data-value={aspect}>
+              {aspect.charAt(0).toUpperCase() + aspect.slice(1)}
             </button>
           ))}
         </div>
@@ -74,7 +74,7 @@ const uniqueDomains = Array.from(allDomains).sort();
       const primaryType = map.data.visualType?.[0] || 'diagram';
       const mapType = map.data.mapType;
       return (
-        <article class="gallery-item" data-map-type={mapType} data-domains={map.data.domains.join(',')}>
+        <article class="gallery-item" data-map-type={mapType} data-aspects={map.data.aspects.join(',')}>
           <a href={`/maps/${map.id}`} class="gallery-link">
             <div class={`visual-preview ${primaryType}`}>
               <div class="preview-pattern"></div>
@@ -84,12 +84,12 @@ const uniqueDomains = Array.from(allDomains).sort();
             </div>
 
             <div class="gallery-content">
-              <div class="domains-row">
-                {map.data.domains.map((domain) => (
+              <div class="aspects-row">
+                {map.data.aspects.map((aspect) => (
                   <span
-                    class="domain-badge"
-                    data-domain={domain.toLowerCase().replace(/\s+/g, '-')}>
-                    {domain}
+                    class="aspect-badge"
+                    data-aspect={aspect}>
+                    {aspect}
                   </span>
                 ))}
               </div>
@@ -130,7 +130,7 @@ const uniqueDomains = Array.from(allDomains).sort();
   // Notion-style filter system
   let activeFilters = {
     mapType: '',
-    domain: ''
+    aspect: ''
   };
 
   // Initialize dropdowns
@@ -190,7 +190,7 @@ const uniqueDomains = Array.from(allDomains).sort();
   // Clear filters button
   const clearButton = document.querySelector('.clear-filters');
   clearButton?.addEventListener('click', () => {
-    activeFilters = { mapType: '', domain: '' };
+    activeFilters = { mapType: '', aspect: '' };
 
     // Reset all select buttons
     document.querySelectorAll('.select-value').forEach(span => {
@@ -202,11 +202,11 @@ const uniqueDomains = Array.from(allDomains).sort();
 
   function applyFilters() {
     const items = document.querySelectorAll('.gallery-item');
-    let hasActiveFilters = activeFilters.mapType || activeFilters.domain;
+    let hasActiveFilters = activeFilters.mapType || activeFilters.aspect;
 
     items.forEach(item => {
       const mapType = item.getAttribute('data-map-type');
-      const domains = item.getAttribute('data-domains')?.split(',') || [];
+      const aspects = item.getAttribute('data-aspects')?.split(',') || [];
 
       let show = true;
 
@@ -214,7 +214,7 @@ const uniqueDomains = Array.from(allDomains).sort();
         show = false;
       }
 
-      if (activeFilters.domain && !domains.includes(activeFilters.domain)) {
+      if (activeFilters.aspect && !aspects.includes(activeFilters.aspect)) {
         show = false;
       }
 
@@ -509,7 +509,7 @@ const uniqueDomains = Array.from(allDomains).sort();
     padding: 1.5rem;
   }
 
-  .domains-row {
+  .aspects-row {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -517,7 +517,7 @@ const uniqueDomains = Array.from(allDomains).sort();
   }
 
   /* Swiss Design: High Contrast Minimal with Semantic Color */
-  .domain-badge {
+  .aspect-badge {
     font-size: 0.6875rem;
     padding: 0.25rem 0.75rem;
     background: rgba(0, 0, 0, 0.05);
@@ -530,84 +530,115 @@ const uniqueDomains = Array.from(allDomains).sort();
     display: inline-block;
   }
 
-  /* Cognitive/Mind - Blue */
-  .domain-badge[data-domain*="cognitive"],
-  .domain-badge[data-domain*="mind"] {
+  /* Cognition - Blue */
+  .aspect-badge[data-aspect="cognition"] {
     background: rgba(59, 130, 246, 0.08);
     border-color: rgba(59, 130, 246, 0.25);
     color: #1e40af;
   }
 
-  /* Complexity/Systems - Purple */
-  .domain-badge[data-domain*="complexity"],
-  .domain-badge[data-domain*="systems"] {
-    background: rgba(139, 92, 246, 0.08);
-    border-color: rgba(139, 92, 246, 0.25);
-    color: #6b21a8;
+  /* Computation - Cyan */
+  .aspect-badge[data-aspect="computation"] {
+    background: rgba(6, 182, 212, 0.08);
+    border-color: rgba(6, 182, 212, 0.25);
+    color: #0e7490;
   }
 
-  /* Epistemology/Philosophy - Rose */
-  .domain-badge[data-domain*="epistemology"],
-  .domain-badge[data-domain*="philosophy"] {
-    background: rgba(236, 72, 153, 0.08);
-    border-color: rgba(236, 72, 153, 0.25);
-    color: #9f1239;
-  }
-
-  /* Architecture/Design - Green */
-  .domain-badge[data-domain*="architecture"],
-  .domain-badge[data-domain*="design"] {
+  /* Code - Green */
+  .aspect-badge[data-aspect="code"] {
     background: rgba(34, 197, 94, 0.08);
     border-color: rgba(34, 197, 94, 0.25);
     color: #15803d;
   }
 
-  /* Method/Methodology - Amber */
-  .domain-badge[data-domain*="method"] {
+  /* Culture - Pink */
+  .aspect-badge[data-aspect="culture"] {
+    background: rgba(236, 72, 153, 0.08);
+    border-color: rgba(236, 72, 153, 0.25);
+    color: #9f1239;
+  }
+
+  /* Complexity - Purple */
+  .aspect-badge[data-aspect="complexity"] {
+    background: rgba(139, 92, 246, 0.08);
+    border-color: rgba(139, 92, 246, 0.25);
+    color: #6b21a8;
+  }
+
+  /* Constraint - Amber */
+  .aspect-badge[data-aspect="constraint"] {
     background: rgba(245, 158, 11, 0.08);
     border-color: rgba(245, 158, 11, 0.25);
     color: #92400e;
   }
 
-  [data-theme="dark"] .domain-badge {
+  /* Causation - Red */
+  .aspect-badge[data-aspect="causation"] {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.25);
+    color: #991b1b;
+  }
+
+  /* Coordination - Teal */
+  .aspect-badge[data-aspect="coordination"] {
+    background: rgba(20, 184, 166, 0.08);
+    border-color: rgba(20, 184, 166, 0.25);
+    color: #115e59;
+  }
+
+  [data-theme="dark"] .aspect-badge {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.2);
     color: var(--text-secondary);
   }
 
   /* Dark mode semantic colors - desaturated */
-  [data-theme="dark"] .domain-badge[data-domain*="cognitive"],
-  [data-theme="dark"] .domain-badge[data-domain*="mind"] {
+  [data-theme="dark"] .aspect-badge[data-aspect="cognition"] {
     background: rgba(59, 130, 246, 0.1);
     border-color: rgba(59, 130, 246, 0.25);
     color: #93c5fd;
   }
 
-  [data-theme="dark"] .domain-badge[data-domain*="complexity"],
-  [data-theme="dark"] .domain-badge[data-domain*="systems"] {
-    background: rgba(139, 92, 246, 0.1);
-    border-color: rgba(139, 92, 246, 0.25);
-    color: #c4b5fd;
+  [data-theme="dark"] .aspect-badge[data-aspect="computation"] {
+    background: rgba(6, 182, 212, 0.1);
+    border-color: rgba(6, 182, 212, 0.25);
+    color: #67e8f9;
   }
 
-  [data-theme="dark"] .domain-badge[data-domain*="epistemology"],
-  [data-theme="dark"] .domain-badge[data-domain*="philosophy"] {
-    background: rgba(236, 72, 153, 0.1);
-    border-color: rgba(236, 72, 153, 0.25);
-    color: #f9a8d4;
-  }
-
-  [data-theme="dark"] .domain-badge[data-domain*="architecture"],
-  [data-theme="dark"] .domain-badge[data-domain*="design"] {
+  [data-theme="dark"] .aspect-badge[data-aspect="code"] {
     background: rgba(34, 197, 94, 0.1);
     border-color: rgba(34, 197, 94, 0.25);
     color: #86efac;
   }
 
-  [data-theme="dark"] .domain-badge[data-domain*="method"] {
+  [data-theme="dark"] .aspect-badge[data-aspect="culture"] {
+    background: rgba(236, 72, 153, 0.1);
+    border-color: rgba(236, 72, 153, 0.25);
+    color: #f9a8d4;
+  }
+
+  [data-theme="dark"] .aspect-badge[data-aspect="complexity"] {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.25);
+    color: #c4b5fd;
+  }
+
+  [data-theme="dark"] .aspect-badge[data-aspect="constraint"] {
     background: rgba(245, 158, 11, 0.1);
     border-color: rgba(245, 158, 11, 0.25);
     color: #fcd34d;
+  }
+
+  [data-theme="dark"] .aspect-badge[data-aspect="causation"] {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+  }
+
+  [data-theme="dark"] .aspect-badge[data-aspect="coordination"] {
+    background: rgba(20, 184, 166, 0.1);
+    border-color: rgba(20, 184, 166, 0.25);
+    color: #5eead4;
   }
 
   .gallery-item h2 {

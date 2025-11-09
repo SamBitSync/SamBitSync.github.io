@@ -9,12 +9,11 @@ const mapsCollection = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     mapType: z.enum(['moc', 'synthesis', 'literature', 'conceptual']),
-    domains: z.array(z.string()),
+    aspects: z.array(z.enum(['cognition', 'computation', 'code', 'culture', 'complexity', 'constraint', 'causation', 'coordination'])),
     patterns: z.array(z.string()).optional(),
     connections: z.array(z.string()).optional(),
     diagram: z.string().optional(),
     visualType: z.array(z.enum(['diagram', 'animation', 'data-viz', 'interactive'])).optional(),
-    tags: z.array(z.string()).optional(),
   }),
 });
 
