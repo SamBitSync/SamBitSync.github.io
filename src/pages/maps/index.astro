@@ -31,7 +31,7 @@ const maps = (await getCollection('maps')).sort(
             <div class="gallery-content">
               <div class="domains-row">
                 {map.data.domains.map((domain) => (
-                  <span class="domain-badge">{domain}</span>
+                  <span class="domain-badge" data-domain={domain.toLowerCase().replace(/\s+/g, '-')}>{domain}</span>
                 ))}
               </div>
 
@@ -218,13 +218,13 @@ const maps = (await getCollection('maps')).sort(
     margin-bottom: 1rem;
   }
 
-  /* Swiss Design: High Contrast Minimal */
+  /* Swiss Design: High Contrast Minimal with Semantic Color */
   .domain-badge {
     font-size: 0.6875rem;
     padding: 0.25rem 0.75rem;
-    background: transparent;
+    background: rgba(0, 0, 0, 0.05);
     color: var(--text-primary);
-    border: 1.5px solid var(--border);
+    border: 1.5px solid rgba(0, 0, 0, 0.15);
     border-radius: 0.25rem;
     font-weight: 500;
     text-transform: uppercase;
@@ -232,19 +232,92 @@ const maps = (await getCollection('maps')).sort(
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  /* Cognitive/Mind - Blue */
+  .domain-badge[data-domain*="cognitive"],
+  .domain-badge[data-domain*="mind"] {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.25);
+    color: #1e40af;
+  }
+
+  /* Complexity/Systems - Purple */
+  .domain-badge[data-domain*="complexity"],
+  .domain-badge[data-domain*="systems"] {
+    background: rgba(139, 92, 246, 0.08);
+    border-color: rgba(139, 92, 246, 0.25);
+    color: #6b21a8;
+  }
+
+  /* Epistemology/Philosophy - Rose */
+  .domain-badge[data-domain*="epistemology"],
+  .domain-badge[data-domain*="philosophy"] {
+    background: rgba(236, 72, 153, 0.08);
+    border-color: rgba(236, 72, 153, 0.25);
+    color: #9f1239;
+  }
+
+  /* Architecture/Design - Green */
+  .domain-badge[data-domain*="architecture"],
+  .domain-badge[data-domain*="design"] {
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(34, 197, 94, 0.25);
+    color: #15803d;
+  }
+
+  /* Method/Methodology - Amber */
+  .domain-badge[data-domain*="method"] {
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.25);
+    color: #92400e;
+  }
+
   .domain-badge:hover {
-    border-color: var(--text-primary);
-    background: var(--surface);
+    filter: brightness(0.95);
   }
 
   [data-theme="dark"] .domain-badge {
-    border-color: rgba(255, 255, 255, 0.25);
-    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--text-secondary);
+  }
+
+  /* Dark mode semantic colors - desaturated */
+  [data-theme="dark"] .domain-badge[data-domain*="cognitive"],
+  [data-theme="dark"] .domain-badge[data-domain*="mind"] {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.25);
+    color: #93c5fd;
+  }
+
+  [data-theme="dark"] .domain-badge[data-domain*="complexity"],
+  [data-theme="dark"] .domain-badge[data-domain*="systems"] {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.25);
+    color: #c4b5fd;
+  }
+
+  [data-theme="dark"] .domain-badge[data-domain*="epistemology"],
+  [data-theme="dark"] .domain-badge[data-domain*="philosophy"] {
+    background: rgba(236, 72, 153, 0.1);
+    border-color: rgba(236, 72, 153, 0.25);
+    color: #f9a8d4;
+  }
+
+  [data-theme="dark"] .domain-badge[data-domain*="architecture"],
+  [data-theme="dark"] .domain-badge[data-domain*="design"] {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.25);
+    color: #86efac;
+  }
+
+  [data-theme="dark"] .domain-badge[data-domain*="method"] {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.25);
+    color: #fcd34d;
   }
 
   [data-theme="dark"] .domain-badge:hover {
-    border-color: rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.03);
+    filter: brightness(1.1);
   }
 
   .gallery-item h2 {
