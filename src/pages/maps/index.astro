@@ -12,6 +12,13 @@ maps.forEach(map => {
   map.data.aspects.forEach(aspect => allAspects.add(aspect));
 });
 const uniqueAspects = Array.from(allAspects).sort();
+
+// Extract unique patterns from all maps
+const allPatterns = new Set<string>();
+maps.forEach(map => {
+  map.data.patterns?.forEach(pattern => allPatterns.add(pattern));
+});
+const uniquePatterns = Array.from(allPatterns).sort();
 ---
 
 <BaseLayout title="Maps | Sambit">
@@ -24,7 +31,7 @@ const uniqueAspects = Array.from(allAspects).sort();
   <div class="filters-bar">
     <div class="filter-group">
       <label class="filter-label">Type</label>
-      <div class="select-wrapper" data-filter="mapType">
+      <div class="select-wrapper" data-filter="mapType" data-multi="false">
         <button class="filter-select" type="button">
           <span class="select-value">All</span>
           <svg class="select-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -42,24 +49,45 @@ const uniqueAspects = Array.from(allAspects).sort();
     </div>
 
     <div class="filter-group">
-      <label class="filter-label">Aspect</label>
-      <div class="select-wrapper" data-filter="aspect">
+      <label class="filter-label">Aspects</label>
+      <div class="select-wrapper" data-filter="aspects" data-multi="true">
         <button class="filter-select" type="button">
-          <span class="select-value">All</span>
+          <span class="select-value">Select...</span>
           <svg class="select-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
         <div class="select-dropdown" hidden>
-          <button class="dropdown-item" data-value="">All Aspects</button>
           {uniqueAspects.map(aspect => (
-            <button class="dropdown-item" data-value={aspect}>
+            <button class="dropdown-item multiselect-item" data-value={aspect}>
               {aspect.charAt(0).toUpperCase() + aspect.slice(1)}
             </button>
           ))}
         </div>
       </div>
     </div>
+
+    <div class="filter-group">
+      <label class="filter-label">Patterns</label>
+      <div class="select-wrapper" data-filter="patterns" data-multi="true">
+        <button class="filter-select" type="button">
+          <span class="select-value">Select...</span>
+          <svg class="select-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="select-dropdown" hidden>
+          {uniquePatterns.map(pattern => (
+            <button class="dropdown-item multiselect-item" data-value={pattern}>
+              {pattern}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Active filter chips -->
+    <div class="active-filters" data-active-filters></div>
 
     <button class="clear-filters" type="button" hidden>
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -74,7 +102,7 @@ const uniqueAspects = Array.from(allAspects).sort();
       const primaryType = map.data.visualType?.[0] || 'diagram';
       const mapType = map.data.mapType;
       return (
-        <article class="gallery-item" data-map-type={mapType} data-aspects={map.data.aspects.join(',')}>
+        <article class="gallery-item" data-map-type={mapType} data-aspects={map.data.aspects.join(',')} data-patterns={map.data.patterns?.join(',') || ''}>
           <a href={`/maps/${map.id}`} class="gallery-link">
             <div class={`visual-preview ${primaryType}`}>
               <div class="preview-pattern"></div>
@@ -127,17 +155,22 @@ const uniqueAspects = Array.from(allAspects).sort();
 </BaseLayout>
 
 <script>
-  // Notion-style filter system
+  // Notion-style multi-select filter system
   let activeFilters = {
     mapType: '',
-    aspect: ''
+    aspects: [],
+    patterns: []
   };
+
+  const activeFiltersContainer = document.querySelector('[data-active-filters]');
+  const clearButton = document.querySelector('.clear-filters');
 
   // Initialize dropdowns
   document.querySelectorAll('.select-wrapper').forEach(wrapper => {
     const selectButton = wrapper.querySelector('.filter-select');
     const dropdown = wrapper.querySelector('.select-dropdown');
     const filterType = wrapper.getAttribute('data-filter');
+    const isMulti = wrapper.getAttribute('data-multi') === 'true';
 
     // Toggle dropdown
     selectButton?.addEventListener('click', (e) => {
@@ -160,24 +193,35 @@ const uniqueAspects = Array.from(allAspects).sort();
       item.addEventListener('click', (e) => {
         e.stopPropagation();
         const value = item.getAttribute('data-value') || '';
-        const label = item.textContent?.trim() || 'All';
+        const label = item.textContent?.trim() || '';
 
-        // Update filter state
-        if (filterType) {
+        if (isMulti) {
+          // Multi-select behavior
+          if (value) {
+            const index = activeFilters[filterType].indexOf(value);
+            if (index > -1) {
+              activeFilters[filterType].splice(index, 1);
+              item.classList.remove('selected');
+            } else {
+              activeFilters[filterType].push(value);
+              item.classList.add('selected');
+            }
+            updateFilterDisplay();
+            applyFilters();
+          }
+        } else {
+          // Single-select behavior
           activeFilters[filterType] = value;
+
+          const valueSpan = selectButton?.querySelector('.select-value');
+          if (valueSpan) {
+            valueSpan.textContent = value ? label : 'All';
+          }
+
+          dropdown.setAttribute('hidden', '');
+          updateFilterDisplay();
+          applyFilters();
         }
-
-        // Update button text
-        const valueSpan = selectButton?.querySelector('.select-value');
-        if (valueSpan) {
-          valueSpan.textContent = value ? label : 'All';
-        }
-
-        // Close dropdown
-        dropdown.setAttribute('hidden', '');
-
-        // Apply filters
-        applyFilters();
       });
     });
   });
@@ -187,35 +231,135 @@ const uniqueAspects = Array.from(allAspects).sort();
     document.querySelectorAll('.select-dropdown').forEach(d => d.setAttribute('hidden', ''));
   });
 
+  // Make badges clickable to toggle filters
+  document.addEventListener('click', (e) => {
+    const aspectBadge = e.target.closest('.aspect-badge');
+    const patternTag = e.target.closest('.pattern-tag');
+
+    if (aspectBadge) {
+      e.preventDefault();
+      e.stopPropagation();
+      const aspect = aspectBadge.getAttribute('data-aspect');
+      toggleFilter('aspects', aspect);
+    } else if (patternTag) {
+      e.preventDefault();
+      e.stopPropagation();
+      const pattern = patternTag.textContent?.trim();
+      if (pattern) toggleFilter('patterns', pattern);
+    }
+  });
+
+  function toggleFilter(filterType, value) {
+    const index = activeFilters[filterType].indexOf(value);
+    if (index > -1) {
+      activeFilters[filterType].splice(index, 1);
+    } else {
+      activeFilters[filterType].push(value);
+    }
+
+    // Update visual state of dropdown items
+    document.querySelectorAll(`[data-filter="${filterType}"] .dropdown-item[data-value="${value}"]`).forEach(item => {
+      item.classList.toggle('selected');
+    });
+
+    updateFilterDisplay();
+    applyFilters();
+  }
+
+  function updateFilterDisplay() {
+    if (!activeFiltersContainer) return;
+
+    // Clear existing chips
+    activeFiltersContainer.innerHTML = '';
+
+    // Add chips for selected aspects
+    activeFilters.aspects.forEach(aspect => {
+      const chip = createFilterChip(aspect, 'aspects', aspect.charAt(0).toUpperCase() + aspect.slice(1));
+      activeFiltersContainer.appendChild(chip);
+    });
+
+    // Add chips for selected patterns
+    activeFilters.patterns.forEach(pattern => {
+      const chip = createFilterChip(pattern, 'patterns', pattern);
+      activeFiltersContainer.appendChild(chip);
+    });
+
+    // Show/hide clear button
+    const hasActiveFilters = activeFilters.mapType ||
+                           activeFilters.aspects.length > 0 ||
+                           activeFilters.patterns.length > 0;
+
+    if (hasActiveFilters) {
+      clearButton?.removeAttribute('hidden');
+    } else {
+      clearButton?.setAttribute('hidden', '');
+    }
+  }
+
+  function createFilterChip(value, filterType, label) {
+    const chip = document.createElement('button');
+    chip.className = 'filter-chip';
+    chip.innerHTML = `
+      ${label}
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M3 3L9 9M9 3L3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    `;
+    chip.addEventListener('click', () => {
+      toggleFilter(filterType, value);
+    });
+    return chip;
+  }
+
   // Clear filters button
-  const clearButton = document.querySelector('.clear-filters');
   clearButton?.addEventListener('click', () => {
-    activeFilters = { mapType: '', aspect: '' };
+    activeFilters = { mapType: '', aspects: [], patterns: [] };
 
     // Reset all select buttons
     document.querySelectorAll('.select-value').forEach(span => {
-      span.textContent = 'All';
+      const wrapper = span.closest('.select-wrapper');
+      const isMulti = wrapper?.getAttribute('data-multi') === 'true';
+      span.textContent = isMulti ? 'Select...' : 'All';
     });
 
+    // Remove selected class from all items
+    document.querySelectorAll('.dropdown-item.selected').forEach(item => {
+      item.classList.remove('selected');
+    });
+
+    updateFilterDisplay();
     applyFilters();
   });
 
   function applyFilters() {
     const items = document.querySelectorAll('.gallery-item');
-    let hasActiveFilters = activeFilters.mapType || activeFilters.aspect;
 
     items.forEach(item => {
       const mapType = item.getAttribute('data-map-type');
-      const aspects = item.getAttribute('data-aspects')?.split(',') || [];
+      const aspects = item.getAttribute('data-aspects')?.split(',').filter(Boolean) || [];
+      const patterns = item.getAttribute('data-patterns')?.split(',').filter(Boolean) || [];
 
       let show = true;
 
+      // Filter by mapType (single select)
       if (activeFilters.mapType && mapType !== activeFilters.mapType) {
         show = false;
       }
 
-      if (activeFilters.aspect && !aspects.includes(activeFilters.aspect)) {
-        show = false;
+      // Filter by aspects (multi-select - item must have ALL selected aspects)
+      if (activeFilters.aspects.length > 0) {
+        const hasAllAspects = activeFilters.aspects.every(aspect => aspects.includes(aspect));
+        if (!hasAllAspects) {
+          show = false;
+        }
+      }
+
+      // Filter by patterns (multi-select - item must have ALL selected patterns)
+      if (activeFilters.patterns.length > 0) {
+        const hasAllPatterns = activeFilters.patterns.every(pattern => patterns.includes(pattern));
+        if (!hasAllPatterns) {
+          show = false;
+        }
       }
 
       if (show) {
@@ -226,13 +370,6 @@ const uniqueAspects = Array.from(allAspects).sort();
         item.style.opacity = '0';
       }
     });
-
-    // Show/hide clear button
-    if (hasActiveFilters) {
-      clearButton?.removeAttribute('hidden');
-    } else {
-      clearButton?.setAttribute('hidden', '');
-    }
   }
 </script>
 
@@ -366,6 +503,70 @@ const uniqueAspects = Array.from(allAspects).sort();
   .clear-filters svg {
     width: 14px;
     height: 14px;
+  }
+
+  /* Active filter chips */
+  .active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .filter-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.8125rem;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: 500;
+  }
+
+  .filter-chip:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+  }
+
+  .filter-chip svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* Multi-select dropdown items */
+  .multiselect-item.selected {
+    background: var(--accent);
+    color: white;
+  }
+
+  .multiselect-item.selected:hover {
+    background: var(--accent-hover);
+  }
+
+  /* Make badges clickable */
+  .aspect-badge {
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .aspect-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .pattern-tag {
+    cursor: pointer;
+  }
+
+  .pattern-tag:hover {
+    background: var(--surface);
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
   .maps-gallery {
