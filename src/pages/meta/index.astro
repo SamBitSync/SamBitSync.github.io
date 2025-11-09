@@ -50,7 +50,7 @@ const categories = Object.keys(metaByCategory).sort();
       </dl>
 
       {category === "Epistemology & Ontology" && (
-        <aside class="pluralism-note">
+        <aside class="pluralism-note" data-reveal="hidden">
           Some frameworks below may contradict. Given reality's stratification and that models leave residuals, theoretical pluralism seems necessary.
         </aside>
       )}
@@ -63,6 +63,24 @@ const categories = Object.keys(metaByCategory).sort();
     </div>
   )}
 </BaseLayout>
+
+<script>
+  // Scroll reveal for pluralism note
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.5,
+    rootMargin: '0px'
+  });
+
+  const note = document.querySelector('.pluralism-note[data-reveal="hidden"]');
+  if (note) observer.observe(note);
+</script>
 
 <style>
   .page-header {
@@ -88,6 +106,19 @@ const categories = Object.keys(metaByCategory).sort();
     border-left: 3px solid var(--text-primary);
     border-radius: 0;
     background: transparent;
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Scroll reveal states */
+  .pluralism-note[data-reveal="hidden"] {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+
+  .pluralism-note.revealed {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   [data-theme="dark"] .pluralism-note {
