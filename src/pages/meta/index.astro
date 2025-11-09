@@ -29,10 +29,6 @@ const categories = Object.keys(metaByCategory).sort();
     <p class="lead">Meta frameworks that shape my thinking: epistemology, philosophy of science, philosophy of mind, methodology, and heuristics</p>
   </header>
 
-  <aside class="pluralism-note">
-    Some frameworks below may appear to contradict. But given reality's stratification and complexity (<span class="framework-ref">Critical Realism</span>) and that every model leaves residuals (<span class="framework-ref">Residual Reality</span>), different frameworks are needed to illuminate different facets. Pluralism over unity.
-  </aside>
-
   {categories.map((category, idx) => (
     <section class="category-section">
       {idx > 0 && <div class="category-divider"></div>}
@@ -52,6 +48,12 @@ const categories = Object.keys(metaByCategory).sort();
           </div>
         ))}
       </dl>
+
+      {category === "Epistemology & Ontology" && (
+        <aside class="pluralism-note">
+          Some frameworks below may contradict. Given reality's stratification and that models leave residuals, theoretical pluralism seems necessary.
+        </aside>
+      )}
     </section>
   ))}
 
@@ -78,17 +80,10 @@ const categories = Object.keys(metaByCategory).sort();
     line-height: 1.6;
     color: var(--text-secondary);
     font-style: italic;
-    margin: -1rem 0 2.5rem 0;
+    margin: 2rem 0 0 0;
     padding: 1rem 1.5rem;
     border-left: 3px solid var(--border);
     background: var(--surface);
-  }
-
-  .framework-ref {
-    font-family: var(--font-mono);
-    font-style: normal;
-    font-size: 0.875rem;
-    color: var(--text-primary);
   }
 
   .category-section {
