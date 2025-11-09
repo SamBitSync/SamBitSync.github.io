@@ -199,7 +199,10 @@ const maps = (await getCollection('maps')).sort(
   }
 
   [data-theme="dark"] .type-badge {
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px);
   }
 
   /* Gallery Content */
@@ -223,6 +226,12 @@ const maps = (await getCollection('maps')).sort(
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+
+  [data-theme="dark"] .domain-badge {
+    background: rgba(96, 165, 250, 0.15);
+    color: #93c5fd;
+    border: 1px solid rgba(96, 165, 250, 0.3);
   }
 
   .gallery-item h2 {
@@ -257,6 +266,12 @@ const maps = (await getCollection('maps')).sort(
     color: var(--text-secondary);
     border-radius: 0.25rem;
     font-style: italic;
+  }
+
+  [data-theme="dark"] .pattern-tag {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #a3a3a3;
   }
 
   .pattern-more {
