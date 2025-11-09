@@ -95,26 +95,26 @@ const categories = Object.keys(metaByCategory).sort();
   .index-list {
     display: flex;
     flex-direction: column;
-    gap: 1.75rem;
+    gap: 1.25rem;
     margin: 0;
   }
 
   .index-entry {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding-bottom: 1.75rem;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 2rem;
+    align-items: baseline;
+    padding: 0.625rem 0;
     border-bottom: 1px solid var(--border);
-    transition: padding-left 0.15s ease;
+    transition: background-color 0.15s ease;
   }
 
   .index-entry:last-child {
     border-bottom: none;
-    padding-bottom: 0;
   }
 
   .index-entry:hover {
-    padding-left: 0.5rem;
+    background-color: var(--surface);
   }
 
   .framework-term {
@@ -122,6 +122,7 @@ const categories = Object.keys(metaByCategory).sort();
     font-size: 0.75rem;
     font-weight: 600;
     margin: 0;
+    line-height: 1.4;
   }
 
   .framework-term a {
@@ -137,7 +138,7 @@ const categories = Object.keys(metaByCategory).sort();
 
   .framework-def {
     margin: 0;
-    line-height: 1.6;
+    line-height: 1.5;
   }
 
   .framework-def a {
@@ -166,12 +167,9 @@ const categories = Object.keys(metaByCategory).sort();
       margin-bottom: 2rem;
     }
 
-    .index-list {
-      gap: 1.5rem;
-    }
-
     .index-entry {
-      padding-bottom: 1.5rem;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
     }
   }
 </style>
