@@ -76,16 +76,17 @@ const categories = Object.keys(metaByCategory).sort();
   }
 
   .pluralism-note {
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--text-primary);
     font-style: italic;
-    margin: 2rem 0 0 0;
-    padding: 1.25rem 1.75rem;
-    border-left: 4px solid var(--border);
-    border-radius: 4px;
-    background: var(--surface);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    margin: 2.5rem 0 0 0;
+    padding: 1.5rem 2rem;
+    border: 1px solid var(--border);
+    border-left: 4px solid color-mix(in srgb, var(--accent) 60%, var(--border));
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--surface) 80%, var(--accent) 3%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   }
 
   .category-section {
