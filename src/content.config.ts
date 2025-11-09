@@ -8,6 +8,7 @@ const mapsCollection = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
+    mapType: z.enum(['moc', 'synthesis', 'literature', 'conceptual']),
     domains: z.array(z.string()),
     patterns: z.array(z.string()).optional(),
     connections: z.array(z.string()).optional(),
