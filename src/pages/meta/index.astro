@@ -2,9 +2,25 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const meta = (await getCollection('meta')).sort(
-  (a, b) => a.data.title.localeCompare(b.data.title)
-);
+const allMeta = await getCollection('meta');
+
+// Group by category
+const metaByCategory = allMeta.reduce((acc, entry) => {
+  const category = entry.data.category;
+  if (!acc[category]) acc[category] = [];
+  acc[category].push(entry);
+  return acc;
+}, {} as Record<string, typeof allMeta>);
+
+// Sort entries within each category alphabetically by framework name
+Object.keys(metaByCategory).forEach(category => {
+  metaByCategory[category].sort((a, b) =>
+    a.data.framework.localeCompare(b.data.framework)
+  );
+});
+
+// Get sorted category names
+const categories = Object.keys(metaByCategory).sort();
 ---
 
 <BaseLayout title="Meta | Sambit">
@@ -13,22 +29,29 @@ const meta = (await getCollection('meta')).sort(
     <p class="lead">Epistemological frameworks, philosophy of science, and methodological foundations</p>
   </header>
 
-  <dl class="index-list">
-    {meta.map((entry) => (
-      <div class="index-entry">
-        <dt class="framework-term">
-          <a href={`/meta/${entry.id}`}>{entry.data.framework}</a>
-        </dt>
-        <dd class="framework-def">
-          <a href={`/meta/${entry.id}`}>
-            <span class="def-text">{entry.data.title}</span>
-          </a>
-        </dd>
-      </div>
-    ))}
-  </dl>
+  {categories.map((category, idx) => (
+    <section class="category-section">
+      {idx > 0 && <div class="category-divider"></div>}
+      <h2 class="category-heading">{category}</h2>
 
-  {meta.length === 0 && (
+      <dl class="index-list">
+        {metaByCategory[category].map((entry) => (
+          <div class="index-entry">
+            <dt class="framework-term">
+              <a href={`/meta/${entry.id}`}>{entry.data.framework}</a>
+            </dt>
+            <dd class="framework-def">
+              <a href={`/meta/${entry.id}`}>
+                <span class="def-text">{entry.data.title}</span>
+              </a>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  ))}
+
+  {categories.length === 0 && (
     <div class="empty-state">
       <p>No framework entries yet. Check back soon.</p>
     </div>
@@ -44,6 +67,29 @@ const meta = (await getCollection('meta')).sort(
     font-size: 1.125rem;
     color: var(--text-secondary);
     margin-top: 0.5rem;
+  }
+
+  .category-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .category-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .category-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 3rem 0 2rem 0;
+  }
+
+  .category-heading {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem 0;
   }
 
   .index-list {

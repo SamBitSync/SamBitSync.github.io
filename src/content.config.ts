@@ -25,6 +25,7 @@ const metaCollection = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     framework: z.string(),
+    category: z.string(),
     thinkers: z.array(z.string()).optional(),
     relatedMaps: z.array(z.string()).optional(),
     maturity: z.enum(['draft', 'working', 'established']),
