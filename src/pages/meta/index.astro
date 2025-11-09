@@ -13,27 +13,23 @@ const meta = (await getCollection('meta')).sort(
     <p class="lead">Epistemological frameworks, philosophy of science, and methodological foundations</p>
   </header>
 
-  <div class="reference-list">
+  <dl class="index-list">
     {meta.map((entry) => (
-      <article class="reference-entry">
-        <a href={`/meta/${entry.id}`} class="entry-link">
-          <div class="entry-header">
-            <h2 class="framework-name">{entry.data.framework}</h2>
+      <div class="index-entry">
+        <dt class="framework-term">
+          <a href={`/meta/${entry.id}`}>{entry.data.framework}</a>
+        </dt>
+        <dd class="framework-def">
+          <a href={`/meta/${entry.id}`}>
+            <span class="def-text">{entry.data.title}</span>
             {entry.data.thinkers && entry.data.thinkers.length > 0 && (
-              <p class="thinkers">
-                {entry.data.thinkers.join(' · ')}
-              </p>
+              <span class="thinkers">— {entry.data.thinkers.join(', ')}</span>
             )}
-          </div>
-
-          <div class="entry-content">
-            <h3 class="entry-title">{entry.data.title}</h3>
-            <p class="entry-description">{entry.data.description}</p>
-          </div>
-        </a>
-      </article>
+          </a>
+        </dd>
+      </div>
     ))}
-  </div>
+  </dl>
 
   {meta.length === 0 && (
     <div class="empty-state">
@@ -44,7 +40,7 @@ const meta = (await getCollection('meta')).sort(
 
 <style>
   .page-header {
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
   }
 
   .lead {
@@ -53,77 +49,74 @@ const meta = (await getCollection('meta')).sort(
     margin-top: 0.5rem;
   }
 
-  .reference-list {
+  .index-list {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 1.25rem;
+    margin: 0;
   }
 
-  .reference-entry {
+  .index-entry {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.5rem;
+    align-items: baseline;
+    padding: 0.625rem 0;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 2rem;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color 0.15s ease;
   }
 
-  .reference-entry:last-child {
+  .index-entry:last-child {
     border-bottom: none;
-    padding-bottom: 0;
   }
 
-  .reference-entry:hover {
-    padding-left: 1rem;
+  .index-entry:hover {
+    background-color: var(--surface);
   }
 
-  .entry-link {
+  .framework-term {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0;
+    min-width: 180px;
+  }
+
+  .framework-term a {
+    text-decoration: none;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .framework-term a:hover {
+    text-decoration: underline;
+  }
+
+  .framework-def {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .framework-def a {
     text-decoration: none;
     color: inherit;
-    display: block;
   }
 
-  .entry-header {
-    margin-bottom: 0.75rem;
-  }
-
-  .framework-name {
-    font-family: var(--font-mono);
+  .def-text {
+    color: var(--text-primary);
     font-size: 0.9375rem;
-    font-weight: 600;
+  }
+
+  .framework-def a:hover .def-text {
     color: var(--accent);
-    margin: 0 0 0.375rem 0;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
   }
 
   .thinkers {
-    font-size: 0.8125rem;
     color: var(--text-tertiary);
-    margin: 0;
+    font-size: 0.8125rem;
     font-style: italic;
-    letter-spacing: 0.01em;
-  }
-
-  .entry-content {
-    margin-top: 0.5rem;
-  }
-
-  .entry-title {
-    font-size: 1.375rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0 0 0.625rem 0;
-    line-height: 1.3;
-    font-family: var(--font-serif);
-  }
-
-  .entry-link:hover .entry-title {
-    color: var(--accent);
-  }
-
-  .entry-description {
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin: 0;
-    font-size: 0.9375rem;
+    margin-left: 0.5rem;
   }
 
   .empty-state {
@@ -137,16 +130,13 @@ const meta = (await getCollection('meta')).sort(
       margin-bottom: 2rem;
     }
 
-    .reference-list {
-      gap: 2rem;
+    .index-entry {
+      grid-template-columns: 1fr;
+      gap: 0.375rem;
     }
 
-    .reference-entry {
-      padding-bottom: 1.5rem;
-    }
-
-    .entry-title {
-      font-size: 1.25rem;
+    .framework-term {
+      min-width: unset;
     }
   }
 </style>
