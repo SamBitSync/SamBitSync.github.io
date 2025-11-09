@@ -59,7 +59,7 @@ const uniquePatterns = Array.from(allPatterns).sort();
         </button>
         <div class="select-dropdown" hidden>
           {uniqueAspects.map(aspect => (
-            <button class="dropdown-item multiselect-item" data-value={aspect}>
+            <button class="dropdown-item multiselect-item" data-value={aspect} data-aspect={aspect}>
               {aspect.charAt(0).toUpperCase() + aspect.slice(1)}
             </button>
           ))}
@@ -613,10 +613,76 @@ const uniquePatterns = Array.from(allPatterns).sort();
   .multiselect-item.selected {
     background: var(--accent);
     color: white;
+    font-weight: 500;
   }
 
   .multiselect-item.selected:hover {
     background: var(--accent-hover);
+  }
+
+  /* Aspect dropdown items - colored when selected */
+  .multiselect-item[data-aspect="cognition"].selected {
+    background: rgb(59, 130, 246);
+  }
+
+  .multiselect-item[data-aspect="cognition"].selected:hover {
+    background: rgb(37, 99, 235);
+  }
+
+  .multiselect-item[data-aspect="computation"].selected {
+    background: rgb(6, 182, 212);
+  }
+
+  .multiselect-item[data-aspect="computation"].selected:hover {
+    background: rgb(8, 145, 178);
+  }
+
+  .multiselect-item[data-aspect="code"].selected {
+    background: rgb(34, 197, 94);
+  }
+
+  .multiselect-item[data-aspect="code"].selected:hover {
+    background: rgb(22, 163, 74);
+  }
+
+  .multiselect-item[data-aspect="culture"].selected {
+    background: rgb(236, 72, 153);
+  }
+
+  .multiselect-item[data-aspect="culture"].selected:hover {
+    background: rgb(219, 39, 119);
+  }
+
+  .multiselect-item[data-aspect="complexity"].selected {
+    background: rgb(139, 92, 246);
+  }
+
+  .multiselect-item[data-aspect="complexity"].selected:hover {
+    background: rgb(124, 58, 237);
+  }
+
+  .multiselect-item[data-aspect="constraint"].selected {
+    background: rgb(245, 158, 11);
+  }
+
+  .multiselect-item[data-aspect="constraint"].selected:hover {
+    background: rgb(217, 119, 6);
+  }
+
+  .multiselect-item[data-aspect="causation"].selected {
+    background: rgb(239, 68, 68);
+  }
+
+  .multiselect-item[data-aspect="causation"].selected:hover {
+    background: rgb(220, 38, 38);
+  }
+
+  .multiselect-item[data-aspect="coordination"].selected {
+    background: rgb(20, 184, 166);
+  }
+
+  .multiselect-item[data-aspect="coordination"].selected:hover {
+    background: rgb(17, 148, 133);
   }
 
   /* Make badges clickable */
