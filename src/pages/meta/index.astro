@@ -76,21 +76,21 @@ const meta = (await getCollection('meta')).sort(
 
   .framework-term {
     font-family: var(--font-mono);
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     margin: 0;
-    min-width: 180px;
+    min-width: 160px;
   }
 
   .framework-term a {
     text-decoration: none;
-    color: var(--accent);
+    color: var(--text-tertiary);
     text-transform: uppercase;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.05em;
   }
 
   .framework-term a:hover {
-    text-decoration: underline;
+    color: var(--accent);
   }
 
   .framework-def {
@@ -105,7 +105,8 @@ const meta = (await getCollection('meta')).sort(
 
   .def-text {
     color: var(--text-primary);
-    font-size: 0.9375rem;
+    font-size: 1.0625rem;
+    font-weight: 500;
   }
 
   .framework-def a:hover .def-text {
@@ -114,9 +115,9 @@ const meta = (await getCollection('meta')).sort(
 
   .thinkers {
     color: var(--text-tertiary);
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     font-style: italic;
-    margin-left: 0.5rem;
+    margin-left: 0.625rem;
   }
 
   .empty-state {
