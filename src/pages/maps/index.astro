@@ -812,7 +812,7 @@ const uniquePatterns = Array.from(allPatterns).sort();
   .maptype-label {
     position: absolute;
     top: 1rem;
-    right: 1rem;
+    left: 1rem;
     display: flex;
     gap: 0.5rem;
   }
@@ -875,7 +875,7 @@ const uniquePatterns = Array.from(allPatterns).sort();
   /* Swiss Design: High Contrast Minimal with Semantic Color */
   .aspect-badge {
     font-size: 0.6875rem;
-    padding: 0.25rem 0.75rem;
+    padding: 0.375rem 1rem;
     background: rgba(0, 0, 0, 0.05);
     color: var(--text-primary);
     border: 1.5px solid rgba(0, 0, 0, 0.15);
@@ -1057,12 +1057,16 @@ const uniquePatterns = Array.from(allPatterns).sort();
     margin-top: 0.75rem;
   }
 
+  .patterns-list[hidden] {
+    display: none;
+  }
+
   .pattern-tag {
     font-size: 0.75rem;
-    padding: 0.25rem 0.625rem;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
+    padding: 0.25rem 0.75rem;
+    background: rgba(100, 116, 139, 0.06); /* Soft slate background */
+    border: 1px solid rgba(100, 116, 139, 0.18);
+    color: #475569; /* Slate-600 */
     border-radius: 1rem; /* Rounded pill shape */
     font-style: italic;
     font-weight: 400;
@@ -1070,18 +1074,21 @@ const uniquePatterns = Array.from(allPatterns).sort();
   }
 
   .pattern-tag:hover {
-    background: var(--surface);
-    border-color: var(--text-tertiary);
+    background: rgba(100, 116, 139, 0.1);
+    border-color: rgba(100, 116, 139, 0.28);
+    color: #334155; /* Slate-700 */
   }
 
   [data-theme="dark"] .pattern-tag {
-    border-color: rgba(255, 255, 255, 0.15);
-    color: var(--text-secondary);
+    background: rgba(148, 163, 184, 0.08); /* Slightly lighter slate for dark mode */
+    border-color: rgba(148, 163, 184, 0.2);
+    color: #94a3b8; /* Slate-400 */
   }
 
   [data-theme="dark"] .pattern-tag:hover {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(148, 163, 184, 0.12);
+    border-color: rgba(148, 163, 184, 0.3);
+    color: #cbd5e1; /* Slate-300 */
   }
 
   .empty-state {
