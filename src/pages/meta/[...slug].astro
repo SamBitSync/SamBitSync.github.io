@@ -253,6 +253,12 @@ const { Content } = await render(post);
 
   /* No special formatting for inline bold - keep it natural */
 
+  /* Indent lists that follow paragraphs with bold labels */
+  .post-content :global(p:has(strong) + ul),
+  .post-content :global(.section-card p:has(strong) + ul) {
+    margin-left: 2rem;
+  }
+
   .post-content :global(blockquote) {
     border-left: 3px solid var(--accent);
     padding-left: 1.5rem;
