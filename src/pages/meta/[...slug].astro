@@ -245,6 +245,28 @@ const { Content } = await render(post);
     margin-bottom: 0.5rem;
   }
 
+  /* Definition-style paragraphs with bold labels */
+  .post-content :global(p strong:first-child) {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+  }
+
+  .post-content :global(.section-card p strong:first-child) {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+  }
+
+  /* Better spacing for consecutive definition paragraphs */
+  .post-content :global(p:has(strong:first-child) + p:has(strong:first-child)) {
+    margin-top: 1.5rem;
+  }
+
+  .post-content :global(.section-card p:has(strong:first-child) + p:has(strong:first-child)) {
+    margin-top: 1.5rem;
+  }
+
   .post-content :global(blockquote) {
     border-left: 3px solid var(--accent);
     padding-left: 1.5rem;
