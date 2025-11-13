@@ -170,6 +170,11 @@ const { Content } = await render(post);
     margin: 0;
   }
 
+  /* Indent list after bold label in intro */
+  .post-content :global(> p:has(strong) + ul) {
+    padding-left: 3.5rem !important;
+  }
+
   .post-content :global(> p:first-of-type) {
     border-radius: 0.5rem 0.5rem 0 0;
     padding-top: 1.5rem;
