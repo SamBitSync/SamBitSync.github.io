@@ -263,28 +263,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     gap: 0.5rem;
   }
 
-  .type-badge, .confidence-badge {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-weight: 500;
-  }
-
-  .type-badge[data-type="atomic"] {
-    background: #e0e7ff;
-    color: #3730a3;
-  }
-
-  .type-badge[data-type="synthesis"] {
-    background: #f0fdf4;
-    color: #15803d;
-  }
-
-  .confidence-badge {
-    background: var(--bg);
-    color: var(--secondary);
-    border: 1px solid var(--secondary);
-  }
+  /* Type badge and confidence badge styles now in BaseLayout.astro */
 
   .card-date {
     font-size: 0.875rem;
@@ -320,14 +299,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     margin-bottom: 1.5rem;
   }
 
-  .note-tag {
-    background: var(--bg);
-    color: var(--secondary);
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    border: 1px solid var(--secondary);
-  }
+  /* Note tag styles now in BaseLayout.astro */
 
   .card-connections {
     border-top: 1px solid var(--secondary);
@@ -350,7 +322,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   .connection-link {
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+    border-radius: 1rem; /* Updated to match connection-node pills */
     background: var(--accent);
     color: white;
     text-decoration: none;

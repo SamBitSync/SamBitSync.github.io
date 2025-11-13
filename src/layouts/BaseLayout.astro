@@ -72,17 +72,38 @@ const { title, description = "Sambit's intellectual workspace - trilingual brain
     --academic-accent: #2563eb;
     --academic-bg: #fafafa;
     --academic-surface: #ffffff;
-    
+
     /* Systems palette - dynamic, explorable */
     --systems-primary: #0f172a;
     --systems-secondary: #334155;
     --systems-accent: #06b6d4;
     --systems-bg: #f8fafc;
     --systems-surface: #ffffff;
-    
+
     /* Typography scale */
     --font-serif: 'Crimson Text', Georgia, serif;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* Semantic Tag Colors - Light Mode (accessible, subtle) */
+    --tag-blue-bg: #EFF6FF;
+    --tag-blue-text: #1E40AF;
+    --tag-green-bg: #F0FDF4;
+    --tag-green-text: #15803D;
+    --tag-amber-bg: #FEF3C7;
+    --tag-amber-text: #92400E;
+    --tag-purple-bg: #F5F3FF;
+    --tag-purple-text: #6B21A8;
+    --tag-cyan-bg: #ECFEFF;
+    --tag-cyan-text: #155E75;
+    --tag-pink-bg: #FCE7F3;
+    --tag-pink-text: #9F1239;
+    --tag-indigo-bg: #E0E7FF;
+    --tag-indigo-text: #3730A3;
+    --tag-slate-bg: #F1F5F9;
+    --tag-slate-text: #334155;
+    --tag-neutral-bg: var(--bg);
+    --tag-neutral-text: var(--secondary);
+    --tag-neutral-border: var(--secondary);
   }
 
   /* Academic Mode Styling */
@@ -240,5 +261,178 @@ const { title, description = "Sambit's intellectual workspace - trilingual brain
   .systems h1, .systems h2, .systems h3 {
     font-family: var(--font-sans);
     font-weight: 600;
+  }
+
+  /* Dark Mode Support via prefers-color-scheme */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      /* Adjusted tag colors for dark mode - softer backgrounds, brighter text */
+      --tag-blue-bg: #1E3A8A;
+      --tag-blue-text: #BFDBFE;
+      --tag-green-bg: #166534;
+      --tag-green-text: #BBF7D0;
+      --tag-amber-bg: #92400E;
+      --tag-amber-text: #FDE68A;
+      --tag-purple-bg: #581C87;
+      --tag-purple-text: #E9D5FF;
+      --tag-cyan-bg: #164E63;
+      --tag-cyan-text: #A5F3FC;
+      --tag-pink-bg: #831843;
+      --tag-pink-text: #FBCFE8;
+      --tag-indigo-bg: #3730A3;
+      --tag-indigo-text: #C7D2FE;
+      --tag-slate-bg: #334155;
+      --tag-slate-text: #CBD5E1;
+    }
+
+    .academic {
+      --academic-primary: #fafafa;
+      --academic-secondary: #b4b4b4;
+      --academic-bg: #0a0a0a;
+      --academic-surface: #1a1a1a;
+    }
+
+    .systems {
+      --systems-primary: #f8fafc;
+      --systems-secondary: #94a3b8;
+      --systems-bg: #020617;
+      --systems-surface: #0f172a;
+    }
+  }
+
+  /* Global Tag Styles - Shared across all tag types */
+  .tag,
+  .methodology-tag,
+  .research-tag,
+  .framework-tag,
+  .note-tag,
+  .domain-tag,
+  .application-tag,
+  .status-badge,
+  .confidence-badge,
+  .maturity-badge,
+  .scope-badge,
+  .type-badge,
+  .connection-node {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  /* Standard tags - neutral style with border */
+  .tag,
+  .research-tag,
+  .framework-tag,
+  .note-tag {
+    background: var(--tag-neutral-bg);
+    color: var(--tag-neutral-text);
+    border: 1px solid var(--tag-neutral-border);
+    border-radius: 0.25rem;
+  }
+
+  /* Methodology tags - Blue (represents process/method) */
+  .methodology-tag {
+    background: var(--tag-blue-bg);
+    color: var(--tag-blue-text);
+    border-radius: 0.25rem;
+  }
+
+  /* Domain tags - Cyan (represents knowledge areas) */
+  .domain-tag {
+    background: var(--tag-cyan-bg);
+    color: var(--tag-cyan-text);
+    border-radius: 0.25rem;
+  }
+
+  /* Application tags - Indigo (represents practical use) */
+  .application-tag {
+    background: var(--tag-indigo-bg);
+    color: var(--tag-indigo-text);
+    border-radius: 0.25rem;
+  }
+
+  /* Status badges */
+  .status-badge[data-status="ongoing"] {
+    background: var(--tag-amber-bg);
+    color: var(--tag-amber-text);
+    border-radius: 0.25rem;
+  }
+
+  .status-badge[data-status="completed"] {
+    background: var(--tag-green-bg);
+    color: var(--tag-green-text);
+    border-radius: 0.25rem;
+  }
+
+  .status-badge[data-status="published"] {
+    background: var(--tag-blue-bg);
+    color: var(--tag-blue-text);
+    border-radius: 0.25rem;
+  }
+
+  /* Maturity badges */
+  .maturity-badge[data-maturity="hypothesis"] {
+    background: var(--tag-amber-bg);
+    color: var(--tag-amber-text);
+    border-radius: 0.25rem;
+  }
+
+  .maturity-badge[data-maturity="framework"] {
+    background: var(--tag-green-bg);
+    color: var(--tag-green-text);
+    border-radius: 0.25rem;
+  }
+
+  .maturity-badge[data-maturity="theory"] {
+    background: var(--tag-blue-bg);
+    color: var(--tag-blue-text);
+    border-radius: 0.25rem;
+  }
+
+  /* Type badges */
+  .type-badge[data-type="synthesis"] {
+    background: var(--tag-green-bg);
+    color: var(--tag-green-text);
+    border-radius: 0.25rem;
+  }
+
+  .type-badge[data-type="analysis"] {
+    background: var(--tag-purple-bg);
+    color: var(--tag-purple-text);
+    border-radius: 0.25rem;
+  }
+
+  .type-badge[data-type="observation"] {
+    background: var(--tag-cyan-bg);
+    color: var(--tag-cyan-text);
+    border-radius: 0.25rem;
+  }
+
+  /* Confidence badges - Neutral gray */
+  .confidence-badge,
+  .scope-badge {
+    background: var(--tag-neutral-bg);
+    color: var(--tag-neutral-text);
+    border: 1px solid var(--tag-neutral-border);
+    border-radius: 0.25rem;
+  }
+
+  /* Connection nodes (pills on maps) - More rounded! */
+  .connection-node {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem; /* Increased from 0.375rem to 1rem for pill shape */
+    cursor: pointer;
+    font-size: 0.875rem;
+  }
+
+  .connection-node:hover {
+    background: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 </style>

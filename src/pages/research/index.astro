@@ -236,23 +236,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     gap: 0.5rem;
   }
 
-  .status-badge, .confidence-badge {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-weight: 500;
-  }
-
-  .status-badge[data-status="ongoing"] {
-    background: #fef3c7;
-    color: #92400e;
-  }
-
-  .confidence-badge {
-    background: var(--bg);
-    color: var(--secondary);
-    border: 1px solid var(--secondary);
-  }
+  /* Status and confidence badge styles now in BaseLayout.astro */
 
   .card-date {
     font-size: 0.875rem;
@@ -298,13 +282,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     gap: 0.375rem;
   }
 
-  .methodology-tag {
-    background: var(--accent);
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-  }
+  /* Methodology tag styles now in BaseLayout.astro */
 
   .card-tags {
     display: flex;
@@ -312,14 +290,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     gap: 0.375rem;
   }
 
-  .research-tag {
-    background: var(--bg);
-    color: var(--secondary);
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    border: 1px solid var(--secondary);
-  }
+  /* Research tag styles now in BaseLayout.astro */
 
   .no-results {
     text-align: center;

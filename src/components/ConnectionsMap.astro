@@ -74,23 +74,7 @@ const { connections = [], currentSlug, type } = Astro.props;
     margin-bottom: 1.5rem;
   }
 
-  .connection-node {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
-    position: relative;
-  }
-
-  .connection-node:hover {
-    background: var(--primary);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+  /* Connection node (pill) styles now in BaseLayout.astro with rounded corners */
 
   .connection-node:active {
     transform: translateY(0);

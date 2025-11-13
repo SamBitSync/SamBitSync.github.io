@@ -239,33 +239,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     gap: 0.5rem;
   }
 
-  .maturity-badge, .scope-badge {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-weight: 500;
-  }
-
-  .maturity-badge[data-maturity="framework"] {
-    background: #f0fdf4;
-    color: #15803d;
-  }
-
-  .maturity-badge[data-maturity="hypothesis"] {
-    background: #fef3c7;
-    color: #92400e;
-  }
-
-  .maturity-badge[data-maturity="theory"] {
-    background: #dbeafe;
-    color: #1e40af;
-  }
-
-  .scope-badge {
-    background: var(--bg);
-    color: var(--secondary);
-    border: 1px solid var(--secondary);
-  }
+  /* Maturity and scope badge styles now in BaseLayout.astro */
 
   .card-date {
     font-size: 0.875rem;
@@ -311,21 +285,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     gap: 0.375rem;
   }
 
-  .domain-tag {
-    background: var(--accent);
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-  }
-
-  .application-tag {
-    background: #e0e7ff;
-    color: #3730a3;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-  }
+  /* Domain and application tag styles now in BaseLayout.astro */
 
   .card-tags {
     display: flex;
@@ -333,14 +293,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     gap: 0.375rem;
   }
 
-  .framework-tag {
-    background: var(--bg);
-    color: var(--secondary);
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    border: 1px solid var(--secondary);
-  }
+  /* Framework tag styles now in BaseLayout.astro */
 
   .no-results {
     text-align: center;
