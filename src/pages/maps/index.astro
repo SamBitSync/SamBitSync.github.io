@@ -365,6 +365,7 @@ const uniquePatterns = Array.from(allPatterns).sort();
       if (colors) {
         chip.style.backgroundColor = colors.bg;
         chip.style.border = `1.5px solid ${colors.border}`;
+        chip.style.borderRadius = '1rem'; // Ensure pill shape even with inline styles
         chip.style.color = colors.text;
 
         chip.addEventListener('mouseenter', () => {
