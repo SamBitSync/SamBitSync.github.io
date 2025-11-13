@@ -317,6 +317,10 @@ const uniquePatterns = Array.from(allPatterns).sort();
     const chip = document.createElement('button');
     chip.className = 'filter-chip';
 
+    // Ensure consistent padding and rounding for all chips
+    chip.style.padding = '0.375rem 1rem';
+    chip.style.borderRadius = '1rem';
+
     // Apply colors matching aspect badges on cards
     if (filterType === 'aspects') {
       const aspectColors = {
@@ -382,7 +386,6 @@ const uniquePatterns = Array.from(allPatterns).sort();
       if (colors) {
         chip.style.backgroundColor = colors.bg;
         chip.style.border = `1.5px solid ${colors.border}`;
-        chip.style.borderRadius = '1rem'; // Ensure pill shape even with inline styles
         chip.style.color = colors.text;
 
         chip.addEventListener('mouseenter', () => {
@@ -394,6 +397,36 @@ const uniquePatterns = Array.from(allPatterns).sort();
           chip.style.borderColor = colors.border;
         });
       }
+    } else if (filterType === 'patterns') {
+      // Pattern chips use subtle slate color scheme to match pattern tags on cards
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+      const patternColors = isDark ? {
+        bg: 'rgba(148, 163, 184, 0.12)',
+        border: 'rgba(148, 163, 184, 0.3)',
+        text: '#94a3b8',
+        hoverBg: 'rgba(148, 163, 184, 0.18)',
+        hoverBorder: 'rgba(148, 163, 184, 0.4)'
+      } : {
+        bg: 'rgba(100, 116, 139, 0.1)',
+        border: 'rgba(100, 116, 139, 0.25)',
+        text: '#475569',
+        hoverBg: 'rgba(100, 116, 139, 0.15)',
+        hoverBorder: 'rgba(100, 116, 139, 0.35)'
+      };
+
+      chip.style.backgroundColor = patternColors.bg;
+      chip.style.border = `1.5px solid ${patternColors.border}`;
+      chip.style.color = patternColors.text;
+
+      chip.addEventListener('mouseenter', () => {
+        chip.style.backgroundColor = patternColors.hoverBg;
+        chip.style.borderColor = patternColors.hoverBorder;
+      });
+      chip.addEventListener('mouseleave', () => {
+        chip.style.backgroundColor = patternColors.bg;
+        chip.style.borderColor = patternColors.border;
+      });
     }
 
     chip.innerHTML = `
