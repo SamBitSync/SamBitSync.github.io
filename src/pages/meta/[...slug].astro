@@ -153,41 +153,51 @@ const { Content } = await render(post);
     margin-bottom: 3rem;
   }
 
-  /* Section visual structure with left accent border */
+  /* Card sections for each h2 */
   .post-content :global(h2) {
     font-size: 1.75rem;
-    margin-top: 3.5rem;
+    margin-top: 3rem;
     margin-bottom: 0;
-    padding: 1.25rem 0 1.25rem 1.75rem;
-    border-left: 3px solid var(--accent);
-    background: linear-gradient(90deg, var(--surface) 0%, transparent 100%);
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem 0.5rem 0 0;
+    border-bottom: none;
   }
 
-  /* First element after h2 gets border */
+  /* First element after h2 - inside the card */
   .post-content :global(h2 + *) {
-    border-left: 3px solid rgba(128, 128, 128, 0.15);
-    padding-left: 1.75rem;
-    padding-top: 1rem;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    padding: 0 1.5rem;
+    margin-top: 0;
   }
 
-  /* Subsequent siblings until next h2/h3 */
+  /* Subsequent siblings - continue the card */
   .post-content :global(h2 + * ~ *:not(h2):not(h3)) {
-    border-left: 3px solid rgba(128, 128, 128, 0.15);
-    padding-left: 1.75rem;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    padding: 0 1.5rem;
+    margin-top: 0;
   }
 
-  /* Last element before next h2 gets bottom padding */
-  .post-content :global(h2 + * ~ *:not(h2):not(h3):has(+ h2)),
-  .post-content :global(h2 + * ~ *:not(h2):not(h3):has(+ h3)) {
+  /* Last element before next h2 - close the card */
+  .post-content :global(h2 + * ~ *:not(h2):not(h3):last-child),
+  .post-content :global(h2 + * ~ p:has(+ h2)),
+  .post-content :global(h2 + * ~ p:has(+ h3)),
+  .post-content :global(h2 + * ~ ul:has(+ h2)),
+  .post-content :global(h2 + * ~ ul:has(+ h3)) {
+    border-bottom: 1px solid var(--border);
+    border-radius: 0 0 0.5rem 0.5rem;
     padding-bottom: 1.5rem;
   }
 
   .post-content :global(h3) {
     font-size: 1.375rem;
-    margin-top: 2.5rem;
+    margin-top: 2rem;
     margin-bottom: 0.75rem;
-    padding-left: 1.75rem;
-    border-left: 3px solid rgba(128, 128, 128, 0.1);
   }
 
   .post-content :global(ul),
