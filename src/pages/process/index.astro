@@ -6,27 +6,35 @@ const process = (await getCollection('process')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 
-const empirical = process.filter(p => p.data.dimension === 'empirical');
 const formal = process.filter(p => p.data.dimension === 'formal');
+const empirical = process.filter(p => p.data.dimension === 'empirical');
 const implementation = process.filter(p => p.data.dimension === 'implementation');
+const troubleshooting = process.filter(p => p.data.dimension === 'troubleshooting');
+const exploration = process.filter(p => p.data.dimension === 'exploration');
 ---
 
 <BaseLayout title="Process | Sambit">
   <header class="page-header">
     <h1>Process</h1>
-    <p class="lead">Documentation of ongoing work across empirical, formal, and implementation dimensions</p>
+    <p class="lead">Working notes across five dimensions: theory, patterns, procedures, problem-solving, and discovery</p>
   </header>
 
   <div class="filters">
     <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="empirical">
-      Empirical <span class="count">({empirical.length})</span>
-    </button>
     <button class="filter-btn" data-filter="formal">
       Formal <span class="count">({formal.length})</span>
     </button>
+    <button class="filter-btn" data-filter="empirical">
+      Empirical <span class="count">({empirical.length})</span>
+    </button>
     <button class="filter-btn" data-filter="implementation">
       Implementation <span class="count">({implementation.length})</span>
+    </button>
+    <button class="filter-btn" data-filter="troubleshooting">
+      Troubleshooting <span class="count">({troubleshooting.length})</span>
+    </button>
+    <button class="filter-btn" data-filter="exploration">
+      Exploration <span class="count">({exploration.length})</span>
     </button>
   </div>
 
@@ -168,16 +176,24 @@ const implementation = process.filter(p => p.data.dimension === 'implementation'
     transition: all 0.2s ease;
   }
 
-  .post-item.dimension-empirical {
-    border-left-color: #10b981;
-  }
-
   .post-item.dimension-formal {
     border-left-color: #3b82f6;
   }
 
+  .post-item.dimension-empirical {
+    border-left-color: #10b981;
+  }
+
   .post-item.dimension-implementation {
     border-left-color: #8b5cf6;
+  }
+
+  .post-item.dimension-troubleshooting {
+    border-left-color: #f59e0b;
+  }
+
+  .post-item.dimension-exploration {
+    border-left-color: #ec4899;
   }
 
   .post-item:hover {
@@ -212,19 +228,29 @@ const implementation = process.filter(p => p.data.dimension === 'implementation'
     letter-spacing: 0.025em;
   }
 
-  .dimension-badge.dimension-empirical {
-    background: #10b98120;
-    color: #10b981;
-  }
-
   .dimension-badge.dimension-formal {
     background: #3b82f620;
     color: #3b82f6;
   }
 
+  .dimension-badge.dimension-empirical {
+    background: #10b98120;
+    color: #10b981;
+  }
+
   .dimension-badge.dimension-implementation {
     background: #8b5cf620;
     color: #8b5cf6;
+  }
+
+  .dimension-badge.dimension-troubleshooting {
+    background: #f59e0b20;
+    color: #f59e0b;
+  }
+
+  .dimension-badge.dimension-exploration {
+    background: #ec489920;
+    color: #ec4899;
   }
 
   .status-badge {

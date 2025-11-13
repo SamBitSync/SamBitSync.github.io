@@ -41,7 +41,7 @@ const processCollection = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
-    dimension: z.enum(['empirical', 'formal', 'implementation']),
+    dimension: z.enum(['formal', 'empirical', 'implementation', 'troubleshooting', 'exploration']),
     project: z.string().optional(),
     status: z.enum(['in-progress', 'blocked', 'completed']),
     tools: z.array(z.string()).optional(),
