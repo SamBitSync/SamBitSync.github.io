@@ -28,7 +28,7 @@ const metaCollection = defineCollection({
     category: z.string(),
     thinkers: z.array(z.string()).optional(),
     relatedMaps: z.array(z.string()).optional(),
-    maturity: z.enum(['draft', 'working', 'established']),
+    maturity: z.enum(['draft', 'in-use', 'established']),
     tags: z.array(z.string()).optional(),
     diagram: z.string().optional(),
   }),
