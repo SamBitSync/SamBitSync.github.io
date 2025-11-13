@@ -153,45 +153,64 @@ const { Content } = await render(post);
     margin-bottom: 3rem;
   }
 
-  /* Card sections for each h2 */
+  /* Card sections for each h2 - unified appearance */
   .post-content :global(h2) {
     font-size: 1.75rem;
     margin-top: 3rem;
     margin-bottom: 0;
-    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 0.5rem 0.5rem 0 0;
-    border-bottom: none;
   }
 
-  /* First element after h2 - inside the card */
-  .post-content :global(h2 + *) {
-    background: var(--surface);
-    border-left: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    padding: 0 1.5rem;
-    margin-top: 0;
-  }
-
-  /* Subsequent siblings - continue the card */
+  /* All content after h2 until next h2/h3 - seamless continuation */
+  .post-content :global(h2 + *),
   .post-content :global(h2 + * ~ *:not(h2):not(h3)) {
     background: var(--surface);
     border-left: 1px solid var(--border);
     border-right: 1px solid var(--border);
-    padding: 0 1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     margin-top: 0;
+    margin-bottom: 0;
   }
 
-  /* Last element before next h2 - close the card */
-  .post-content :global(h2 + * ~ *:not(h2):not(h3):last-child),
-  .post-content :global(h2 + * ~ p:has(+ h2)),
-  .post-content :global(h2 + * ~ p:has(+ h3)),
-  .post-content :global(h2 + * ~ ul:has(+ h2)),
-  .post-content :global(h2 + * ~ ul:has(+ h3)) {
+  /* Restore normal spacing for paragraphs/lists inside cards */
+  .post-content :global(h2 + p),
+  .post-content :global(h2 + * ~ p) {
+    margin: 1rem 0;
+  }
+
+  .post-content :global(h2 + ul),
+  .post-content :global(h2 + * ~ ul),
+  .post-content :global(h2 + ol),
+  .post-content :global(h2 + * ~ ol) {
+    margin: 1rem 0;
+  }
+
+  .post-content :global(h2 + img),
+  .post-content :global(h2 + * ~ img) {
+    margin: 1.5rem 0;
+  }
+
+  /* Close the card - find last element before next h2/h3 or end */
+  .post-content :global(h2 ~ h2),
+  .post-content :global(h2 ~ h3) {
+    margin-top: 3rem;
+  }
+
+  /* Hack: Add bottom border and radius to common last elements */
+  .post-content :global(h2 + p:not(:has(~ :not(h2):not(h3)))),
+  .post-content :global(h2 + ul:not(:has(~ :not(h2):not(h3)))),
+  .post-content :global(h2 + img:not(:has(~ :not(h2):not(h3)))),
+  .post-content :global(h2 + * ~ p:not(:has(~ :not(h2):not(h3)))),
+  .post-content :global(h2 + * ~ ul:not(:has(~ :not(h2):not(h3)))),
+  .post-content :global(h2 + * ~ img:not(:has(~ :not(h2):not(h3)))) {
     border-bottom: 1px solid var(--border);
     border-radius: 0 0 0.5rem 0.5rem;
     padding-bottom: 1.5rem;
+    margin-bottom: 0;
   }
 
   .post-content :global(h3) {
