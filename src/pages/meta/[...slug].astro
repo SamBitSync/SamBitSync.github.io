@@ -173,6 +173,12 @@ const { Content } = await render(post);
   .post-content :global(> p:first-of-type) {
     border-radius: 0.5rem 0.5rem 0 0;
     padding-top: 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .post-content :global(> p:first-of-type ~ p),
+  .post-content :global(> p:first-of-type ~ ul) {
+    padding-left: 1.5rem;
   }
 
   .post-content :global(> p:first-of-type ~ p:has(~ h2):last-of-type),
@@ -187,7 +193,7 @@ const { Content } = await render(post);
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 0.5rem;
-    padding: 1.5rem;
+    padding: 1.75rem;
     margin: 3rem 0;
   }
 
@@ -245,44 +251,7 @@ const { Content } = await render(post);
     margin-bottom: 0.5rem;
   }
 
-  /* Definition-style paragraphs with bold labels */
-  .post-content :global(p strong:first-child) {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--text-primary);
-  }
-
-  .post-content :global(.section-card p strong:first-child) {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--text-primary);
-  }
-
-  /* Indent content after bold labels */
-  .post-content :global(p:has(strong:first-child)) {
-    text-indent: -2rem;
-    padding-left: 2rem;
-  }
-
-  .post-content :global(.section-card p:has(strong:first-child)) {
-    text-indent: -2rem;
-    padding-left: 2rem;
-  }
-
-  /* Indent lists that follow bold paragraph labels */
-  .post-content :global(p:has(strong:only-child) + ul),
-  .post-content :global(.section-card p:has(strong:only-child) + ul) {
-    padding-left: 2rem;
-  }
-
-  /* Better spacing for consecutive definition paragraphs */
-  .post-content :global(p:has(strong:first-child) + p:has(strong:first-child)) {
-    margin-top: 1.5rem;
-  }
-
-  .post-content :global(.section-card p:has(strong:first-child) + p:has(strong:first-child)) {
-    margin-top: 1.5rem;
-  }
+  /* No special formatting for inline bold - keep it natural */
 
   .post-content :global(blockquote) {
     border-left: 3px solid var(--accent);
