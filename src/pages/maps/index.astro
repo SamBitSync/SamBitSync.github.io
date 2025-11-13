@@ -101,22 +101,38 @@ const uniquePatterns = Array.from(allPatterns).sort();
     {maps.map((map) => {
       const primaryType = map.data.visualType?.[0] || 'diagram';
       const mapType = map.data.mapType;
+      const patternCount = map.data.patterns?.length || 0;
       return (
         <article class="gallery-item" data-map-type={mapType} data-aspects={map.data.aspects.join(',')} data-patterns={map.data.patterns?.join(',') || ''}>
           <a href={`/maps/${map.id}`} class="gallery-link">
             <div class={`visual-preview ${primaryType}`}>
               <div class="preview-pattern"></div>
+
+              {/* MapType badge - top left */}
               <div class="maptype-label">
                 <span class="maptype-badge">{mapType}</span>
               </div>
+
+              {/* VisualType icons - top right */}
+              {map.data.visualType && map.data.visualType.length > 0 && (
+                <div class="visual-type-icons">
+                  {map.data.visualType.map((vType) => (
+                    <span class="visual-icon" data-visual-type={vType} title={vType}>
+                      {vType === 'diagram' && '📊'}
+                      {vType === 'animation' && '🎬'}
+                      {vType === 'data-viz' && '📈'}
+                      {vType === 'interactive' && '🎯'}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div class="gallery-content">
+              {/* Aspects - primary semantic info */}
               <div class="aspects-row">
                 {map.data.aspects.map((aspect) => (
-                  <span
-                    class="aspect-badge"
-                    data-aspect={aspect}>
+                  <span class="aspect-badge" data-aspect={aspect}>
                     {aspect}
                   </span>
                 ))}
@@ -125,19 +141,20 @@ const uniquePatterns = Array.from(allPatterns).sort();
               <h2>{map.data.title}</h2>
               <p class="description">{map.data.description}</p>
 
-              {map.data.patterns && map.data.patterns.length > 0 && (
-                <div class="patterns-footer">
-                  {map.data.patterns.slice(0, 3).map((pattern) => (
-                    <span class="pattern-tag">{pattern}</span>
-                  ))}
-                  {map.data.patterns.length > 3 && (
-                    <span class="pattern-more">+{map.data.patterns.length - 3} more</span>
-                  )}
-                  {map.data.visualType && map.data.visualType.length > 0 && (
-                    <span class="visual-type-label">
-                      {map.data.visualType.join(', ')}
-                    </span>
-                  )}
+              {/* Patterns - collapsed by default, shows count */}
+              {patternCount > 0 && (
+                <div class="patterns-section">
+                  <button class="patterns-toggle" type="button">
+                    <span class="pattern-count">⋯ {patternCount} pattern{patternCount !== 1 ? 's' : ''}</span>
+                    <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                  <div class="patterns-list" hidden>
+                    {map.data.patterns.map((pattern) => (
+                      <span class="pattern-tag">{pattern}</span>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -451,6 +468,26 @@ const uniquePatterns = Array.from(allPatterns).sort();
       }
     });
   }
+
+  // Handle pattern toggle expansion
+  document.addEventListener('click', (e) => {
+    const toggle = e.target.closest('.patterns-toggle');
+    if (!toggle) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const patternsList = toggle.nextElementSibling;
+    const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+
+    if (isExpanded) {
+      toggle.setAttribute('aria-expanded', 'false');
+      patternsList.setAttribute('hidden', '');
+    } else {
+      toggle.setAttribute('aria-expanded', 'true');
+      patternsList.removeAttribute('hidden');
+    }
+  });
 </script>
 
 <style>
@@ -801,6 +838,28 @@ const uniquePatterns = Array.from(allPatterns).sort();
     backdrop-filter: blur(8px);
   }
 
+  /* Visual Type Icons - top right corner */
+  .visual-type-icons {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    gap: 0.25rem;
+    z-index: 2;
+  }
+
+  .visual-icon {
+    font-size: 1.125rem;
+    opacity: 0.7;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+    transition: all 0.2s ease;
+  }
+
+  .visual-icon:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
   /* Gallery Content */
   .gallery-content {
     padding: 1.5rem;
@@ -954,12 +1013,48 @@ const uniquePatterns = Array.from(allPatterns).sort();
     margin: 0 0 1rem 0;
   }
 
-  .patterns-footer {
+  /* Patterns Section - Collapsed by default */
+  .patterns-section {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .patterns-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s ease;
+    font-family: var(--font-sans);
+  }
+
+  .patterns-toggle:hover {
+    color: var(--text-secondary);
+  }
+
+  .patterns-toggle .chevron {
+    transition: transform 0.2s ease;
+  }
+
+  .patterns-toggle[aria-expanded="true"] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .pattern-count {
+    font-style: italic;
+  }
+
+  .patterns-list {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--border);
+    margin-top: 0.75rem;
   }
 
   .pattern-tag {
@@ -987,29 +1082,6 @@ const uniquePatterns = Array.from(allPatterns).sort();
   [data-theme="dark"] .pattern-tag:hover {
     background: rgba(255, 255, 255, 0.03);
     border-color: rgba(255, 255, 255, 0.25);
-  }
-
-  .pattern-more {
-    font-size: 0.75rem;
-    color: var(--text-tertiary);
-    padding: 0.25rem 0.5rem;
-  }
-
-  .visual-type-label {
-    font-size: 0.6875rem;
-    padding: 0.25rem 0.625rem;
-    background: transparent;
-    border: 1px dashed var(--border);
-    color: var(--text-tertiary);
-    border-radius: 0.25rem;
-    font-weight: 400;
-    font-style: italic;
-    text-transform: lowercase;
-  }
-
-  [data-theme="dark"] .visual-type-label {
-    border-color: rgba(255, 255, 255, 0.2);
-    color: var(--text-tertiary);
   }
 
   .empty-state {
