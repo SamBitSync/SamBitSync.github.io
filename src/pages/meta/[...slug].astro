@@ -248,14 +248,31 @@ const { Content } = await render(post);
   /* Definition-style paragraphs with bold labels */
   .post-content :global(p strong:first-child) {
     display: block;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
     color: var(--text-primary);
   }
 
   .post-content :global(.section-card p strong:first-child) {
     display: block;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
     color: var(--text-primary);
+  }
+
+  /* Indent content after bold labels */
+  .post-content :global(p:has(strong:first-child)) {
+    text-indent: -2rem;
+    padding-left: 2rem;
+  }
+
+  .post-content :global(.section-card p:has(strong:first-child)) {
+    text-indent: -2rem;
+    padding-left: 2rem;
+  }
+
+  /* Indent lists that follow bold paragraph labels */
+  .post-content :global(p:has(strong:only-child) + ul),
+  .post-content :global(.section-card p:has(strong:only-child) + ul) {
+    padding-left: 2rem;
   }
 
   /* Better spacing for consecutive definition paragraphs */
