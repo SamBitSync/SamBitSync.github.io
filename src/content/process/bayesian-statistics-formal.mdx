@@ -1,0 +1,92 @@
+---
+title: "Bayesian statistics - formal understanding"
+description: "Understanding the core principles of Bayesian inference: updating beliefs by redistributing plausibility"
+date: 2025-01-14
+dimension: "formal"
+status: "in-progress"
+tools: ["R", "Statistical Rethinking"]
+tags: ["bayesian", "statistics", "inference"]
+---
+
+## Core Principle
+
+Bayesian inference updates beliefs by weighting how compatible different explanations are with observed data. It doesn't prove or falsify - it redistributes plausibility across possibilities.
+
+The heart: **Prior × Likelihood → Posterior**
+
+---
+
+## What Bayesian Inference Does
+
+Updates beliefs based on observation. Given what I've seen, how should I redistribute plausibility across possible explanations?
+
+**The structure:**
+
+- P(hypothesis | data) = what I want to know (posterior)
+- P(hypothesis) = what I believed before (prior)
+- P(data | hypothesis) = how compatible data is with each hypothesis (likelihood)
+- P(data) = normalizing constant (marginal)
+
+This inverts the typical question in a way that matches how I actually think about research. Not "how compatible is my data with this hypothesis?" but "given this data, how plausible are different hypotheses?"
+
+---
+
+## Randomness and Parameters
+
+In Bayesian inference, randomness is epistemic - it represents uncertainty, not inherent unpredictability. Something is random when I lack specific knowledge about it.
+
+Randomness has structure. At scale, random processes become predictable. This makes statistical inference possible.
+
+**Parameters** are things I want to know but can't directly observe. They're probabilistic because I'm uncertain about them. Observed values aren't probabilistic - I saw what I saw.
+
+A **conjecture** is each possible configuration of parameters I'm considering.
+
+---
+
+## Key Components
+
+**Probability Distribution:** All possible values of an uncertain quantity, with how plausible each value is given current knowledge.
+
+**Prior:** Existing belief before seeing data. Makes assumptions explicit. Modern practice uses **weakly informative priors** - they regularize without strongly constraining. Flat priors aren't neutral (they encode assumptions through parameterization).
+
+**Likelihood:** Given a hypothesis, what's the probability of generating the observed data? Uses specific distributions:
+
+- Binomial: categorical data, success/failure, counting
+- Normal (Gaussian): continuous data
+
+This is the hardest part mathematically but conceptually clear.
+
+**Posterior:** Updated belief after observation. Bayesian analysis is continuous updating.
+
+---
+
+## Grid Approximation
+
+Continuous parameters have infinite possibilities. Grid approximation discretizes: break parameter space into a grid, test each point. Trades precision for tractability.
+
+Good for learning the logic. Real work uses more sophisticated methods (MCMC, HMC).
+
+---
+
+## Contrast with Frequentist Approaches
+
+**Frequentist:** Probability is long-run frequency across infinite repetitions. "If there was no effect, how often would I see data this extreme?" (p-value logic)
+
+**Bayesian:** Probability is degree of belief. "Given this observation, how plausible are different hypotheses?"
+
+Frequentist p-values are easy to misinterpret because they answer a question you're not actually asking. Bayesian inference uses frequentist probability (likelihood) but for Bayesian purposes (updating beliefs about parameters).
+
+Both approaches are valid. They're asking different questions.
+
+---
+
+## Connection to Statistics Broadly
+
+Statistics studies populations, variation, randomness at scale. It's a method of observation - dealing with the tension between observing the world and building abstractions to make sense of it.
+
+Traditional approaches (zoo of tests, p-values, NHST) obscure underlying principles. Bayesian inference makes the inference structure explicit: prior belief + data → updated belief.
+
+
+**Source:** Statistical Rethinking (McElreath), Data Lunch Process group (NLHSS analysis)
+
+**Status:** Formal understanding developing, implementing in practice
