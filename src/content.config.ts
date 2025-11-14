@@ -48,6 +48,7 @@ const processCollection = defineCollection({
     visualType: z.array(z.enum(['diagram', 'data-viz', 'code', 'animation'])).optional(),
     tags: z.array(z.string()).optional(),
     diagram: z.string().optional(),
+    source: z.string().optional(),
   }),
 });
 

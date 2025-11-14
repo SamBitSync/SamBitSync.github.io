@@ -35,7 +35,7 @@ const { Content } = await render(post);
 
       <div class="post-meta">
         <time datetime={post.data.date.toISOString()}>
-          {post.data.date.toLocaleDateString('en-US', {
+          Last updated: {post.data.date.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
@@ -64,6 +64,21 @@ const { Content } = await render(post);
     <div class="post-content">
       <Content />
     </div>
+
+    {(post.data.source || post.data.status) && (
+      <aside class="metadata-box">
+        {post.data.source && (
+          <div class="metadata-item">
+            <strong>Source:</strong> {post.data.source}
+          </div>
+        )}
+        {post.data.status && (
+          <div class="metadata-item">
+            <strong>Status:</strong> {post.data.status === 'in-progress' ? 'Formal understanding developing, implementing in practice' : post.data.status === 'blocked' ? 'Blocked' : 'Completed'}
+          </div>
+        )}
+      </aside>
+    )}
 
     <nav class="post-nav">
       <a href="/process" class="back-link">← Back to Process</a>
@@ -266,6 +281,29 @@ const { Content } = await render(post);
     overflow-x: auto;
     margin: 1.5rem 0;
     font-size: 0.875rem;
+  }
+
+  .metadata-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.9375rem;
+  }
+
+  .metadata-item {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+  }
+
+  .metadata-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .metadata-item strong {
+    color: var(--text-primary);
+    margin-right: 0.5rem;
   }
 
   .post-nav {
