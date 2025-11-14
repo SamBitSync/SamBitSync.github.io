@@ -276,6 +276,30 @@ const { Content } = await render(post);
     text-align: center;
   }
 
+  .post-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.9375rem;
+  }
+
+  .post-content :global(th),
+  .post-content :global(td) {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .post-content :global(th) {
+    background: var(--surface);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .post-content :global(tbody tr:hover) {
+    background: var(--surface);
+  }
+
   .post-content :global(img),
   .post-content :global(figure) {
     max-width: 100%;

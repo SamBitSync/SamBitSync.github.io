@@ -23,13 +23,12 @@ Updates beliefs based on observation. Given what I've seen, how should I redistr
 
 **The structure:**
 
-`P(hypothesis | data)` — what I want to know (posterior)
-
-`P(hypothesis)` — what I believed before (prior)
-
-`P(data | hypothesis)` — how compatible data is with each hypothesis (likelihood)
-
-`P(data)` — normalizing constant (marginal)
+| Notation | Meaning |
+|----------|---------|
+| `P(hypothesis \| data)` | what I want to know (posterior) |
+| `P(hypothesis)` | what I believed before (prior) |
+| `P(data \| hypothesis)` | how compatible data is with each hypothesis (likelihood) |
+| `P(data)` | normalizing constant (marginal) |
 
 This inverts the typical question in a way that matches how I actually think about research. Not "how compatible is my data with this hypothesis?" but "given this data, how plausible are different hypotheses?"
 
