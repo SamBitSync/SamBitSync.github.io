@@ -1,0 +1,379 @@
+---
+import StratifiedCogSciMap from "./StratifiedCogSciMap.astro";
+---
+
+<div class="map-layout">
+    <section class="intro-section">
+        <h1>
+            Cognitive Science: Research Programmes & Stratified Disagreement
+        </h1>
+        <p class="lead">
+            Cognitive science is better understood as a cluster of competing
+            <strong>research programmes</strong> than a unified discipline. These
+            programmes disagree not just on facts, but on deep commitments regarding
+            what is real (Ontology), what counts as an answer (Explanation), and how
+            to investigate (Methodology).
+        </p>
+    </section>
+
+    <!-- Moving Table to Top as Primer -->
+    <section class="content-block">
+        <h2>The "Hard Core" Stratification</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Layer</th>
+                        <th>What it settles</th>
+                        <th>Example Disagreement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Ontological</strong></td>
+                        <td>What cognition <em>is</em></td>
+                        <td>Computation vs. coupling</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Explanatory</strong></td>
+                        <td>What counts as explanation</td>
+                        <td
+                            >Mechanism vs. optimality proof vs. phase portrait</td
+                        >
+                    </tr>
+                    <tr>
+                        <td><strong>Methodological</strong></td>
+                        <td>How to investigate</td>
+                        <td>Behavioral experiments vs. dynamical modeling</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="note">
+            These come apart. Two researchers can share ontology
+            (representationalism) but diverge on explanatory norms (mechanistic
+            vs. computational-level). Different components have different
+            rigidity.
+        </p>
+    </section>
+
+    <section class="content-block">
+        <h2>The Five Programmes</h2>
+        <div class="card-grid">
+            <div class="info-card">
+                <h3>Classical/Symbolic</h3>
+                <p>Cognition is rule-governed symbol manipulation.</p>
+                <div class="key-figures">
+                    <strong>Key Figures:</strong> Fodor, Newell, Pylyshyn
+                </div>
+            </div>
+            <div class="info-card">
+                <h3>Connectionist</h3>
+                <p>
+                    Cognition is pattern transformation across distributed
+                    representations.
+                </p>
+                <div class="key-figures">
+                    <strong>Key Figures:</strong> Rumelhart, McClelland, Smolensky
+                </div>
+            </div>
+            <div class="info-card">
+                <h3>Bayesian</h3>
+                <p>
+                    Cognition is approximate optimal inference under
+                    uncertainty.
+                </p>
+                <div class="key-figures">
+                    <strong>Key Figures:</strong> Tenenbaum, Griffiths, Friston
+                </div>
+            </div>
+            <div class="info-card">
+                <h3>Embodied/Enactive</h3>
+                <p>
+                    Cognition is inseparable from bodily action and
+                    environmental coupling.
+                </p>
+                <div class="key-figures">
+                    <strong>Key Figures:</strong> Varela, Thompson, Di Paolo
+                </div>
+            </div>
+            <div class="info-card">
+                <h3>Dynamical Systems</h3>
+                <p>Cognition is continuous state-space evolution.</p>
+                <div class="key-figures">
+                    <strong>Key Figures:</strong> Kelso, Thelen, Van Gelder
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <StratifiedCogSciMap />
+
+    <section class="text-block">
+        <h2>Programme Relations</h2>
+        <p>Relations are a partial order, not pure rivalry:</p>
+        <ul class="clean-list">
+            <li>
+                <strong>Bayesian & Connectionist</strong>: Complementary across
+                Marr levels.
+            </li>
+            <li>
+                <strong>Embodiment</strong>: Often about scope (boundaries)
+                rather than mechanism.
+            </li>
+            <li>
+                <strong>Dynamical Systems</strong>: A mathematical vocabulary
+                applicable within multiple ontologies.
+            </li>
+        </ul>
+        <p>
+            This dissolves pseudo-debates (Bayesian vs. connectionist) while
+            preserving genuine ones (classical vs. radical enactivism).
+        </p>
+    </section>
+
+    <section class="text-block">
+        <h2>Case Study: Predictive Processing</h2>
+        <p>
+            PP attempts unification by straddling: Bayesian at computational
+            level, Connectionist in implementation, Dynamical in mathematics.
+        </p>
+        <p>
+            However, there are limits to what it can absorb without becoming
+            unfalsifiable:
+        </p>
+        <ul class="clean-list">
+            <li>
+                <strong>Radical enactivism's</strong> rejection of representational
+                content.
+            </li>
+            <li>
+                <strong>Strongly externalist</strong> claims where cognition crosses
+                the skin.
+            </li>
+            <li>
+                <strong>Social constitution</strong> of norms (are practices just
+                "priors"?).
+            </li>
+        </ul>
+    </section>
+
+    <section class="content-block">
+        <h2>Hierarchy of Presupposition</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Level</th>
+                        <th>Example</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Phenomenal</strong></td>
+                        <td>Behavioral regularities needing explanation</td>
+                        <td>Minimal shared</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thin Theoretical</strong></td>
+                        <td>Adaptive coordination with environment</td>
+                        <td>Already boundary-drawing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thicker Framing</strong></td>
+                        <td>"Cognition", "Representation"</td>
+                        <td>Contested</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Programme-Specific</strong></td>
+                        <td>"How is X represented?"</td>
+                        <td>Fully internal</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="manifesto-block">
+        <h2>Critical Realism as Regulative Commitment</h2>
+        <div class="manifesto-content">
+            <div class="viewpoint">
+                <h4>The Pragmatist View</h4>
+                <p>
+                    Bracketing metaphysics reveals that theoretical questions
+                    lack determinate answers. Fertility <em>is</em> truth.
+                </p>
+            </div>
+            <div class="viewpoint my-view">
+                <h4>My Stance</h4>
+                <p>
+                    Bracketing is <strong>epistemically modest</strong>, not
+                    ontologically deflationary. Cognitive mechanisms and social
+                    processes are real and stratified.
+                </p>
+            </div>
+        </div>
+        <div class="implications">
+            <h3>What this buys:</h3>
+            <ul>
+                <li>
+                    <strong>Against instrumentalism:</strong> PP translating enactivism
+                    into priors might be <em>wrong</em> about the joints of reality,
+                    not just less useful.
+                </li>
+                <li>
+                    <strong>Differentiated realism:</strong> Methodology is instrumental;
+                    Ontology tracks real mechanisms.
+                </li>
+                <li>
+                    <strong>Unified stance:</strong> Experiments and ethnography are
+                    probing different strata of the same reality.
+                </li>
+            </ul>
+        </div>
+    </section>
+</div>
+
+<style>
+    .map-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 4rem;
+        max-width: 1000px; /* Constrain width for readability */
+        margin: 0 auto;
+    }
+
+    .intro-section {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    h1 {
+        margin-bottom: 1rem;
+    }
+    .lead {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        max-width: 60ch;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Cards - De-flashed & Informative - Centered */
+    .card-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* Centers the 5th card */
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .info-card {
+        background: var(--surface);
+        padding: 1.5rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 300px; /* Base width */
+        max-width: 400px; /* Cap width so they don't get too wide */
+        height: auto;
+    }
+
+    .info-card:hover {
+        border-color: var(--text-primary);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .info-card h3 {
+        margin: 0 0 0.75rem 0;
+        font-size: 1.1rem;
+        font-family: var(--font-serif);
+        color: var(--text-primary);
+    }
+
+    .info-card p {
+        margin: 0 0 1rem 0;
+        font-size: 0.9375rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+        flex-grow: 1; /* Push key figures to bottom */
+    }
+
+    .key-figures {
+        font-size: 0.8125rem;
+        color: var(--text-tertiary);
+        border-top: 1px solid var(--border-subtle);
+        padding-top: 0.75rem;
+        font-family: var(--font-sans);
+    }
+
+    .key-figures strong {
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    /* Text Blocks (Normalized Flow) */
+    .text-block {
+        max-width: 65ch; /* Optimal reading width */
+        margin: 0 auto; /* Centered */
+    }
+
+    .manifesto-block {
+        margin-top: 2rem;
+        border-top: 2px solid var(--text-primary);
+        padding-top: 3rem;
+    }
+
+    .manifesto-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        margin: 2rem 0;
+    }
+
+    @media (max-width: 700px) {
+        .manifesto-content {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .viewpoint {
+        padding: 0;
+        border: none;
+        background: transparent;
+    }
+
+    .viewpoint h4 {
+        font-family: var(--font-serif);
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.85rem;
+    }
+
+    .my-view h4 {
+        color: var(--accent);
+    }
+
+    .implications {
+        margin-top: 2rem;
+        padding: 2rem;
+        background: var(--surface-elevated);
+        border-radius: var(--radius-sm);
+    }
+
+    .clean-list li {
+        margin-bottom: 0.75rem;
+    }
+    .note {
+        font-size: 0.9rem;
+        color: var(--text-tertiary);
+        margin-top: 1rem;
+    }
+</style>

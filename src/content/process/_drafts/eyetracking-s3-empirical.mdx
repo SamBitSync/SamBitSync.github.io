@@ -1,0 +1,27 @@
+---
+title: "What audio-visual alignment actually requires"
+description: "Measuring latency and jitter in the experimental setup"
+date: 2025-11-28
+dimension: "empirical"
+project: "Eyetracking"
+series: "3"
+seriesTitle: "Building VWP Tasks That Actually Work"
+status: "in-progress"
+tags: ["eye-tracking", "VWP", "empirical", "PsychoPy"]
+---
+
+# What audio-visual alignment actually requires
+
+If the audio lags the video by 50ms, our "anticipatory" looks might just be reactive.
+
+**Measurement**:
+- Photodiode on screen.
+- Microphone on speaker.
+- Oscilloscope to measure delta.
+
+**Result**:
+- Standard PC audio latency: ~30-80ms.
+- ASIO drivers: &lt;10ms.
+- PsychoPy `PTB` backend: &lt;10ms.
+
+We *must* use low-latency audio drivers for VWP.

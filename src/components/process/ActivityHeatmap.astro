@@ -1,0 +1,87 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+    entries: CollectionEntry<"process">[];
+}
+
+const { entries } = Astro.props;
+
+// Generate last 30 days
+const today = new Date();
+const days = Array.from({ length: 30 }, (_, i) => {
+    const d = new Date(today);
+    d.setDate(d.getDate() - (29 - i));
+    return d;
+});
+
+// Map entries to days
+const activityMap = new Map();
+entries.forEach((entry) => {
+    const dateStr = entry.data.date.toISOString().split("T")[0];
+    activityMap.set(dateStr, (activityMap.get(dateStr) || 0) + 1);
+});
+
+function getActivityLevel(count: number) {
+    if (count === 0) return 0;
+    if (count === 1) return 1;
+    if (count === 2) return 2;
+    return 3;
+}
+---
+
+<div class="heatmap" title="Activity over last 30 days">
+    {
+        days.map((day) => {
+            const dateStr = day.toISOString().split("T")[0];
+            const count = activityMap.get(dateStr) || 0;
+            const level = getActivityLevel(count);
+            return (
+                <div
+                    class={`day level-${level}`}
+                    title={`${dateStr}: ${count} entries`}
+                />
+            );
+        })
+    }
+</div>
+
+<style>
+    .heatmap {
+        display: flex;
+        gap: 2px;
+        align-items: flex-end;
+        height: 12px;
+    }
+
+    .day {
+        width: 4px;
+        height: 4px;
+        border-radius: 1px;
+        background-color: var(--surface-2); /* Default/Empty */
+        transition: all 0.2s ease;
+    }
+
+    .day.level-0 {
+        background-color: var(--border);
+        opacity: 0.3;
+    }
+
+    .day.level-1 {
+        background-color: var(--accent);
+        opacity: 0.4;
+        height: 6px;
+    }
+
+    .day.level-2 {
+        background-color: var(--accent);
+        opacity: 0.7;
+        height: 9px;
+    }
+
+    .day.level-3 {
+        background-color: var(--accent);
+        opacity: 1;
+        height: 12px;
+    }
+</style>

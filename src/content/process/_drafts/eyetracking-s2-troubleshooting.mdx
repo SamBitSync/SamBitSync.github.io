@@ -1,0 +1,24 @@
+---
+title: "When participants look at edges, corners, or just zone out"
+description: "Handling off-target gaze behavior in VWP"
+date: 2025-11-28
+dimension: "troubleshooting"
+project: "Eyetracking"
+series: "2"
+seriesTitle: "Visual World Paradigm as Time Machine"
+status: "in-progress"
+tags: ["eye-tracking", "VWP", "troubleshooting"]
+---
+
+# When participants look at edges, corners, or just zone out
+
+Participants get bored. They look at the bezel. They stare at the blank space.
+
+**Problem**: This data is "valid" (eyes were open) but "invalid" (not task-related).
+
+**Strategy**:
+- **Zone Out**: Long fixations (>2s) on nothing? Flag trial.
+- **Corner Hugging**: Calibration drift? Or just resting?
+- **Blinking**: Excessive blinking indicates fatigue.
+
+We need heuristics to filter "low quality engagement" trials.

@@ -1,0 +1,27 @@
+---
+title: "Remote deployment on Gorilla - what breaks and surprising workarounds"
+description: "Adapting lab-based VWP for web-based data collection"
+date: 2025-11-28
+dimension: "troubleshooting"
+project: "Eyetracking"
+series: "3"
+seriesTitle: "Building VWP Tasks That Actually Work"
+status: "in-progress"
+tags: ["eye-tracking", "VWP", "troubleshooting", "Gorilla"]
+---
+
+# Remote deployment on Gorilla - what breaks and surprising workarounds
+
+WebGazer.js (used by Gorilla) is not an EyeLink 1000.
+
+**What breaks**:
+- Precision drops to ~5-10% of screen width.
+- Head movement kills calibration.
+- Lighting conditions vary wildly.
+
+**Workarounds**:
+- **Huge AOIs**: 4 quadrants only. No small objects.
+- **Virtual Chinrest**: Card calibration trick to estimate distance.
+- **Shorter Blocks**: Recalibrate every 2 minutes.
+
+It works for coarse VWP, but requires different design constraints.

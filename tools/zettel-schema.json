@@ -1,0 +1,93 @@
+{
+  "version": "1.0.0",
+  "collections": {
+    "process": {
+      "path": "src/content/process",
+      "dimensions": [
+        { "value": "formal",             "label": "Formal",            "description": "Mathematical / theoretical treatment" },
+        { "value": "empirical",          "label": "Empirical",         "description": "Data collection and observation" },
+        { "value": "implementation",     "label": "Implementation",    "description": "Building, coding, configuring" },
+        { "value": "troubleshooting",    "label": "Troubleshooting",   "description": "Debugging and problem-solving" },
+        { "value": "exploration",        "label": "Exploration",       "description": "Open-ended investigation" },
+        { "value": "canon",              "label": "Canon",             "description": "Core texts and established knowledge" },
+        { "value": "structured-learning","label": "Structured Learning","description": "Courses, curricula, MOOCs" },
+        { "value": "readings",           "label": "Readings",          "description": "Papers and literature notes" }
+      ],
+      "statuses": [
+        { "value": "in-progress", "label": "In Progress", "color": "#d97706" },
+        { "value": "blocked",     "label": "Blocked",     "color": "#dc2626" },
+        { "value": "completed",   "label": "Completed",   "color": "#059669" }
+      ],
+      "filenamePatterns": {
+        "series":   "{topic}-s{series}-{dimension}",
+        "indexed":  "{domain}-{topic}-{index}",
+        "simple":   "{topic}-{dimension}"
+      }
+    }
+  },
+  "topics": {
+    "systems": {
+      "label": "Systems and Substrates",
+      "subtitle": "What has the mechanism",
+      "entries": [
+        { "slug": "trilingual-minds",    "title": "Trilingual Minds" },
+        { "slug": "phonology",           "title": "Phonology" },
+        { "slug": "attention",           "title": "Attention" },
+        { "slug": "binding-problem",     "title": "Binding Problem" },
+        { "slug": "generative-models",   "title": "Generative Models" },
+        { "slug": "predictive-processing","title": "Predictive Processing" },
+        { "slug": "control-theory",      "title": "Control Theory" },
+        { "slug": "scientific-communities","title": "Scientific Communities" },
+        { "slug": "language-acquisition","title": "Language Acquisition" }
+      ]
+    },
+    "tools": {
+      "label": "Tools and Techniques",
+      "subtitle": "How you probe it",
+      "entries": [
+        { "slug": "eyetracking",                    "title": "Eyetracking Series" },
+        { "slug": "mousetracking",                  "title": "Mousetracking" },
+        { "slug": "building-cognitive-experiments", "title": "Building Cognitive Experiments" },
+        { "slug": "signal-processing",              "title": "Signal Processing" },
+        { "slug": "bayesian-statistics",            "title": "Bayesian Statistics Series" },
+        { "slug": "causation",                      "title": "Causation" },
+        { "slug": "sts",                            "title": "STS and Ethnography" },
+        { "slug": "explanatory-depth",              "title": "Explanatory Depth" },
+        { "slug": "computational-cognitive-science","title": "Computational Cognitive Science" },
+        { "slug": "mechanistic-interpretability",   "title": "Mechanistic Interpretability" }
+      ]
+    },
+    "patterns": {
+      "label": "Patterns Which Connect",
+      "subtitle": "Vocabulary across substrates",
+      "entries": [
+        { "slug": "strange-loops",             "title": "Strange Loops" },
+        { "slug": "computation-as-dynamics",   "title": "Computation as Dynamics" },
+        { "slug": "learning-as-optimization",  "title": "Learning as Optimization" },
+        { "slug": "representation-spaces",     "title": "Representation Spaces" },
+        { "slug": "information-theory",        "title": "Information Theory" },
+        { "slug": "algorithmic-information",   "title": "Algorithmic Information" },
+        { "slug": "geometric-deep-learning",   "title": "Geometric Deep Learning" },
+        { "slug": "compression-as-intelligence","title": "Compression as Intelligence" },
+        { "slug": "neuroai",                   "title": "NeuroAI" },
+        { "slug": "beyond-folk-psychology",    "title": "Beyond Folk Psychology" }
+      ]
+    },
+    "courses": {
+      "label": "Curriculum",
+      "subtitle": "University courses, MOOCs, and assigned readings",
+      "entries": [
+        { "slug": "moocs",       "title": "MOOCs" },
+        { "slug": "course-work", "title": "Course Work" }
+      ]
+    },
+    "library": {
+      "label": "Library",
+      "subtitle": "Books, papers, and research materials",
+      "entries": [
+        { "slug": "readings", "title": "Readings" },
+        { "slug": "books",    "title": "Books" }
+      ]
+    }
+  }
+}

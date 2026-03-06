@@ -1,0 +1,24 @@
+---
+title: "Screen geometry and the 2x2 grid that dominates the literature"
+description: "Implementing the standard 4-quadrant layout"
+date: 2025-11-28
+dimension: "implementation"
+project: "Eyetracking"
+series: "2"
+seriesTitle: "Visual World Paradigm as Time Machine"
+status: "in-progress"
+tags: ["eye-tracking", "VWP", "implementation"]
+---
+
+# Screen geometry and the 2x2 grid that dominates the literature
+
+Why is the 2x2 grid so common?
+
+1.  **Maximizes Separation**: Corners are furthest apart.
+2.  **Minimizes Central Bias**: No object is in the center (where gaze naturally rests).
+3.  **Symmetry**: Equal saccade distance to all targets.
+
+Implementation:
+- 1920x1080 screen.
+- 4 images (300x300px) centered in quadrants.
+- Central fixation cross for drift check.

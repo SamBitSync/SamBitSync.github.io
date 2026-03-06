@@ -1,0 +1,28 @@
+---
+title: "My PsychoPy workflow for Heritage Newari VWP tasks"
+description: "A reusable template for VWP experiments"
+date: 2025-11-28
+dimension: "implementation"
+project: "Eyetracking"
+series: "3"
+seriesTitle: "Building VWP Tasks That Actually Work"
+status: "in-progress"
+tags: ["eye-tracking", "VWP", "implementation", "PsychoPy"]
+---
+
+# My PsychoPy workflow for Heritage Newari VWP tasks
+
+1.  **Trial Structure**:
+    - Fixation (Drift Check)
+    - Preview (1000ms)
+    - Audio Stimulus ("Look at the...")
+    - Response (Click / Timeout)
+2.  **Data Output**:
+    - `.csv` with trial metadata.
+    - `.hdf5` with raw gaze samples (via ioHub).
+3.  **Code Components**:
+    - `Begin Experiment`: Connect tracker.
+    - `Each Frame`: Check gaze contingency.
+    - `End Experiment`: Save and close.
+
+This template abstracts the hardware details.

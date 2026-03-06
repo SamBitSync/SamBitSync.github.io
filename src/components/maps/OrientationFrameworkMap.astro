@@ -1,0 +1,723 @@
+---
+/**
+ * ORIENTATION FRAMEWORK MAP v2
+ *
+ * Converted from React to Astro component.
+ * Interactivity handled via vanilla JS.
+ */
+
+const nodeDescriptions: Record<string, string> = {
+    emergence:
+        "The meta-question: How does level N generate level N+1? From GEB — how does syntax generate semantics? The question that pulled you into this.",
+    question:
+        "What mechanism generates this pattern? Abductive reasoning about generative mechanisms — inferring the hidden structure from its outputs.",
+    method: "Disrupt smooth functioning → read the residual. Perturbation reveals structure. This is HOW you answer the emergence question.",
+    bayesian:
+        'Bayesian: What inference structure generates this? Priors, likelihoods, updating. The "what" of computation — what problem is being solved under uncertainty.',
+    dynamical:
+        'Dynamical: How does this unfold through time? Trajectories, attractors, state space. The "how" of computation — the temporal structure of the process.',
+    bd_coupling:
+        "B ↔ D: Not independent. B specifies what computation, D specifies how it unfolds. Bayesian updating through dynamics. What vs. how — coupled, not competing.",
+    mechanistic:
+        "Mechanistic: Inspect the system directly. Activations, circuits, features, neural patterns. Direct access to structure rather than inferring from behavior.",
+    semiotic:
+        "Semiotic-Interpretive: What does this mean? Signs, context, reflexivity. What formal methods can't reach. Also: whose questions, what counts, what's hidden.",
+    msi_coupling:
+        "M ↔ S-I: Two access routes. M inspects (looks inside the mechanism). S-I interprets (what the mechanism signifies). Inspect vs. interpret. Both needed.",
+    fallibilism:
+        "Fallibilism: Each orientation leaves residual that another catches. B misses dynamics → D. D misses meaning → S-I. S-I misses causal structure → M, B, D. No complete view.",
+    trilingual:
+        "Trilingual minds: Neural → Cognitive emergence. Heritage Newari-Nepali-English speakers. B, D, M primary. S-I not just context — heritage status constitutes the processing architecture.",
+    neural: "Neural networks: Computation → Semantics? emergence. LLMs as model organisms. B, D, M primary. S-I asks: what IS generated? And reflexively: whose safety, why this field now?",
+    knowledge:
+        "Knowledge production: Practice → Institution emergence. Your ethnography. S-I primary — infrastructure hides legitimacy work, absence reveals it. B, D, M become objects of study here.",
+};
+
+const layers: Record<string, string> = {
+    all: "Full Map",
+    emergence: "Emergence",
+    core: "Question & Method",
+    orientations: "Orientations",
+    objects: "Objects",
+};
+
+const layerMap: Record<string, string[]> = {
+    emergence: ["emergence"],
+    core: ["question", "method"],
+    orientations: [
+        "bayesian",
+        "dynamical",
+        "bd_coupling",
+        "mechanistic",
+        "semiotic",
+        "msi_coupling",
+        "fallibilism",
+    ],
+    objects: ["trilingual", "neural", "knowledge"],
+};
+---
+
+<div class="orientation-map">
+    <!-- Layer Toggles -->
+    <div class="layer-toggles">
+        {
+            Object.entries(layers).map(([key, label]) => (
+                <button
+                    class="layer-btn"
+                    data-layer={key}
+                    data-active={key === "all" ? "true" : "false"}
+                >
+                    {label}
+                </button>
+            ))
+        }
+    </div>
+
+    <!-- Main Diagram -->
+    <div class="diagram-container">
+        <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet">
+            <!-- Arrow Markers -->
+            <defs>
+                <marker
+                    id="arrow"
+                    markerWidth="4"
+                    markerHeight="4"
+                    refX="3"
+                    refY="2"
+                    orient="auto"
+                >
+                    <path d="M 0 0 L 4 2 L 0 4 Z" fill="var(--text-tertiary)"
+                    ></path>
+                </marker>
+                <marker
+                    id="arrow-light"
+                    markerWidth="4"
+                    markerHeight="4"
+                    refX="3"
+                    refY="2"
+                    orient="auto"
+                >
+                    <path d="M 0 0 L 4 2 L 0 4 Z" fill="var(--text-secondary)"
+                    ></path>
+                </marker>
+            </defs>
+
+            <!-- LAYER 1: EMERGENCE -->
+            <g class="node" data-node="emergence">
+                <rect
+                    x="100"
+                    y="8"
+                    width="200"
+                    height="32"
+                    fill="var(--surface)"
+                    stroke="var(--text-secondary)"
+                    stroke-width="1"></rect>
+                <text x="200" y="22" text-anchor="middle" class="node-title"
+                    >EMERGENCE</text
+                >
+                <text x="200" y="34" text-anchor="middle" class="node-subtitle"
+                    >How does level N generate level N+1?</text
+                >
+            </g>
+
+            <!-- Connection: Emergence → Core -->
+            <line
+                class="connection"
+                data-layer="emergence"
+                x1="200"
+                y1="40"
+                x2="200"
+                y2="50"
+                stroke="var(--text-tertiary)"
+                stroke-width="1"
+                marker-end="url(#arrow)"></line>
+
+            <!-- LAYER 2: CORE QUESTION & METHOD -->
+            <g class="node" data-node="question">
+                <rect
+                    x="75"
+                    y="52"
+                    width="250"
+                    height="28"
+                    fill="var(--surface)"
+                    stroke="var(--text-primary)"
+                    stroke-width="1"></rect>
+                <text x="200" y="66" text-anchor="middle" class="node-label"
+                    >What mechanism generates this pattern?</text
+                >
+                <text x="200" y="76" text-anchor="middle" class="node-sublabel"
+                    >method: disrupt smooth functioning → read residual</text
+                >
+            </g>
+
+            <!-- Connection: Core → Orientations -->
+            <line
+                class="connection"
+                data-layer="core"
+                x1="200"
+                y1="80"
+                x2="200"
+                y2="95"
+                stroke="var(--text-tertiary)"
+                stroke-width="1"
+                marker-end="url(#arrow)"></line>
+
+            <!-- LAYER 3: ORIENTATIONS -->
+
+            <!-- B-D Coupling box -->
+            <g class="node" data-node="bd_coupling">
+                <rect
+                    x="45"
+                    y="98"
+                    width="145"
+                    height="58"
+                    fill="none"
+                    stroke="var(--text-tertiary)"
+                    stroke-width="1"
+                    stroke-dasharray="3 3"
+                    rx="3"></rect>
+                <text
+                    x="117"
+                    y="110"
+                    text-anchor="middle"
+                    class="coupling-label">what ↔ how</text
+                >
+            </g>
+
+            <!-- Bayesian -->
+            <g class="node" data-node="bayesian">
+                <rect
+                    x="55"
+                    y="116"
+                    width="55"
+                    height="32"
+                    fill="var(--surface)"
+                    stroke="var(--text-primary)"
+                    stroke-width="1"></rect>
+                <text x="82" y="130" text-anchor="middle" class="node-title"
+                    >B</text
+                >
+                <text x="82" y="142" text-anchor="middle" class="node-sublabel"
+                    >inference</text
+                >
+            </g>
+
+            <!-- Dynamical -->
+            <g class="node" data-node="dynamical">
+                <rect
+                    x="125"
+                    y="116"
+                    width="55"
+                    height="32"
+                    fill="var(--surface)"
+                    stroke="var(--text-primary)"
+                    stroke-width="1"></rect>
+                <text x="152" y="130" text-anchor="middle" class="node-title"
+                    >D</text
+                >
+                <text x="152" y="142" text-anchor="middle" class="node-sublabel"
+                    >dynamics</text
+                >
+            </g>
+
+            <!-- B ↔ D arrow -->
+            <g class="node" data-node="bd_coupling">
+                <line
+                    x1="110"
+                    y1="132"
+                    x2="125"
+                    y2="132"
+                    stroke="var(--text-primary)"
+                    stroke-width="1"></line>
+                <polygon
+                    points="110,132 114,129 114,135"
+                    fill="var(--text-primary)"></polygon>
+                <polygon
+                    points="125,132 121,129 121,135"
+                    fill="var(--text-primary)"></polygon>
+            </g>
+
+            <!-- M-SI Coupling box -->
+            <g class="node" data-node="msi_coupling">
+                <rect
+                    x="210"
+                    y="98"
+                    width="145"
+                    height="58"
+                    fill="none"
+                    stroke="var(--text-tertiary)"
+                    stroke-width="1"
+                    stroke-dasharray="3 3"
+                    rx="3"></rect>
+                <text
+                    x="282"
+                    y="110"
+                    text-anchor="middle"
+                    class="coupling-label">inspect ↔ interpret</text
+                >
+            </g>
+
+            <!-- Mechanistic -->
+            <g class="node" data-node="mechanistic">
+                <rect
+                    x="220"
+                    y="116"
+                    width="55"
+                    height="32"
+                    fill="var(--surface)"
+                    stroke="var(--text-primary)"
+                    stroke-width="1"></rect>
+                <text x="247" y="130" text-anchor="middle" class="node-title"
+                    >M</text
+                >
+                <text x="247" y="142" text-anchor="middle" class="node-sublabel"
+                    >inspect</text
+                >
+            </g>
+
+            <!-- Semiotic-Interpretive -->
+            <g class="node" data-node="semiotic">
+                <rect
+                    x="290"
+                    y="116"
+                    width="55"
+                    height="32"
+                    fill="var(--surface)"
+                    stroke="var(--text-primary)"
+                    stroke-width="1"></rect>
+                <text x="317" y="130" text-anchor="middle" class="node-title"
+                    >S-I</text
+                >
+                <text x="317" y="142" text-anchor="middle" class="node-sublabel"
+                    >interpret</text
+                >
+            </g>
+
+            <!-- M ↔ S-I arrow -->
+            <g class="node" data-node="msi_coupling">
+                <line
+                    x1="275"
+                    y1="132"
+                    x2="290"
+                    y2="132"
+                    stroke="var(--text-primary)"
+                    stroke-width="1"></line>
+                <polygon
+                    points="275,132 279,129 279,135"
+                    fill="var(--text-primary)"></polygon>
+                <polygon
+                    points="290,132 286,129 286,135"
+                    fill="var(--text-primary)"></polygon>
+            </g>
+
+            <!-- Fallibilism arrows -->
+            <g class="node" data-node="fallibilism">
+                <path
+                    d="M 190 115 Q 200 105 210 115"
+                    fill="none"
+                    stroke="var(--text-secondary)"
+                    stroke-width="1"
+                    marker-end="url(#arrow-light)"></path>
+                <path
+                    d="M 210 145 Q 200 155 190 145"
+                    fill="none"
+                    stroke="var(--text-secondary)"
+                    stroke-width="1"
+                    marker-end="url(#arrow-light)"></path>
+                <text
+                    x="200"
+                    y="165"
+                    text-anchor="middle"
+                    class="fallibilism-label">residual ↔ purchase</text
+                >
+            </g>
+
+            <!-- CONNECTION LINES: Orientations → Objects -->
+            <line
+                class="object-connection"
+                x1="117"
+                y1="156"
+                x2="75"
+                y2="200"
+                stroke="var(--text-secondary)"
+                stroke-width="1"></line>
+            <line
+                class="object-connection"
+                x1="117"
+                y1="156"
+                x2="200"
+                y2="200"
+                stroke="var(--text-secondary)"
+                stroke-width="1"></line>
+            <line
+                class="object-connection secondary"
+                x1="282"
+                y1="156"
+                x2="75"
+                y2="200"
+                stroke="var(--text-tertiary)"
+                stroke-width="1"
+                stroke-dasharray="2 2"></line>
+            <line
+                class="object-connection"
+                x1="247"
+                y1="148"
+                x2="200"
+                y2="200"
+                stroke="var(--text-secondary)"
+                stroke-width="1"></line>
+            <line
+                class="object-connection secondary"
+                x1="317"
+                y1="148"
+                x2="200"
+                y2="200"
+                stroke="var(--text-tertiary)"
+                stroke-width="1"
+                stroke-dasharray="2 2"></line>
+            <line
+                class="object-connection primary"
+                x1="317"
+                y1="148"
+                x2="325"
+                y2="200"
+                stroke="var(--text-secondary)"
+                stroke-width="1.5"></line>
+
+            <!-- LAYER 4: OBJECTS -->
+            <g class="node" data-node="trilingual">
+                <rect
+                    x="20"
+                    y="202"
+                    width="110"
+                    height="42"
+                    fill="var(--surface)"
+                    stroke="var(--text-secondary)"
+                    stroke-width="1"></rect>
+                <text x="75" y="218" text-anchor="middle" class="node-label"
+                    >Trilingual minds</text
+                >
+                <text x="75" y="230" text-anchor="middle" class="node-sublabel"
+                    >neural → cognitive</text
+                >
+                <text x="75" y="240" text-anchor="middle" class="node-micro"
+                    >B, D, M + S-I constitutive</text
+                >
+            </g>
+
+            <g class="node" data-node="neural">
+                <rect
+                    x="145"
+                    y="202"
+                    width="110"
+                    height="42"
+                    fill="var(--surface)"
+                    stroke="var(--text-secondary)"
+                    stroke-width="1"></rect>
+                <text x="200" y="218" text-anchor="middle" class="node-label"
+                    >Neural networks</text
+                >
+                <text x="200" y="230" text-anchor="middle" class="node-sublabel"
+                    >computation → semantics?</text
+                >
+                <text x="200" y="240" text-anchor="middle" class="node-micro"
+                    >B, D, M + S-I reflexive</text
+                >
+            </g>
+
+            <g class="node" data-node="knowledge">
+                <rect
+                    x="270"
+                    y="202"
+                    width="110"
+                    height="42"
+                    fill="var(--surface)"
+                    stroke="var(--text-secondary)"
+                    stroke-width="1"></rect>
+                <text x="325" y="218" text-anchor="middle" class="node-label"
+                    >Knowledge production</text
+                >
+                <text x="325" y="230" text-anchor="middle" class="node-sublabel"
+                    >practice → institution</text
+                >
+                <text x="325" y="240" text-anchor="middle" class="node-micro"
+                    >S-I primary</text
+                >
+            </g>
+
+            <!-- Bottom insight -->
+            <g class="insight">
+                <text x="200" y="265" text-anchor="middle" class="insight-quote"
+                    >"What does smooth functioning hide, and how does disruption
+                    reveal it?"</text
+                >
+                <text
+                    x="200"
+                    y="278"
+                    text-anchor="middle"
+                    class="insight-summary"
+                    >Four orientations. Three substrates. Non-uniform purchase.
+                    Fallibilism as glue.</text
+                >
+            </g>
+        </svg>
+    </div>
+
+    <!-- Description Panel -->
+    <div class="description-panel">
+        <p class="description-text" id="hover-description">
+            Hover over any element for details
+        </p>
+    </div>
+
+    <!-- Key -->
+    <div class="key">
+        <span class="key-item"
+            ><span class="key-line solid"></span> primary purchase</span
+        >
+        <span class="key-item"
+            ><span class="key-line dashed"></span> secondary/meta</span
+        >
+    </div>
+</div>
+
+<script define:vars={{ nodeDescriptions, layerMap }}>
+    document.addEventListener("DOMContentLoaded", () => {
+        const container = document.querySelector(".orientation-map");
+        if (!container) return;
+
+        const buttons = container.querySelectorAll(".layer-btn");
+        const nodes = container.querySelectorAll(".node");
+        const connections = container.querySelectorAll(
+            ".connection, .object-connection",
+        );
+        const descriptionEl = document.getElementById("hover-description");
+
+        let activeLayer = "all";
+
+        // Layer toggle
+        buttons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                activeLayer = btn.dataset.layer;
+
+                buttons.forEach((b) => (b.dataset.active = "false"));
+                btn.dataset.active = "true";
+
+                updateVisibility();
+            });
+        });
+
+        function updateVisibility() {
+            nodes.forEach((node) => {
+                const nodeType = node.dataset.node;
+                const isVisible =
+                    activeLayer === "all" ||
+                    Object.entries(layerMap).some(
+                        ([layer, types]) =>
+                            layer === activeLayer && types.includes(nodeType),
+                    );
+                node.style.opacity = isVisible ? "1" : "0.12";
+            });
+
+            connections.forEach((conn) => {
+                const connLayer = conn.dataset.layer;
+                if (activeLayer === "all") {
+                    conn.style.opacity = "0.4";
+                } else if (connLayer === activeLayer) {
+                    conn.style.opacity = "0.6";
+                } else {
+                    conn.style.opacity =
+                        activeLayer === "objects" ? "0.5" : "0.08";
+                }
+            });
+        }
+
+        // Hover descriptions
+        nodes.forEach((node) => {
+            node.addEventListener("mouseenter", () => {
+                const nodeType = node.dataset.node;
+                if (nodeDescriptions[nodeType]) {
+                    descriptionEl.textContent = nodeDescriptions[nodeType];
+                    descriptionEl.classList.add("active");
+                }
+            });
+
+            node.addEventListener("mouseleave", () => {
+                descriptionEl.textContent =
+                    "Hover over any element for details";
+                descriptionEl.classList.remove("active");
+            });
+        });
+
+        updateVisibility();
+    });
+</script>
+
+<style>
+    .orientation-map {
+        font-family: var(--font-mono);
+        background: var(--bg);
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+    }
+
+    /* Layer Toggles */
+    .layer-toggles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .layer-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text-tertiary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: var(--font-mono);
+    }
+
+    .layer-btn:hover {
+        border-color: var(--text-secondary);
+    }
+
+    .layer-btn[data-active="true"] {
+        background: var(--text-primary);
+        color: var(--bg);
+        border-color: var(--text-primary);
+    }
+
+    /* Diagram */
+    .diagram-container {
+        width: 100%;
+        aspect-ratio: 4/3;
+    }
+
+    .diagram-container svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .node {
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+    }
+
+    .node-title {
+        fill: var(--text-primary);
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    .node-subtitle {
+        fill: var(--text-tertiary);
+        font-size: 7px;
+    }
+
+    .node-label {
+        fill: var(--text-primary);
+        font-size: 8px;
+    }
+
+    .node-sublabel {
+        fill: var(--text-tertiary);
+        font-size: 6px;
+    }
+
+    .node-micro {
+        fill: var(--text-tertiary);
+        font-size: 5px;
+        opacity: 0.7;
+    }
+
+    .coupling-label {
+        fill: var(--text-tertiary);
+        font-size: 6px;
+    }
+
+    .fallibilism-label {
+        fill: var(--text-tertiary);
+        font-size: 6px;
+        font-style: italic;
+    }
+
+    .insight-quote {
+        fill: var(--text-tertiary);
+        font-size: 7px;
+        font-style: italic;
+    }
+
+    .insight-summary {
+        fill: var(--text-tertiary);
+        font-size: 6px;
+        opacity: 0.7;
+    }
+
+    .object-connection {
+        opacity: 0.4;
+    }
+
+    /* Description Panel */
+    .description-panel {
+        min-height: 4rem;
+        margin-top: 1rem;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        border-radius: var(--radius-md);
+    }
+
+    .description-text {
+        font-size: 0.8125rem;
+        color: var(--text-tertiary);
+        line-height: 1.6;
+        margin: 0;
+        font-style: italic;
+    }
+
+    .description-text.active {
+        color: var(--text-secondary);
+        font-style: normal;
+    }
+
+    /* Key */
+    .key {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+    }
+
+    .key-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .key-line {
+        width: 2rem;
+        height: 1px;
+        background: var(--text-tertiary);
+    }
+
+    .key-line.dashed {
+        background: repeating-linear-gradient(
+            90deg,
+            var(--text-tertiary) 0,
+            var(--text-tertiary) 4px,
+            transparent 4px,
+            transparent 8px
+        );
+    }
+</style>

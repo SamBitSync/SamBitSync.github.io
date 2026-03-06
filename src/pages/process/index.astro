@@ -1,0 +1,537 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TopicCard from "../../components/process/TopicCard.astro";
+import { DOMAINS, getTopicInfo, type DomainKey } from "../../lib/taxonomy";
+
+// Fetch all data
+const allProcess = (await getCollection("process")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+// Group process entries by topic (Project)
+const topicsMap = new Map<string, CollectionEntry<"process">[]>();
+const unsortedEntries: CollectionEntry<"process">[] = [];
+
+allProcess.forEach((entry) => {
+  if (entry.data.project) {
+    const projectKey = entry.data.project;
+    if (!topicsMap.has(projectKey)) {
+      topicsMap.set(projectKey, []);
+    }
+    topicsMap.get(projectKey)!.push(entry);
+  } else {
+    unsortedEntries.push(entry);
+  }
+});
+
+// Process topics and enrich with taxonomy metadata
+const processedTopics = Array.from(topicsMap.entries())
+  .map(([projectName, entries]) => {
+    // Look up metadata from our static taxonomy
+    const metadata = getTopicInfo(projectName);
+    const slug = projectName.toLowerCase().replace(/\s+/g, "-");
+
+    const seriesSet = new Set(
+      entries.filter((e) => e.data.series).map((e) => e.data.series),
+    );
+    const dimensionsSet = new Set(entries.map((e) => e.data.dimension));
+    const mostRecent = entries[0]; // Already sorted
+
+    return {
+      name: metadata.title,
+      slug: slug,
+      entries,
+      seriesCount: seriesSet.size,
+      dimensionsCount: dimensionsSet.size,
+      entryCount: entries.length,
+      mostRecent,
+      domain: metadata.domain,
+      status: metadata.status || "active",
+      description: metadata.description,
+      layout: metadata.layout,
+    };
+  })
+  .sort(
+    (a, b) =>
+      b.mostRecent.data.date.valueOf() - a.mostRecent.data.date.valueOf(),
+  );
+
+// Group topics by Domain
+const domainGroups: Record<string, typeof processedTopics> = {
+  systems: [],
+  tools: [],
+  patterns: [],
+  courses: [],
+  library: [],
+  uncategorized: [],
+};
+
+processedTopics.forEach((topic) => {
+  if (domainGroups[topic.domain]) {
+    domainGroups[topic.domain].push(topic);
+  } else {
+    domainGroups["uncategorized"].push(topic);
+  }
+});
+
+// Remove empty groups
+Object.keys(domainGroups).forEach((key) => {
+  if (domainGroups[key].length === 0) delete domainGroups[key];
+});
+
+// Define display order
+const domainOrder: DomainKey[] = [
+  "library",
+  "courses",
+  "systems",
+  "tools",
+  "patterns",
+  "uncategorized",
+];
+
+const dimensionIcons: Record<string, string> = {
+  exploration: "🔍",
+  formal: "📐",
+  empirical: "📊",
+  implementation: "⚙️",
+  troubleshooting: "🔧",
+  canon: "🏛️",
+  "structured-learning": "🎓",
+  readings: "📑",
+};
+
+// Global stats
+const totalEntries = allProcess.length;
+const totalTopics = processedTopics.length;
+---
+
+<BaseLayout title="Process | Sambit">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <header class="sidebar-header">
+        <h1>Process</h1>
+        <p class="subtitle">Research and learning Dashboard</p>
+      </header>
+
+      <div class="stats-widget">
+        <div class="stat-item">
+          <span class="stat-value">{totalTopics}</span>
+          <span class="stat-label">Active Topics</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{totalEntries}</span>
+          <span class="stat-label">Total Entries</span>
+        </div>
+      </div>
+
+      <nav class="domain-nav">
+        <h3>Index</h3>
+        <ul>
+          {
+            domainOrder
+              .filter((d) => domainGroups[d])
+              .map((domain) => (
+                <li>
+                  <a href={`#domain-${domain}`}>
+                    {DOMAINS[domain]?.label || domain}
+                    <span class="count">{domainGroups[domain].length}</span>
+                  </a>
+                </li>
+              ))
+          }
+        </ul>
+      </nav>
+
+      <div class="activity-stream">
+        <h3>Global Activity</h3>
+        <div class="stream-list">
+          {
+            allProcess.slice(0, 8).map((entry) => (
+              <a href={`/process/${entry.id}`} class="stream-item">
+                <div class="stream-meta">
+                  <span class="stream-topic">
+                    {entry.data.project || "Unsorted"}
+                  </span>
+                  <time datetime={entry.data.date.toISOString()}>
+                    {entry.data.date.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                </div>
+                <div class="stream-title">
+                  <span class="dimension-icon">
+                    {dimensionIcons[entry.data.dimension]}
+                  </span>
+                  {entry.data.title}
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      {
+        domainOrder.map((domain) => {
+          const topics = domainGroups[domain];
+          if (!topics || topics.length === 0) return null;
+
+          return (
+            <section id={`domain-${domain}`} class="domain-section">
+              <header class="domain-header">
+                <h2 class="domain-title">{DOMAINS[domain]?.label || domain}</h2>
+                <p class="domain-subtitle">{DOMAINS[domain]?.subtitle}</p>
+              </header>
+
+              <div class="topics-grid">
+                {topics.map((topic) => (
+                  <TopicCard topic={topic} />
+                ))}
+              </div>
+            </section>
+          );
+        })
+      }
+
+      {
+        unsortedEntries.length > 0 && (
+          <section class="unsorted-section">
+            <h2>Unsorted / Standalone</h2>
+            <div class="unsorted-grid">
+              {unsortedEntries.slice(0, 6).map((entry) => (
+                <a href={`/process/${entry.id}`} class="unsorted-card">
+                  <span class="dimension-icon">
+                    {dimensionIcons[entry.data.dimension]}
+                  </span>
+                  <span class="unsorted-title">{entry.data.title}</span>
+                  <time>{entry.data.date.toLocaleDateString()}</time>
+                </a>
+              ))}
+            </div>
+            {unsortedEntries.length > 6 && (
+              <a href="/process/all" class="view-all-link">
+                View all {unsortedEntries.length} unsorted entries →
+              </a>
+            )}
+          </section>
+        )
+      }
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .dashboard-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 4rem;
+    max-width: var(--max-width-wide);
+    margin: 0 auto;
+    padding-top: 2rem;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: sticky;
+    top: 6rem; /* More breathing room from top */
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .sidebar-header h1 {
+    font-family: var(--font-sans);
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  /* Stats - Minimalist */
+  .stats-widget {
+    display: flex;
+    gap: 2rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  /* Domain Nav - Clean List */
+  .domain-nav h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .domain-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .domain-nav a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    padding: 0.5rem 0.75rem;
+    margin: 0 -0.75rem; /* Negative margin to align text with header */
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+  }
+
+  .domain-nav a:hover {
+    background: var(--surface-elevated);
+    color: var(--text-primary);
+  }
+
+  .domain-nav .count {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    background: transparent;
+    padding: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .domain-nav a:hover .count {
+    color: var(--text-secondary);
+  }
+
+  /* Activity Stream - Clean */
+  .activity-stream h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .stream-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .stream-item {
+    text-decoration: none;
+    color: inherit;
+    padding: 0.625rem 0 0.625rem 0.75rem;
+    border-left: 2px solid var(--border);
+    transition: border-color 0.15s ease;
+    background: transparent;
+    display: block;
+  }
+
+  .stream-item:hover {
+    border-left-color: var(--accent);
+  }
+
+  .stream-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin-bottom: 0.25rem;
+  }
+
+  .stream-topic {
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .stream-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    line-height: 1.4;
+    color: var(--text-secondary);
+  }
+
+  .stream-item:hover .stream-title {
+    color: var(--text-primary);
+  }
+
+  .dimension-icon {
+    font-size: 0.875rem;
+    opacity: 0.7;
+  }
+
+  /* Main Content */
+  .domain-section {
+    margin-bottom: 5rem;
+    scroll-margin-top: 4rem;
+  }
+
+  .domain-header {
+    margin-bottom: 2rem;
+    padding-bottom: 0;
+    border-bottom: none;
+    position: relative;
+  }
+
+  /* Subtle separator */
+  .domain-header::after {
+    content: "";
+    position: absolute;
+    bottom: -1rem;
+    left: 0;
+    width: 3rem;
+    height: 2px;
+    background: var(--border);
+    border-radius: 1px;
+  }
+
+  .domain-title {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    font-family: var(--font-serif); /* Serif for Domain Titles */
+    font-weight: 600;
+  }
+
+  .domain-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    font-style: normal;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(320px, 1fr)
+    ); /* Slightly wider cards */
+    gap: 2rem; /* More breathing room */
+  }
+
+  /* Unsorted Section - Modernized */
+  .unsorted-section {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 4rem;
+    margin-top: 4rem;
+  }
+
+  .unsorted-section h2 {
+    margin-bottom: 2rem;
+    letter-spacing: -0.02em;
+    font-family: var(--font-serif);
+  }
+
+  .unsorted-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .unsorted-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.9375rem;
+    transition: border-color 0.15s ease;
+  }
+
+  .unsorted-card:hover {
+    border-color: var(--accent);
+  }
+
+  .unsorted-title {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .unsorted-card time {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+  }
+
+  .view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.5rem 0;
+    transition: color 0.15s ease;
+  }
+
+  .view-all-link:hover {
+    color: var(--text-primary);
+  }
+
+  @media (max-width: 900px) {
+    .dashboard-layout {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .sidebar {
+      position: static;
+      margin-bottom: 3rem;
+    }
+
+    .stats-widget {
+      justify-content: flex-start;
+    }
+  }
+</style>

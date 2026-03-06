@@ -1,0 +1,316 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+const topics = await getCollection("topics");
+const allProcess = await getCollection("process");
+
+// Helper to get stats for a topic
+function getTopicStats(topicSlug: string) {
+    const entries = allProcess.filter((p) => {
+        const proj = p.data.project?.toLowerCase().replace(/\s+/g, "-");
+        return proj === topicSlug;
+    });
+
+    const dimensions = new Set(entries.map((e) => e.data.dimension));
+    return {
+        entryCount: entries.length,
+        dimensionCount: dimensions.size,
+        dimensions: Array.from(dimensions),
+    };
+}
+
+// Group topics by domain
+const domains = {
+    cognition: {
+        label: "🧠 Cognition & Neuroscience",
+        topics: [] as CollectionEntry<"topics">[],
+    },
+    ai: {
+        label: "🤖 AI & Computation",
+        topics: [] as CollectionEntry<"topics">[],
+    },
+    foundations: {
+        label: "📐 Foundations & Formalism",
+        topics: [] as CollectionEntry<"topics">[],
+    },
+    meta: {
+        label: "🏛️ Metascience & Philosophy",
+        topics: [] as CollectionEntry<"topics">[],
+    },
+};
+
+topics.forEach((topic) => {
+    const domain = topic.data.domain || "meta"; // Default to meta if undefined
+    if (domains[domain]) {
+        domains[domain].topics.push(topic);
+    }
+});
+
+// Sort topics within domains? Maybe by status or title.
+Object.values(domains).forEach((d) => {
+    d.topics.sort((a, b) => a.data.title.localeCompare(b.data.title));
+});
+
+const dimensionIcons: Record<string, string> = {
+    exploration: "🔍",
+    formal: "📐",
+    empirical: "📊",
+    implementation: "⚙️",
+    troubleshooting: "🔧",
+};
+---
+
+<BaseLayout title="Topics | Process | Sambit">
+    <header class="page-header">
+        <a href="/process" class="back-link">← Back to Process</a>
+        <h1>Research Topics</h1>
+        <p class="lead">
+            Organized arcs of inquiry across {topics.length} topics
+        </p>
+    </header>
+
+    <div class="domains-stack">
+        {
+            Object.entries(domains).map(
+                ([key, domain]) =>
+                    domain.topics.length > 0 && (
+                        <section class="domain-section">
+                            <h2 class="domain-title">{domain.label}</h2>
+                            <div class="topics-grid">
+                                {domain.topics.map((topic) => {
+                                    const stats = getTopicStats(topic.slug);
+                                    return (
+                                        <article class="topic-card">
+                                            <a
+                                                href={`/process/topics/${topic.slug}`}
+                                                class="topic-link"
+                                            >
+                                                <div class="topic-header">
+                                                    <h3>{topic.data.title}</h3>
+                                                    <span
+                                                        class={`status-badge status-${topic.data.status}`}
+                                                    >
+                                                        {topic.data.status}
+                                                    </span>
+                                                </div>
+                                                <p class="topic-description">
+                                                    {topic.data.description}
+                                                </p>
+
+                                                <div class="topic-footer">
+                                                    <div class="topic-stats">
+                                                        <span class="stat">
+                                                            <strong>
+                                                                {
+                                                                    stats.entryCount
+                                                                }
+                                                            </strong>{" "}
+                                                            entries
+                                                        </span>
+                                                    </div>
+                                                    <div class="dimensions-preview">
+                                                        {stats.dimensions.map(
+                                                            (dim) => (
+                                                                <span
+                                                                    class="dimension-dot"
+                                                                    title={dim}
+                                                                    style={`background-color: var(--color-${dim}, #ccc)`}
+                                                                >
+                                                                    {
+                                                                        dimensionIcons[
+                                                                            dim
+                                                                        ]
+                                                                    }
+                                                                </span>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </article>
+                                    );
+                                })}
+                            </div>
+                        </section>
+                    ),
+            )
+        }
+    </div>
+
+    {
+        topics.length === 0 && (
+            <div class="empty-state">
+                <p>
+                    No topics defined. Add topic files to{" "}
+                    <code>src/content/topics/</code>.
+                </p>
+            </div>
+        )
+    }
+</BaseLayout>
+
+<style>
+    .page-header {
+        margin-bottom: 3rem;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        margin-bottom: 1rem;
+        transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: var(--accent);
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .lead {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+    }
+
+    .domains-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 4rem;
+    }
+
+    .domain-title {
+        font-size: 1.5rem;
+        color: var(--text-secondary);
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .topics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .topic-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        transition: all 0.2s ease;
+        height: 100%;
+    }
+
+    .topic-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        border-color: var(--accent);
+    }
+
+    .topic-link {
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem;
+        text-decoration: none;
+        color: inherit;
+        height: 100%;
+    }
+
+    .topic-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .topic-header h3 {
+        font-size: 1.25rem;
+        margin: 0;
+        color: var(--text-primary);
+        line-height: 1.3;
+    }
+
+    .status-badge {
+        font-size: 0.625rem;
+        text-transform: uppercase;
+        padding: 0.125rem 0.375rem;
+        border-radius: 1rem;
+        font-weight: 600;
+        white-space: nowrap;
+        border: 1px solid currentColor;
+    }
+
+    .status-active {
+        color: #10b981;
+    }
+    .status-planned {
+        color: #6366f1;
+    }
+    .status-completed {
+        color: #f59e0b;
+    }
+
+    .topic-description {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0 0 1.5rem 0;
+        line-height: 1.5;
+        flex-grow: 1;
+    }
+
+    .topic-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+    }
+
+    .topic-stats {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .stat {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    .stat strong {
+        color: var(--accent);
+        font-weight: 600;
+    }
+
+    .dimensions-preview {
+        display: flex;
+        gap: 0.25rem;
+    }
+
+    .dimension-dot {
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 0.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        background: var(--surface-2); /* Fallback */
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2rem;
+        }
+
+        .topics-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

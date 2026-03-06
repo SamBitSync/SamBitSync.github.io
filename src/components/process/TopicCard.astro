@@ -1,0 +1,369 @@
+---
+import ActivityHeatmap from "./ActivityHeatmap.astro";
+import type { CollectionEntry } from "astro:content";
+import type { DomainKey } from "../../lib/taxonomy";
+
+interface Props {
+    topic: {
+        name: string;
+        slug: string;
+        entries: CollectionEntry<"process">[];
+        seriesCount: number;
+        dimensionsCount: number;
+        entryCount: number;
+        mostRecent: CollectionEntry<"process">;
+        domain: DomainKey;
+        description: string;
+        layout?: "grid" | "timeline";
+    };
+}
+
+const { topic } = Astro.props;
+
+const dimensionIcons: Record<string, string> = {
+    exploration: "🔍",
+    formal: "📐",
+    empirical: "📊",
+    implementation: "⚙️",
+    troubleshooting: "🔧",
+    canon: "🏛️",
+    "structured-learning": "🎓",
+    readings: "📑",
+};
+
+// Get last active relative time
+function timeAgo(date: Date) {
+    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + "y ago";
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + "mo ago";
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + "d ago";
+    return "today";
+}
+---
+
+<article
+    class="topic-card"
+    data-domain={topic.domain}
+    data-layout={topic.layout}
+>
+    <a href={`/process/topics/${topic.slug}`} class="card-link">
+        <header class="card-header">
+            <div class="header-top">
+                <div class="title-group">
+                    <h3>{topic.name}</h3>
+                    {
+                        topic.domain === "courses" &&
+                            topic.layout === "grid" && (
+                                <span class="badge">Course</span>
+                            )
+                    }
+                    {
+                        topic.domain === "courses" &&
+                            topic.layout === "timeline" && (
+                                <span class="badge">Readings</span>
+                            )
+                    }
+                    {
+                        topic.domain === "tools" && (
+                            <span class="badge">Tool</span>
+                        )
+                    }
+                </div>
+                <span class="last-active"
+                    >{timeAgo(topic.mostRecent.data.date)}</span
+                >
+            </div>
+            <div class="card-body">
+                <p class="description">{topic.description}</p>
+                <div class="recent-list">
+                    {
+                        topic.entries.slice(0, 3).map((entry) => (
+                            <div class="mini-entry">
+                                <span
+                                    class={`dimension-dot dimension-${entry.data.dimension}`}
+                                    title={entry.data.dimension}
+                                >
+                                    {dimensionIcons[entry.data.dimension]}
+                                </span>
+                                <span class="entry-title">
+                                    {entry.data.title}
+                                </span>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+
+            <footer class="card-footer">
+                <div class="stats">
+                    {
+                        topic.domain === "systems" && (
+                            <span class="system-id">
+                                SYS-{topic.slug.slice(0, 3).toUpperCase()}
+                            </span>
+                        )
+                    }
+                    {
+                        topic.domain !== "systems" && (
+                            <span title={`${topic.entryCount} entries`}>
+                                {topic.entryCount} entries
+                            </span>
+                        )
+                    }
+                    <span class="separator">•</span>
+                    <span title={`${topic.seriesCount} series`}>
+                        {topic.seriesCount} series
+                    </span>
+                </div>
+                <div class="action-icon">→</div>
+            </footer>
+        </header>
+    </a>
+
+    <style>
+        .topic-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            box-shadow: var(--shadow);
+            border: 1px solid transparent; /* Prevent layout shift on hover */
+        }
+
+        /* Domain Themes - Subtle Gradients & Accents */
+        .topic-card[data-domain="systems"] {
+            --theme-color: #64748b;
+            --theme-bg: var(--surface);
+            --theme-gradient: linear-gradient(
+                to bottom right,
+                color-mix(in srgb, var(--text-primary) 5%, transparent),
+                transparent
+            );
+        }
+
+        .topic-card[data-domain="tools"] {
+            --theme-color: #10b981;
+            --theme-bg: var(--surface);
+            --theme-gradient: linear-gradient(
+                to bottom right,
+                color-mix(in srgb, #10b981 10%, transparent),
+                transparent
+            );
+        }
+
+        .topic-card[data-domain="patterns"] {
+            --theme-color: #8b5cf6;
+            --theme-bg: var(--surface);
+            --theme-gradient: linear-gradient(
+                to bottom right,
+                color-mix(in srgb, #8b5cf6 10%, transparent),
+                transparent
+            );
+        }
+
+        .topic-card[data-domain="courses"] {
+            --theme-color: #3b82f6;
+            --theme-bg: var(--surface);
+            --theme-gradient: linear-gradient(
+                to bottom right,
+                color-mix(in srgb, #3b82f6 10%, transparent),
+                transparent
+            );
+        }
+
+        .topic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: var(--surface);
+        }
+
+        /* Header with subtle gradient background */
+        .card-header {
+            padding: 1.5rem;
+            background: var(--theme-gradient, var(--surface));
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+
+        .topic-card[data-domain="systems"] h3 {
+            font-family: var(--font-mono);
+            letter-spacing: -0.03em;
+        }
+
+        .badge {
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--theme-color);
+            font-weight: 700;
+            background: color-mix(in srgb, var(--theme-color) 15%, transparent);
+            border: 1px solid
+                color-mix(in srgb, var(--theme-color) 25%, transparent);
+            padding: 2px 8px;
+            border-radius: 4px;
+            width: fit-content;
+        }
+
+        .last-active {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-family: var(--font-mono);
+            white-space: nowrap;
+            margin-left: 0.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .description {
+            margin: 0;
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .recent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--border); /* Visible separator */
+        }
+
+        .mini-entry {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            padding: 0.35rem 0.5rem; /* Add padding for touch target/visual block */
+            margin: 0 -0.5rem; /* Negative margin to align with content */
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .mini-entry:hover {
+            background: var(--surface-elevated);
+            color: var(--text-primary);
+        }
+
+        .topic-card:hover .mini-entry {
+            color: var(--text-primary);
+        }
+
+        .topic-card[data-domain="tools"] .mini-entry {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+        }
+
+        .entry-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dimension-dot {
+            font-size: 0.5rem; /* Smaller dot */
+            flex-shrink: 0;
+            opacity: 0.6;
+            filter: grayscale(100%); /* Muted by default */
+            transition: all 0.2s;
+        }
+
+        .topic-card:hover .dimension-dot {
+            opacity: 1;
+            filter: none;
+            transform: scale(1.2);
+        }
+
+        .card-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-subtle);
+            background: var(--surface);
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stats {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .system-id {
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+            font-weight: 600;
+            background: var(--border-subtle);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .separator {
+            color: var(--border);
+        }
+
+        .action-icon {
+            color: var(--theme-color);
+            font-weight: bold;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .topic-card:hover .action-icon {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</article>

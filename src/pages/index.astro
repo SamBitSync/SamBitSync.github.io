@@ -1,368 +1,909 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
 
-// Get recent content across all collections
-const recentResearch = (await getCollection('research'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 2);
+// Get recent content
+const allMaps = (await getCollection("maps")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const allMeta = (await getCollection("meta")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const allProcess = (await getCollection("process")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const allProjects = (await getCollection("project")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
 
-const recentFrameworks = (await getCollection('frameworks'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 2);
-
-const recentNotes = (await getCollection('notes'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3);
+const recentMaps = allMaps.slice(0, 2);
+const recentProcess = allProcess.slice(0, 2);
 ---
 
-<BaseLayout 
-  title="Sambit Maps · Systems" 
-  description="Academic research in complexity science, epistemology, and knowledge systems"
-  mode="academic"
->
+<BaseLayout title="Sambit">
   <div class="hero">
-    <div class="hero-content">
-      <h1 class="hero-title">Hi, I'm Sambit</h1>
-      <h2 class="hero-subtitle">Exploring incommensurable connections</h2>
-      <p class="hero-description">
-        I'm currently working on how trilingual people manage three languages in their heads, 
-        writing about what it's like doing cognitive science research in Nepal, and teaching 
-        myself computational modeling because I'm curious how different approaches to understanding 
-        complex things actually connect.
-      </p>
-      
-      <div class="hero-meta">
-        <span class="current-work">Research Intern</span>
-        <span class="learning-focus">Cognitive Science & Complex Systems</span>
+
+    <div class="hero-identity">
+      <div class="hero-left">
+        <!-- Masthead -->
+        <div class="hero-masthead">
+          <h1 class="hero-title">Sambit</h1>
+          <div class="hero-meta">
+            <p class="hero-location">Kathmandu, Nepal</p>
+            <div class="hero-social">
+              <a href="https://www.linkedin.com/in/sambit-rimal-0876b9116" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  ><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+              </a>
+              <a href="https://github.com/SamBitSync" target="_blank" rel="noreferrer" aria-label="GitHub">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  ><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rule -->
+        <div class="hero-rule"></div>
+
+        <!-- Tagline -->
+        <p class="hero-tagline">
+          On a voyage in a Ship of Theseus. Constantly being rebuilt at sea, plank by plank. <a href="/meta/neuraths-boat"><em class="neurath">Neurath's way.</em></a>
+        </p>
+
+        <!-- Planks -->
+        <div class="hero-planks-block">
+          <span class="planks-label">Three load-bearing planks</span>
+          <div class="planks">
+            <span data-plank="philosophy">philosophy</span>
+            <span class="plank-sep">—</span>
+            <span data-plank="experiments">experiments</span>
+            <span class="plank-sep">—</span>
+            <span data-plank="modeling">modeling</span>
+          </div>
+        </div>
+
+        <!-- Currently (inside left column so triangle has no gap) -->
+        <div class="hero-currently-block">
+          <span class="currently-label">Currently engaging via</span>
+          <ul class="hero-currently">
+            <li data-vertex="experiments">
+              <div class="currently-item">
+                <span class="currently-title">Behavioral experiments <span class="at-sign">@</span> <a href="https://cogpsychling-lab.github.io/" target="_blank" rel="noreferrer">Cognitive Science &amp; Psycholinguistics Lab</a></span>
+                <span class="currently-desc">Psycholinguistic experiments on bilingualism, multilingualism, and how language shapes cognition in non-WEIRD populations</span>
+                <span class="vertex-tag">experiments</span>
+              </div>
+            </li>
+            <li data-vertex="philosophy">
+              <div class="currently-item">
+                <span class="currently-title">STS research <span class="at-sign">@</span> <a href="https://theopen.institute/" target="_blank" rel="noreferrer">The Open Institute</a></span>
+                <span class="currently-desc">Insider ethnography of a cognitive science lab — how scientific legitimacy gets built at the margins</span>
+                <span class="vertex-tag">philosophy</span>
+              </div>
+            </li>
+            <li data-vertex="modeling">
+              <div class="currently-item">
+                <span class="currently-title">Autodidactic mathematics <span class="at-sign">@</span> <a href="https://github.com/SamBitSync/modeling-mechanisms" target="_blank" rel="noreferrer">modeling-mechanisms</a></span>
+                <span class="currently-desc">Working through complex adaptive systems, game theory, and computational models — this site is where the third plank gets built</span>
+                <span class="vertex-tag">modeling</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-triangle">
+          <svg width="260" height="280" viewBox="0 0 260 280" fill="none" overflow="visible" xmlns="http://www.w3.org/2000/svg">
+            <!-- Edges -->
+            <line class="tri-edge" data-edges="philosophy experiments" x1="130" y1="52" x2="30" y2="220" stroke="#c4b8a8" stroke-width="0.8" stroke-dasharray="5,5"/>
+            <line class="tri-edge" data-edges="philosophy modeling" x1="130" y1="52" x2="230" y2="220" stroke="#c4b8a8" stroke-width="0.8" stroke-dasharray="5,5"/>
+            <line class="tri-edge" data-edges="experiments modeling" x1="30" y1="220" x2="230" y2="220" stroke="#c4b8a8" stroke-width="0.8" stroke-dasharray="5,5"/>
+            <!-- Inner medians to centroid -->
+            <line x1="130" y1="52" x2="130" y2="164" stroke="#c4b8a8" stroke-width="0.4" opacity="0.35"/>
+            <line x1="30" y1="220" x2="130" y2="164" stroke="#c4b8a8" stroke-width="0.4" opacity="0.35"/>
+            <line x1="230" y1="220" x2="130" y2="164" stroke="#c4b8a8" stroke-width="0.4" opacity="0.35"/>
+            <!-- Satellite nodes -->
+            <circle cx="80" cy="136" r="2" fill="#c4b8a8" opacity="0.45"/>
+            <circle cx="180" cy="136" r="2" fill="#c4b8a8" opacity="0.45"/>
+            <circle cx="80" cy="220" r="1.5" fill="#c4b8a8" opacity="0.3"/>
+            <circle cx="180" cy="220" r="1.5" fill="#c4b8a8" opacity="0.3"/>
+            <!-- Centroid — open circle, where work converges -->
+            <circle cx="130" cy="164" r="3.5" fill="none" stroke="#8b4513" stroke-width="1.2" opacity="0.6"/>
+            <!-- Vertex nodes -->
+            <circle class="tri-node" data-vertex="philosophy" cx="130" cy="52" fill="#8b4513" opacity="0.8"/>
+            <circle class="tri-node" data-vertex="experiments" cx="30" cy="220" fill="#8b4513" opacity="0.8"/>
+            <circle class="tri-node" data-vertex="modeling" cx="230" cy="220" fill="#8b4513" opacity="0.8"/>
+            <!-- Labels -->
+            <text class="tri-label" data-vertex="philosophy" x="130" y="32" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="9" font-weight="500" letter-spacing="0.12em" fill="#78716c">PHILOSOPHY</text>
+            <text class="tri-label" data-vertex="experiments" x="30" y="248" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="9" font-weight="500" letter-spacing="0.12em" fill="#78716c">EXPERIMENTS</text>
+            <text class="tri-label" data-vertex="modeling" x="230" y="248" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="9" font-weight="500" letter-spacing="0.12em" fill="#78716c">MODELING</text>
+            <!-- Invisible hit zones -->
+            <circle class="tri-target" data-vertex="philosophy" cx="130" cy="52" r="20" fill="none" style="cursor:pointer"/>
+            <circle class="tri-target" data-vertex="experiments" cx="30" cy="220" r="20" fill="none" style="cursor:pointer"/>
+            <circle class="tri-target" data-vertex="modeling" cx="230" cy="220" r="20" fill="none" style="cursor:pointer"/>
+          </svg>
+        </div>
       </div>
     </div>
+
+    <!-- Rule + Byline -->
+    <div class="hero-rule"></div>
+    <div class="hero-byline">
+      <span class="byline-label">Degrees</span>
+      <span class="byline-sep">·</span>
+      <span>BSc CSIT · MA Linguistics <span class="byline-ongoing">(ongoing)</span> · Tribhuvan University</span>
+    </div>
+
   </div>
 
-  <div class="content-preview">
-    <section class="preview-section">
-      <div class="section-header">
-        <h3>What I'm Working On</h3>
-        <a href="/research" class="section-link">See all current work →</a>
+<div class="sections-grid">
+    <a href="/maps" class="section-card maps">
+      <div class="card-glass"></div>
+      <div class="card-content">
+        <div class="section-icon">◈</div>
+        <div class="section-text">
+          <h2>Maps</h2>
+          <span class="section-desc">Knowledge Topology</span>
+          <span class="section-count">{allMaps.length} items</span>
+        </div>
       </div>
-      
-      <div class="content-grid">
-        {recentResearch.map((item) => (
-          <article class="content-card research-card">
-            <div class="card-meta">
-              <span class="card-type">Research</span>
-              <span class="card-status">{item.data.status}</span>
-            </div>
-            <h4><a href={`/research/${item.slug}`}>{item.data.title}</a></h4>
-            <p class="card-description">{item.data.description}</p>
-            <div class="card-tags">
-              {item.data.methodology.slice(0, 2).map(method => (
-                <span class="tag methodology-tag">{method}</span>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
+    </a>
 
-    <section class="preview-section">
-      <div class="section-header">
-        <h3>Things I'm Learning</h3>
-        <a href="/frameworks" class="section-link">See what I'm figuring out →</a>
+    <a href="/meta" class="section-card meta">
+      <div class="card-glass"></div>
+      <div class="card-content">
+        <div class="section-icon">⊕</div>
+        <div class="section-text">
+          <h2>Meta</h2>
+          <span class="section-desc">Frameworks & Models</span>
+          <span class="section-count">{allMeta.length} items</span>
+        </div>
       </div>
-      
-      <div class="content-grid">
-        {recentFrameworks.map((item) => (
-          <article class="content-card framework-card">
-            <div class="card-meta">
-              <span class="card-type">Framework</span>
-              <span class="card-maturity">{item.data.maturity}</span>
-            </div>
-            <h4><a href={`/frameworks/${item.slug}`}>{item.data.title}</a></h4>
-            <p class="card-description">{item.data.description}</p>
-            <div class="card-tags">
-              {item.data.domain.slice(0, 2).map(domain => (
-                <span class="tag domain-tag">{domain}</span>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
+    </a>
 
-    <section class="preview-section">
-      <div class="section-header">
-        <h3>Random Thoughts</h3>
-        <a href="/notes" class="section-link">Browse my notes →</a>
+    <a href="/process" class="section-card process">
+      <div class="card-glass"></div>
+      <div class="card-content">
+        <div class="section-icon">⟲</div>
+        <div class="section-text">
+          <h2>Process</h2>
+          <span class="section-desc">Lab Notes & Logs</span>
+          <span class="section-count">{allProcess.length} entries</span>
+        </div>
       </div>
-      
-      <div class="notes-list">
-        {recentNotes.map((note) => (
-          <article class="note-item">
-            <div class="note-meta">
-              <span class="note-type">{note.data.type}</span>
-              <span class="note-confidence">{note.data.confidence}</span>
-            </div>
-            <h5><a href={`/notes/${note.slug}`}>{note.data.title}</a></h5>
-            <div class="note-tags">
-              {note.data.tags.slice(0, 3).map(tag => (
-                <span class="tag note-tag">{tag}</span>
-              ))}
-            </div>
-          </article>
-        ))}
+    </a>
+
+    <a href="/project" class="section-card project">
+      <div class="card-glass"></div>
+      <div class="card-content">
+        <div class="section-icon">◆</div>
+        <div class="section-text">
+          <h2>Project</h2>
+          <span class="section-desc">Artifacts & Obsessions</span>
+          <span class="section-count">{allProjects.length} items</span>
+        </div>
       </div>
-    </section>
+    </a>
   </div>
+
+  {
+    (recentMaps.length > 0 || recentProcess.length > 0) && (
+      <div class="recent-work">
+        <div class="recent-header">
+          <h2 class="section-label">Recent Signals</h2>
+          <div class="header-line" />
+        </div>
+
+        <div class="recent-grid">
+          <h3 class="col-header">Maps</h3>
+          <h3 class="col-header">Process</h3>
+          {[0, 1].map((i) => [
+            recentMaps[i] ? (
+              <a href={`/maps/${recentMaps[i].id}`} class="recent-item">
+                <span class="item-date">
+                  {recentMaps[i].data.date.toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </span>
+                <div class="item-info">
+                  <h4>{recentMaps[i].data.title}</h4>
+                  <div class="item-tags">
+                    {recentMaps[i].data.aspects?.slice(0, 2).map((a) => (
+                      <span>{a}</span>
+                    ))}
+                  </div>
+                </div>
+              </a>
+            ) : <div />,
+            recentProcess[i] ? (
+              <a href={`/process/${recentProcess[i].id}`} class="recent-item">
+                <div class="item-badges">
+                  <span class={`badge status-${recentProcess[i].data.status}`}>
+                    {recentProcess[i].data.status}
+                  </span>
+                </div>
+                <div class="item-info">
+                  <h4>{recentProcess[i].data.title}</h4>
+                  <p>{recentProcess[i].data.description}</p>
+                </div>
+              </a>
+            ) : <div />,
+          ])}
+        </div>
+      </div>
+    )
+  }
 </BaseLayout>
 
 <style>
+  /* ── Hero ── */
   .hero {
-    text-align: center;
-    padding: 4rem 0;
-    border-bottom: 1px solid var(--secondary);
-    margin-bottom: 4rem;
+    padding: 2rem 0 2.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+
+  .hero-identity {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: start;
+    margin-bottom: 2rem;
+  }
+
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2.5rem;
+  }
+
+  .hero-masthead {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 0.75rem;
   }
 
   .hero-title {
-    font-family: var(--font-serif);
-    font-size: 3.5rem;
-    font-weight: 600;
-    color: var(--primary);
-    margin-bottom: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: clamp(2.75rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    margin: 0;
+    color: var(--text-primary);
   }
 
-  .hero-subtitle {
-    font-size: 1.5rem;
-    color: var(--secondary);
-    font-weight: 400;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-description {
-    max-width: 600px;
-    margin: 0 auto 2rem auto;
-    font-size: 1.125rem;
-    line-height: 1.7;
-    color: var(--secondary);
+  :global([data-theme="light"]) .hero-title {
+    color: #1c1917;
   }
 
   .hero-meta {
     display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    font-size: 0.875rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    border-left: 1px solid var(--border);
+    padding-left: 1.5rem;
   }
 
-  .academic-status, .research-focus {
-    padding: 0.375rem 0.75rem;
-    background: var(--surface);
-    border: 1px solid var(--secondary);
-    border-radius: 0.375rem;
-    color: var(--primary);
-  }
-
-  .mode-hint {
-    margin-top: 2rem;
-  }
-
-  .explore-toggle {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: opacity 0.2s ease;
-  }
-
-  .explore-toggle:hover {
-    opacity: 0.9;
-  }
-
-  .content-preview {
-    display: grid;
-    gap: 4rem;
-  }
-
-  .preview-section {
-    display: grid;
-    gap: 1.5rem;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--accent);
-    padding-bottom: 0.5rem;
-  }
-
-  .section-header h3 {
-    font-family: var(--font-serif);
-    font-size: 1.75rem;
-    color: var(--primary);
+  .hero-location {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-tertiary);
     margin: 0;
   }
 
-  .section-link {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.875rem;
+  .hero-rule {
+    height: 1px;
+    background: var(--text-primary);
+    opacity: 0.1;
   }
 
-  .section-link:hover {
+  :global([data-theme="light"]) .hero-rule {
+    opacity: 0.15;
+  }
+
+  .hero-tagline {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    margin: 1rem 0 0;
+    line-height: 1.7;
+  }
+
+
+  .neurath {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  .hero-tagline a {
+    color: inherit;
     text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(139, 69, 19, 0.35);
+    transition: text-decoration-color 0.15s ease;
   }
 
-  .content-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
+  .hero-tagline a:hover {
+    text-decoration-color: var(--accent);
   }
 
-  .content-card {
-    background: var(--surface);
-    border: 1px solid var(--secondary);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    transition: border-color 0.2s ease;
-  }
-
-  .content-card:hover {
-    border-color: var(--accent);
-  }
-
-  .card-meta {
+  /* Social: inline with location in masthead */
+  .hero-social {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    font-size: 0.75rem;
+    gap: 0.875rem;
   }
 
-  .card-type {
-    background: var(--accent);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-weight: 500;
-  }
-
-  .card-status, .card-maturity {
-    background: var(--bg);
-    color: var(--secondary);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    border: 1px solid var(--secondary);
-  }
-
-  .content-card h4 {
-    margin: 0 0 0.75rem 0;
-    font-size: 1.125rem;
-  }
-
-  .content-card h4 a {
-    color: var(--primary);
-    text-decoration: none;
-  }
-
-  .content-card h4 a:hover {
-    color: var(--accent);
-  }
-
-  .card-description {
-    color: var(--secondary);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-
-  .card-tags {
+  .hero-social a {
+    color: var(--text-tertiary);
+    opacity: 0.45;
+    transition: opacity 0.15s ease;
     display: flex;
-    flex-wrap: wrap;
+  }
+
+  .hero-social a:hover {
+    opacity: 0.85;
+  }
+
+  /* Planks block */
+  .hero-planks-block {
+    display: flex;
+    flex-direction: column;
     gap: 0.375rem;
+    padding: 1.25rem 0;
   }
 
-  .tag {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    background: var(--bg);
-    color: var(--secondary);
-    border: 1px solid var(--secondary);
-  }
-
-  .notes-list {
-    display: grid;
-    gap: 1rem;
-  }
-
-  .note-item {
-    background: var(--surface);
-    border-left: 3px solid var(--accent);
-    padding: 1rem 1.5rem;
-    border-radius: 0 0.375rem 0.375rem 0;
-  }
-
-  .note-meta {
-    display: flex;
-    gap: 0.5rem;
+  .planks-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #a0724e;
+    letter-spacing: 0.08em;
+    text-transform: none;
+    display: block;
     margin-bottom: 0.5rem;
+  }
+
+  .planks {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .planks [data-plank] {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    cursor: default;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .plank-sep {
+    color: var(--text-tertiary);
+    font-weight: 300;
     font-size: 0.75rem;
   }
 
-  .note-type, .note-confidence {
-    background: var(--bg);
-    color: var(--secondary);
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
-    border: 1px solid var(--secondary);
-  }
-
-  .note-item h5 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-  }
-
-  .note-item h5 a {
-    color: var(--primary);
-    text-decoration: none;
-  }
-
-  .note-item h5 a:hover {
+  [data-plank].active,
+  .planks [data-plank]:hover {
     color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-subtle);
   }
 
-  .note-tags {
+  /* Triangle motif */
+  .hero-triangle {
+    opacity: 0.75;
+    flex-shrink: 0;
+  }
+
+  .hero-triangle svg {
+    display: block;
+    width: 260px;
+    height: 280px;
+  }
+
+  .tri-node {
+    r: 3.5;
+    transition: r 0.18s ease, opacity 0.18s ease;
+  }
+
+  .tri-node.active {
+    r: 5.5;
+    opacity: 1;
+  }
+
+  .tri-label {
+    transition: fill 0.18s ease;
+  }
+
+  .tri-label.active {
+    fill: #8b4513 !important;
+  }
+
+  .tri-edge {
+    transition: stroke 0.18s ease, opacity 0.18s ease;
+  }
+
+  .tri-edge.solid {
+    stroke-dasharray: none;
+    stroke: rgba(139, 69, 19, 0.55);
+    opacity: 1;
+  }
+
+  /* Currently block */
+  .hero-currently-block {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem 0 0;
+  }
+
+  .currently-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent-hover);
+    padding-top: 0.15rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .currently-label::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .hero-currently {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .hero-currently li {
+    padding: 0.75rem 0 0.75rem 1.25rem;
+    border-left: 2px solid var(--border);
+    transition: border-left-color 0.2s ease;
+  }
+
+  .hero-currently li + li {
+    margin-top: 0.75rem;
+  }
+
+  .hero-currently li:hover {
+    border-left-color: var(--accent);
+  }
+
+  .currently-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .currently-title {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .currently-title a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(139, 69, 19, 0.3);
+    transition: text-decoration-color 0.15s ease;
+  }
+
+  .currently-title a:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  .at-sign {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    letter-spacing: 0;
+  }
+
+  .currently-desc {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    line-height: 1.55;
+  }
+
+  .vertex-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.4;
+    margin-top: 0.4rem;
+    display: block;
+    transition: opacity 0.2s ease;
+  }
+
+  .hero-currently li:hover .vertex-tag {
+    opacity: 0.85;
+  }
+
+
+  /* Byline */
+  .hero-byline {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.03em;
+    padding-top: 0.75rem;
+  }
+
+  .byline-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .byline-sep {
+    opacity: 0.4;
+  }
+
+  .byline-ongoing {
+    font-style: italic;
+    color: var(--accent-hover);
+  }
+
+  /* Light Mode: Serif Headings */
+  :global([data-theme="light"]) h2,
+  :global([data-theme="light"]) h3 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.02em;
+  }
+
+  /* ── Navigation Grid: flat, typographic ── */
+  .sections-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    margin: 0 0 5rem;
+    border: 1px solid var(--border);
+  }
+
+  .section-card {
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    padding: 1.75rem;
+    border: none;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    transition: background 0.15s ease;
+    display: block;
+  }
+
+  /* remove extra borders on grid edges */
+  .section-card:nth-child(2),
+  .section-card:nth-child(4) {
+    border-right: none;
+  }
+
+  .section-card:nth-child(3),
+  .section-card:nth-child(4) {
+    border-bottom: none;
+  }
+
+  .section-card:hover {
+    background: var(--surface);
+  }
+
+  :global([data-theme="light"]) .section-card:hover {
+    background: #fafaf9;
+  }
+
+  /* hide unused glass element */
+  .card-glass {
+    display: none;
+  }
+
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .section-icon {
+    font-size: 1rem;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    line-height: 1;
+  }
+
+  .section-text {
+    display: flex;
+    flex-direction: column;
     gap: 0.25rem;
   }
 
-  .note-tag {
-    font-size: 0.6875rem;
+  .section-text h2 {
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .section-desc {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+  }
+
+  .section-count {
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    color: var(--text-tertiary);
+    opacity: 0.6;
+    margin-top: 0.25rem;
+    display: block;
+  }
+
+  /* Recent Work */
+  .recent-work {
+    padding: 0 0 4rem;
+  }
+
+  .recent-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+    margin: 0;
+  }
+
+  .header-line {
+    height: 1px;
+    background: var(--border);
+    width: 100%;
+  }
+
+  .recent-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 3rem;
+  }
+
+  .col-header {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-tertiary);
+    margin: 0 0 0.25rem 0;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.75rem;
+  }
+
+  .recent-item {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.25rem 0;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid var(--border-subtle);
+    transition: all 0.2s ease;
+    background: transparent;
+  }
+
+  .recent-item:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+
+  .recent-item:hover h4 {
+    color: var(--accent);
+  }
+
+  .item-date {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+    padding-top: 0.2rem;
+    min-width: 60px;
+    flex-shrink: 0;
+  }
+
+  .item-info h4 {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .item-tags {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .item-tags span {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--text-tertiary);
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+  }
+
+  .item-badges {
+    min-width: 60px;
+    flex-shrink: 0;
+    padding-top: 0.2rem;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .badge {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+
+  .status-in-progress {
+    background: var(--accent-subtle);
+    color: var(--accent);
+    border-color: rgba(139, 69, 19, 0.2);
+  }
+
+  :global([data-theme="light"]) .status-in-progress {
+    background: transparent;
+    color: #b45309;
+    border-color: #d97706;
+  }
+
+  .status-completed {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border-color: rgba(16, 185, 129, 0.2);
+  }
+
+  :global([data-theme="light"]) .status-completed {
+    background: transparent;
+    color: #059669;
+    border-color: #059669;
   }
 
   @media (max-width: 768px) {
+    .hero {
+      padding: 1.5rem 0 1.5rem;
+    }
+
+    .hero-identity {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-right {
+      display: none;
+    }
+
     .hero-title {
-      font-size: 2.5rem;
+      font-size: clamp(2rem, 8vw, 2.75rem);
     }
-    
-    .hero-meta {
-      flex-direction: column;
-      gap: 0.5rem;
+
+    .hero-tagline {
+      font-size: 1.125rem;
     }
-    
-    .section-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
+
+    .hero-planks-block {
+      padding: 1rem 0;
     }
-    
-    .content-grid {
+
+    .hero-byline {
+      flex-wrap: wrap;
+      gap: 0.375rem 0.625rem;
+    }
+
+    .sections-grid {
+      grid-template-columns: 1fr;
+    }
+
+    /* reset border edges for single column */
+    .section-card:nth-child(2),
+    .section-card:nth-child(4) {
+      border-right: 1px solid var(--border);
+    }
+
+    .section-card:nth-child(3) {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-card:last-child {
+      border-bottom: none;
+    }
+
+    .recent-grid {
       grid-template-columns: 1fr;
     }
   }
 </style>
+
+<script>
+  const planks = document.querySelectorAll('[data-plank]');
+  const targets = document.querySelectorAll('.tri-target');
+
+  function activate(name: string) {
+    document.querySelectorAll(`.tri-node[data-vertex="${name}"]`).forEach(el => el.classList.add('active'));
+    document.querySelectorAll(`.tri-label[data-vertex="${name}"]`).forEach(el => el.classList.add('active'));
+    document.querySelectorAll(`[data-plank="${name}"]`).forEach(el => el.classList.add('active'));
+    document.querySelectorAll(`.tri-edge[data-edges*="${name}"]`).forEach(el => el.classList.add('solid'));
+  }
+
+  function deactivate(name: string) {
+    document.querySelectorAll(`.tri-node[data-vertex="${name}"]`).forEach(el => el.classList.remove('active'));
+    document.querySelectorAll(`.tri-label[data-vertex="${name}"]`).forEach(el => el.classList.remove('active'));
+    document.querySelectorAll(`[data-plank="${name}"]`).forEach(el => el.classList.remove('active'));
+    document.querySelectorAll(`.tri-edge[data-edges*="${name}"]`).forEach(el => el.classList.remove('solid'));
+  }
+
+  planks.forEach(plank => {
+    const name = (plank as HTMLElement).dataset.plank!;
+    plank.addEventListener('mouseenter', () => activate(name));
+    plank.addEventListener('mouseleave', () => deactivate(name));
+  });
+
+  targets.forEach(target => {
+    const name = (target as HTMLElement).dataset.vertex!;
+    target.addEventListener('mouseenter', () => activate(name));
+    target.addEventListener('mouseleave', () => deactivate(name));
+  });
+
+  document.querySelectorAll('.hero-currently li[data-vertex]').forEach(item => {
+    const name = (item as HTMLElement).dataset.vertex!;
+    item.addEventListener('mouseenter', () => activate(name));
+    item.addEventListener('mouseleave', () => deactivate(name));
+  });
+</script>
+

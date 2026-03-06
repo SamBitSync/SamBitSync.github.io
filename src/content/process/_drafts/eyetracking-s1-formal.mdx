@@ -1,0 +1,23 @@
+---
+title: "The chain: theory → mechanism → observable"
+description: "Formalizing the inference chain from cognitive state to measured gaze"
+date: 2025-11-28
+dimension: "formal"
+project: "Eyetracking"
+series: "1"
+seriesTitle: "Precision, Sampling, and What Actually Matters"
+status: "in-progress"
+tags: ["eye-tracking", "VWP", "formal"]
+---
+
+# The chain: theory → mechanism → observable
+
+What precision do you actually need?
+
+Let's formalize the chain:
+1.  **Theory**: "Subject predicts X"
+2.  **Mechanism**: "Oculomotor system targets location of X"
+3.  **Observable**: "Eye tracker reports coordinates (x,y)"
+
+The error propagates. If the target is large, the tolerance for error in step 3 is high.
+We can define the required precision $P$ as a function of target separation $S$ and target size $T$.
