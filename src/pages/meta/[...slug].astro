@@ -1,10 +1,10 @@
 ---
-import { getCollection, render } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
-  const meta = await getCollection('meta');
+  const meta = await getCollection("meta");
   return meta.map((post) => ({
     params: { slug: post.id },
     props: { post },
@@ -12,19 +12,33 @@ export async function getStaticPaths() {
 }
 
 interface Props {
-  post: CollectionEntry<'meta'>;
+  post: CollectionEntry<"meta">;
 }
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+const maturityIcons = {
+  seedling: "🌱",
+  budding: "🌿",
+  evergreen: "🌳",
+};
 ---
 
-<BaseLayout title={`${post.data.title} | Meta`} description={post.data.description}>
+<BaseLayout
+  title={`${post.data.title} | Meta`}
+  description={post.data.description}
+>
   <article class="post">
     <header class="post-header">
       <div class="header-meta">
         <span class="framework">{post.data.framework}</span>
         <span class={`maturity-badge maturity-${post.data.maturity}`}>
+          <span class="maturity-icon"
+            >{
+              maturityIcons[post.data.maturity as keyof typeof maturityIcons]
+            }</span
+          >
           {post.data.maturity}
         </span>
       </div>
@@ -33,49 +47,83 @@ const { Content } = await render(post);
 
       <div class="post-meta">
         <time datetime={post.data.date.toISOString()}>
-          Last updated: {post.data.date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}
+          Last updated: {
+            post.data.date.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          }
         </time>
       </div>
 
-      {post.data.thinkers && post.data.thinkers.length > 0 && (
-        <div class="thinkers">
-          <strong>Key thinkers:</strong>
-          {post.data.thinkers.map((thinker, index) => (
-            <span>{thinker}{index < post.data.thinkers.length - 1 ? ', ' : ''}</span>
-          ))}
-        </div>
-      )}
+      {
+        post.data.thinkers && post.data.thinkers.length > 0 && (
+          <div class="thinkers">
+            <strong>Key thinkers:</strong>
+            {post.data.thinkers.map((thinker, index) => (
+              <span>
+                {thinker}
+                {index < post.data.thinkers.length - 1 ? ", " : ""}
+              </span>
+            ))}
+          </div>
+        )
+      }
     </header>
 
     <div class="post-content">
       <Content />
     </div>
 
-    {post.data.relatedMaps && post.data.relatedMaps.length > 0 && (
-      <aside class="connections">
-        <button class="connections-toggle" type="button" aria-expanded="false">
-          <span class="connections-label">Related frameworks</span>
-          <span class="connections-count">({post.data.relatedMaps.length})</span>
-          <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <div class="connections-list" hidden>
-          <ul>
-            {post.data.relatedMaps.map((map) => {
-              const displayName = map.split('/').pop().split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-              return (
-                <li><a href={`/${map}`}>{displayName}</a></li>
-              );
-            })}
-          </ul>
-        </div>
-      </aside>
-    )}
+    {
+      post.data.relatedMaps && post.data.relatedMaps.length > 0 && (
+        <aside class="connections">
+          <button
+            class="connections-toggle"
+            type="button"
+            aria-expanded="false"
+          >
+            <span class="connections-label">Related frameworks</span>
+            <span class="connections-count">
+              ({post.data.relatedMaps.length})
+            </span>
+            <svg
+              class="chevron"
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+            >
+              <path
+                d="M3 4.5L6 7.5L9 4.5"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <div class="connections-list" hidden>
+            <ul>
+              {post.data.relatedMaps.map((map) => {
+                const displayName = map
+                  .split("/")
+                  .pop()
+                  .split("-")
+                  .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                  .join(" ");
+                return (
+                  <li>
+                    <a href={`/${map}`}>{displayName}</a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </aside>
+      )
+    }
 
     <nav class="post-nav">
       <a href="/meta" class="back-link">← Back to Meta</a>
@@ -116,21 +164,29 @@ const { Content } = await render(post);
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.025em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
   }
 
-  .maturity-draft {
+  .maturity-icon {
+    font-size: 0.875rem;
+    line-height: 1;
+  }
+
+  .maturity-seedling {
     background: #f59e0b20;
     color: #f59e0b;
     border: 1px solid #f59e0b40;
   }
 
-  .maturity-in-use {
+  .maturity-budding {
     background: #3b82f620;
     color: #3b82f6;
     border: 1px solid #3b82f640;
   }
 
-  .maturity-established {
+  .maturity-evergreen {
     background: #10b98120;
     color: #10b981;
     border: 1px solid #10b98140;
@@ -403,20 +459,21 @@ const { Content } = await render(post);
 
 <script>
   // Handle connections toggle
-  document.addEventListener('DOMContentLoaded', () => {
-    const toggle = document.querySelector('.connections-toggle');
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.querySelector(".connections-toggle");
     if (!toggle) return;
 
-    toggle.addEventListener('click', () => {
+    toggle.addEventListener("click", () => {
       const list = toggle.nextElementSibling;
-      const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+      if (!list) return;
+      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
 
       if (isExpanded) {
-        toggle.setAttribute('aria-expanded', 'false');
-        list.setAttribute('hidden', '');
+        toggle.setAttribute("aria-expanded", "false");
+        list.setAttribute("hidden", "");
       } else {
-        toggle.setAttribute('aria-expanded', 'true');
-        list.removeAttribute('hidden');
+        toggle.setAttribute("aria-expanded", "true");
+        list.removeAttribute("hidden");
       }
     });
   });

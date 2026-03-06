@@ -4,106 +4,160 @@ export interface Props {
   description?: string;
 }
 
-const { title, description = "Sambit's portfolio and external memory system - cognitive science research, epistemic practice, and cross-domain synthesis" } = Astro.props;
+const {
+  title,
+  description = "Sambit's portfolio and external memory system - cognitive science research, epistemic practice, and cross-domain synthesis",
+} = Astro.props;
+
+const lastUpdated = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="description" content={description} />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="color-scheme" content="light dark" />
-  <title>{title}</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{title}</title>
 
-  <meta name="author" content="Sambit" />
-  <meta name="keywords" content="cognitive science, epistemology, complexity science, research portfolio" />
+    <meta name="author" content="Sambit" />
+    <meta
+      name="keywords"
+      content="cognitive science, epistemology, complexity science, research portfolio"
+    />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400;1,6..72,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- HTMX -->
-  <script src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous"></script>
-</head>
+    <!-- HTMX -->
+    <script
+      src="https://unpkg.com/htmx.org@2.0.3"
+      integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
+      crossorigin="anonymous"></script>
+  </head>
 
-<body>
-  <script is:inline>
-    // Theme initialization - runs before page render to prevent flash
-    (function() {
-      const getTheme = () => {
-        const stored = localStorage.getItem('theme');
-        if (stored) return stored;
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      };
+  <body>
+    <script is:inline>
+      // Theme initialization - runs before page render to prevent flash
+      (function () {
+        const getTheme = () => {
+          const stored = localStorage.getItem("theme");
+          if (stored) return stored;
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        };
 
-      document.documentElement.setAttribute('data-theme', getTheme());
-    })();
-  </script>
+        document.documentElement.setAttribute("data-theme", getTheme());
+      })();
+    </script>
 
-  <div id="app">
-    <header class="header">
-      <nav class="nav">
-        <a href="/" class="brand">Sambit</a>
+    <div id="app">
+      <header class="header">
+        <nav class="nav">
+          <a href="/" class="brand">Sambit</a>
 
-        <div class="nav-links">
-          <a href="/maps" class="nav-link">Maps</a>
-          <a href="/meta" class="nav-link">Meta</a>
-          <a href="/process" class="nav-link">Process</a>
-          <a href="/project" class="nav-link">Project</a>
-          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-            <svg class="sun-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M10 2V4M10 16V18M18 10H16M4 10H2M15.657 4.343L14.243 5.757M5.757 14.243L4.343 15.657M15.657 15.657L14.243 14.243M5.757 5.757L4.343 4.343" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <svg class="moon-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>
-      </nav>
-    </header>
+          <div class="nav-links">
+            <a href="/maps" class="nav-link">Maps</a>
+            <a href="/meta" class="nav-link">Meta</a>
+            <a href="/process" class="nav-link">Process</a>
+            <a href="/project" class="nav-link">Project</a>
+            <button
+              id="theme-toggle"
+              class="theme-toggle"
+              aria-label="Toggle theme"
+            >
+              <svg
+                class="sun-icon"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="10"
+                  cy="10"
+                  r="4"
+                  stroke="currentColor"
+                  stroke-width="1.5"></circle>
+                <path
+                  d="M10 2V4M10 16V18M18 10H16M4 10H2M15.657 4.343L14.243 5.757M5.757 14.243L4.343 15.657M15.657 15.657L14.243 14.243M5.757 5.757L4.343 4.343"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"></path>
+              </svg>
+              <svg
+                class="moon-icon"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"></path>
+              </svg>
+            </button>
+          </div>
+        </nav>
+      </header>
 
-    <main class="main">
-      <slot />
-    </main>
+      <main class="main">
+        <slot />
+      </main>
 
-    <footer class="footer">
-      <p>Work in progress, thoughts subject to change</p>
-    </footer>
-  </div>
+      <footer class="footer">
+        <span class="footer-status">Constantly changing.</span>
+        <span class="footer-sep">·</span>
+        <a href="/meta/neuraths-boat" class="footer-nodock">No dry dock.</a>
+        <span class="footer-sep">·</span>
+        <span class="footer-date">Last plank replaced: {lastUpdated}</span>
+      </footer>
+    </div>
+    <div class="noise-overlay"></div>
 
-  <script>
-    // Theme toggle handler
-    const themeToggle = document.getElementById('theme-toggle');
+    <script>
+      // Theme toggle handler
+      const themeToggle = document.getElementById("theme-toggle");
 
-    function updateTheme() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const html = document.documentElement;
+      function updateTheme() {
+        const currentTheme =
+          document.documentElement.getAttribute("data-theme");
+        const html = document.documentElement;
 
-      // Update icons
-      if (currentTheme === 'dark') {
-        themeToggle?.classList.add('dark');
-      } else {
-        themeToggle?.classList.remove('dark');
+        // Update icons
+        if (currentTheme === "dark") {
+          themeToggle?.classList.add("dark");
+        } else {
+          themeToggle?.classList.remove("dark");
+        }
       }
-    }
 
-    themeToggle?.addEventListener('click', () => {
-      const html = document.documentElement;
-      const currentTheme = html.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      themeToggle?.addEventListener("click", () => {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
 
-      html.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
+        html.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateTheme();
+      });
+
+      // Initialize
       updateTheme();
-    });
-
-    // Initialize
-    updateTheme();
-  </script>
-</body>
+    </script>
+  </body>
 </html>
 
 <style is:global>
@@ -115,96 +169,104 @@ const { title, description = "Sambit's portfolio and external memory system - co
   }
 
   :root {
-    /* Light mode */
-    --bg: #fafafa;
+    /* Light mode - Warm Paper (Stone based) */
+    --bg: #f7f5f0; /* Warm Paper */
     --bg-elevated: #ffffff;
     --surface: #ffffff;
-    --surface-elevated: #ffffff;
-    --text-primary: #1a1a1a;
-    --text-secondary: #666666;
-    --text-tertiary: #999999;
-    --border: #e8e8e8;
-    --border-subtle: #f2f2f2;
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-    --accent-subtle: #dbeafe;
+    --surface-elevated: #fafaf9;
+
+    --text-primary: #1c1917; /* Stone 900 */
+    --text-secondary: #44403c; /* Stone 700 */
+    --text-tertiary: #78716c; /* Stone 500 */
+
+    --border: #e7e5e4; /* Stone 200 */
+    --border-subtle: #f5f5f4; /* Stone 100 */
+
+    --accent: #8b4513; /* Burnt sienna */
+    --accent-hover: #a0724e; /* Sienna muted */
+    --accent-subtle: rgba(139, 69, 19, 0.06);
+
+    /* Modern Shadows - Diffuse & Layered */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    --shadow-md:
+      0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+    --shadow-lg:
+      0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+
+    /* Radii */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
 
     /* Typography */
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-serif: 'Crimson Pro', Georgia, serif;
-    --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+    --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
+    --font-serif: "Newsreader", Georgia, serif;
+    --font-mono: "IBM Plex Mono", "SF Mono", monospace;
 
     /* Spacing */
-    --max-width: 900px;
-    --max-width-wide: 1200px;
+    --max-width: 1200px;
+    --max-width-wide: 1400px;
   }
 
   /* Dark mode - auto-detect */
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      /* Base surface - Material Design recommended */
-      --bg: #121212;
-      --bg-elevated: #1e1e1e;
+      --bg: #09090b; /* Zinc 950 */
+      --bg-elevated: #18181b; /* Zinc 900 */
 
-      /* Elevation through white overlays on base */
-      --surface: #1e1e1e;        /* Base + ~5% white overlay */
-      --surface-elevated: #2c2c2c; /* Base + ~8% white overlay */
+      --surface: #18181b; /* Zinc 900 */
+      --surface-elevated: #27272a; /* Zinc 800 */
 
-      /* Text with proper contrast ratios (WCAG AA) */
-      --text-primary: #e3e3e3;   /* High emphasis - 87% white */
-      --text-secondary: #a8a8a8; /* Medium emphasis - 60% white */
-      --text-tertiary: #808080;  /* Disabled - 38% white */
+      --text-primary: #f4f4f5; /* Zinc 100 */
+      --text-secondary: #a1a1aa; /* Zinc 400 */
+      --text-tertiary: #52525b; /* Zinc 600 */
 
-      /* Borders - subtle elevation indicators */
-      --border: #2c2c2c;
-      --border-subtle: #1e1e1e;
+      --border: #27272a; /* Zinc 800 */
+      --border-subtle: #18181b; /* Zinc 900 */
 
-      /* Accent colors */
-      --accent: #60a5fa;
-      --accent-hover: #93c5fd;
-      --accent-subtle: #1e3a8a;
+      --accent: #c17f52; /* Sienna - lighter for dark mode */
+      --accent-hover: #d4a574; /* Sienna highlight */
+      --accent-subtle: rgba(139, 69, 19, 0.15);
 
-      /* Subtle shadows for depth (lighter, not darker) */
-      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-      --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
-      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+      /* Dark Mode Shadows - Stronger + Border Highlight */
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+      --shadow:
+        0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+      --shadow-md:
+        0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+      --shadow-lg:
+        0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5);
     }
   }
 
   /* Dark mode - manual override */
   [data-theme="dark"] {
-    /* Base surface - Material Design recommended */
-    --bg: #121212;
-    --bg-elevated: #1e1e1e;
+    --bg: #09090b;
+    --bg-elevated: #18181b;
 
-    /* Elevation through white overlays on base */
-    --surface: #1e1e1e;        /* Base + ~5% white overlay */
-    --surface-elevated: #2c2c2c; /* Base + ~8% white overlay */
+    --surface: #18181b;
+    --surface-elevated: #27272a;
 
-    /* Text with proper contrast ratios (WCAG AA) */
-    --text-primary: #e3e3e3;   /* High emphasis - 87% white */
-    --text-secondary: #a8a8a8; /* Medium emphasis - 60% white */
-    --text-tertiary: #808080;  /* Disabled - 38% white */
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --text-tertiary: #52525b;
 
-    /* Borders - subtle elevation indicators */
-    --border: #2c2c2c;
-    --border-subtle: #1e1e1e;
+    --border: #27272a;
+    --border-subtle: #18181b;
 
-    /* Accent colors */
-    --accent: #60a5fa;
-    --accent-hover: #93c5fd;
-    --accent-subtle: #1e3a8a;
+    --accent: #c17f52;
+    --accent-hover: #d4a574;
+    --accent-subtle: rgba(139, 69, 19, 0.15);
 
-    /* Subtle shadows for depth (lighter, not darker) */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+    --shadow-md:
+      0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+    --shadow-lg:
+      0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5);
   }
 
   /* Base Styles */
@@ -280,7 +342,7 @@ const { title, description = "Sambit's portfolio and external memory system - co
   }
 
   .nav-link::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -0.25rem;
     left: 0;
@@ -352,18 +414,50 @@ const { title, description = "Sambit's portfolio and external memory system - co
   .footer {
     background: var(--surface);
     border-top: 1px solid var(--border);
-    padding: 2.5rem 2rem;
-    text-align: center;
+    padding: 2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
   }
 
-  .footer p {
-    color: var(--text-tertiary);
-    font-size: 0.875rem;
+  .footer-status {
+    color: var(--accent);
     font-style: italic;
+    font-family: var(--font-serif);
+    font-size: 0.8rem;
+  }
+
+  .footer-sep {
+    color: var(--text-tertiary);
+    opacity: 0.4;
+  }
+
+  .footer-nodock {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .footer-nodock:hover {
+    color: var(--accent);
+  }
+
+  .footer-date {
+    color: var(--text-tertiary);
   }
 
   /* Typography */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-weight: 600;
     line-height: 1.2;
     color: var(--text-primary);
@@ -457,7 +551,8 @@ const { title, description = "Sambit's portfolio and external memory system - co
   }
 
   /* Lists */
-  ul, ol {
+  ul,
+  ol {
     margin: 1.5rem 0;
     padding-left: 1.75rem;
   }
@@ -476,6 +571,43 @@ const { title, description = "Sambit's portfolio and external memory system - co
     border: none;
     border-top: 1px solid var(--border);
     margin: 3rem 0;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 0.9375rem;
+    overflow-x: auto;
+    display: block; /* Allows scrolling on mobile */
+  }
+
+  thead {
+    background: var(--surface-elevated);
+    border-bottom: 2px solid var(--border);
+  }
+
+  th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: var(--surface-elevated);
   }
 
   /* Images */
@@ -510,14 +642,53 @@ const { title, description = "Sambit's portfolio and external memory system - co
       padding: 3rem 1.25rem;
     }
 
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.625rem; }
-    h3 { font-size: 1.375rem; }
-    h4 { font-size: 1.125rem; }
+    h1 {
+      font-size: 2rem;
+    }
+    h2 {
+      font-size: 1.625rem;
+    }
+    h3 {
+      font-size: 1.375rem;
+    }
+    h4 {
+      font-size: 1.125rem;
+    }
   }
 
   @media (max-width: 480px) {
-    h1 { font-size: 1.75rem; }
-    h2 { font-size: 1.5rem; }
+    h1 {
+      font-size: 1.75rem;
+    }
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 1.75rem;
+    }
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* GRAIN TEXTURE (Global Light Mode) */
+  .noise-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  [data-theme="light"] .noise-overlay {
+    display: block;
+    mix-blend-mode: multiply;
   }
 </style>

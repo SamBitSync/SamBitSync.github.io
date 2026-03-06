@@ -9,11 +9,11 @@ const mapsCollection = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     mapType: z.enum(['moc', 'synthesis', 'literature', 'conceptual']),
-    aspects: z.array(z.enum(['cognition', 'computation', 'code', 'culture', 'complexity', 'constraint', 'causation', 'coordination'])),
+    aspects: z.array(z.enum(['cognition', 'computation', 'code', 'culture', 'complexity', 'constraint', 'causation', 'coordination', 'meta-theory', 'methodology'])),
     patterns: z.array(z.string()).optional(),
     connections: z.array(z.string()).optional(),
     diagram: z.string().optional(),
-    visualType: z.array(z.enum(['diagram', 'animation', 'data-viz', 'interactive'])).optional(),
+    visualType: z.array(z.enum(['diagram', 'animation', 'data-viz', 'interactive', 'text'])).optional(),
   }),
 });
 
@@ -28,7 +28,7 @@ const metaCollection = defineCollection({
     category: z.string(),
     thinkers: z.array(z.string()).optional(),
     relatedMaps: z.array(z.string()).optional(),
-    maturity: z.enum(['draft', 'in-use', 'established']),
+    maturity: z.enum(['seedling', 'budding', 'evergreen']),
     tags: z.array(z.string()).optional(),
     diagram: z.string().optional(),
   }),
@@ -36,12 +36,21 @@ const metaCollection = defineCollection({
 
 // Process: Lab notebook documenting ongoing work
 const processCollection = defineCollection({
-  loader: glob({ base: './src/content/process', pattern: '**/*.{md,mdx}' }),
+  loader: glob({ base: './src/content/process', pattern: '*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
-    dimension: z.enum(['formal', 'empirical', 'implementation', 'troubleshooting', 'exploration']),
+    dimension: z.enum([
+      'formal',
+      'empirical',
+      'implementation',
+      'troubleshooting',
+      'exploration',
+      'canon',
+      'structured-learning',
+      'readings'
+    ]),
     project: z.string().optional(),
     status: z.enum(['in-progress', 'blocked', 'completed']),
     tools: z.array(z.string()).optional(),
@@ -49,6 +58,9 @@ const processCollection = defineCollection({
     tags: z.array(z.string()).optional(),
     diagram: z.string().optional(),
     source: z.string().optional(),
+    series: z.string().optional(),
+    seriesTitle: z.string().optional(),
+    seriesFocus: z.string().optional(),
   }),
 });
 

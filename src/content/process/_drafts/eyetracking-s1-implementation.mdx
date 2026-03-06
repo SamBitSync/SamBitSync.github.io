@@ -1,0 +1,24 @@
+---
+title: "Calibration as contract between ideal and actual gaze"
+description: "Implementing robust calibration routines"
+date: 2025-11-28
+dimension: "implementation"
+project: "Eyetracking"
+series: "1"
+seriesTitle: "Precision, Sampling, and What Actually Matters"
+status: "in-progress"
+tags: ["eye-tracking", "VWP", "implementation"]
+---
+
+# Calibration as contract between ideal and actual gaze
+
+Calibration isn't just a setup step; it's a mapping function.
+
+We map:
+`Raw Pupil/CR` -> `Screen Coordinates`
+
+This mapping is non-linear and drifts over time.
+Implementation:
+- 9-point grid.
+- Polynomial fit or TPS (Thin Plate Spline).
+- Validation step to check error residuals.

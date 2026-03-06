@@ -1,0 +1,22 @@
+---
+title: "Drift detection and when to recalibrate mid-experiment"
+description: "Handling drift during long experimental sessions"
+date: 2025-11-28
+dimension: "troubleshooting"
+project: "Eyetracking"
+series: "1"
+seriesTitle: "Precision, Sampling, and What Actually Matters"
+status: "in-progress"
+tags: ["eye-tracking", "VWP", "troubleshooting"]
+---
+
+# Drift detection and when to recalibrate mid-experiment
+
+Drift is inevitable. The head moves, the eye dries, the system heats up.
+
+**Problem**: If we recalibrate too often, we annoy the participant. If too rarely, data is garbage.
+
+**Solution**:
+- Drift check before every trial (single point).
+- If error > threshold (e.g., 2°), trigger full recalibration.
+- Monitor drift trends over time.

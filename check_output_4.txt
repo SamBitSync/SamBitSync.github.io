@@ -1,0 +1,679 @@
+17:24:08 [content] Syncing content
+17:24:08 [content] Synced content
+17:24:08 [types] Generated 705ms
+17:24:08 [check] Getting diagnostics for Astro files in C:\Users\rimal\code_w\zettelkasten-astro...
+[96mastro.config.mjs[0m:[93m14[0m:[93m26[0m - [91merror[0m[90m ts(7006): [0mParameter 'permalink' implicitly has an 'any' type.
+
+[7m14[0m           hrefTemplate: (permalink) => `/meta/${permalink}`,
+[7m  [0m [91m                         ~~~~~~~~~[0m
+[96mastro.config.mjs[0m:[93m13[0m:[93m26[0m - [91merror[0m[90m ts(7006): [0mParameter 'name' implicitly has an 'any' type.
+
+[7m13[0m           pageResolver: (name) => [name.toLowerCase().replace(/\s+/g, '-')],
+[7m  [0m [91m                         ~~~~[0m
+
+[96mpublic/Digital-Setu/script.js[0m:[93m3262[0m:[93m44[0m - [93mwarning[0m[90m ts(6133): [0m'e' is declared but its value is never read.
+
+[7m3262[0m             localVideoElement.play().catch(e => {
+[7m    [0m [93m                                           ~[0m
+[96mpublic/Digital-Setu/script.js[0m:[93m1148[0m:[93m43[0m - [93mwarning[0m[90m ts(6133): [0m'index' is declared but its value is never read.
+
+[7m1148[0m     interviewLocations.forEach((location, index) => {
+[7m    [0m [93m                                          ~~~~~[0m
+[96mpublic/Digital-Setu/script.js[0m:[93m1089[0m:[93m43[0m - [93mwarning[0m[90m ts(6133): [0m'index' is declared but its value is never read.
+
+[7m1089[0m     khajagharLocations.forEach((location, index) => {
+[7m    [0m [93m                                          ~~~~~[0m
+[96mpublic/Digital-Setu/script.js[0m:[93m965[0m:[93m11[0m - [93mwarning[0m[90m ts(6133): [0m'labelStyle' is declared but its value is never read.
+
+[7m965[0m     const labelStyle = {
+[7m   [0m [93m          ~~~~~~~~~~[0m
+
+[96msrc/components/Graph.astro[0m:[93m338[0m:[93m22[0m - [91merror[0m[90m ts(7005): [0mVariable 'resizeTimer' implicitly has an 'any' type.
+
+[7m338[0m         clearTimeout(resizeTimer);
+[7m   [0m [91m                     ~~~~~~~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m336[0m:[93m9[0m - [91merror[0m[90m ts(7034): [0mVariable 'resizeTimer' implicitly has type 'any' in some locations where its type cannot be determined.
+
+[7m336[0m     let resizeTimer;
+[7m   [0m [91m        ~~~~~~~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m314[0m:[93m32[0m - [91merror[0m[90m ts(7006): [0mParameter 'event' implicitly has an 'any' type.
+
+[7m314[0m             function dragended(event) {
+[7m   [0m [91m                               ~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m309[0m:[93m30[0m - [91merror[0m[90m ts(7006): [0mParameter 'event' implicitly has an 'any' type.
+
+[7m309[0m             function dragged(event) {
+[7m   [0m [91m                             ~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m303[0m:[93m34[0m - [91merror[0m[90m ts(7006): [0mParameter 'event' implicitly has an 'any' type.
+
+[7m303[0m             function dragstarted(event) {
+[7m   [0m [91m                                 ~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m302[0m:[93m23[0m - [91merror[0m[90m ts(7006): [0mParameter 'simulation' implicitly has an 'any' type.
+
+[7m302[0m         function drag(simulation) {
+[7m   [0m [91m                      ~~~~~~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m295[0m:[93m29[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m295[0m                 searchInput.value = "";
+[7m   [0m [91m                            ~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m291[0m:[93m27[0m - [91merror[0m[90m ts(2345): [0mArgument of type '(selection: Selection<Element, unknown, any, any> | TransitionLike<Element, unknown>, transform: ZoomTransform | ((this: Element, event: any, d: unknown) => ZoomTransform), point?: [...] | ... 1 more ... | undefined) => void' is not assignable to parameter of type '(transition: Transition<SVGSVGElement, unknown, null, undefined>, ...args: any[]) => any'.
+  Types of parameters 'selection' and 'transition' are incompatible.
+    Type 'Transition<SVGSVGElement, unknown, null, undefined>' is not assignable to type 'Selection<Element, unknown, any, any> | TransitionLike<Element, unknown>'.
+      Type 'Transition<SVGSVGElement, unknown, null, undefined>' is missing the following properties from type 'Selection<Element, unknown, any, any>': classed, property, html, append, and 14 more.
+
+[7m291[0m                     .call(zoom.transform, initialTransform);
+[7m   [0m [91m                          ~~~~~~~~~~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m288[0m:[93m17[0m - [91merror[0m[90m ts(7005): [0mVariable 'initialTransform' implicitly has an 'any' type.
+
+[7m288[0m             if (initialTransform) {
+[7m   [0m [91m                ~~~~~~~~~~~~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m277[0m:[93m25[0m - [91merror[0m[90m ts(2345): [0mArgument of type '(selection: Selection<Element, unknown, any, any> | TransitionLike<Element, unknown>, transform: ZoomTransform | ((this: Element, event: any, d: unknown) => ZoomTransform), point?: [...] | ... 1 more ... | undefined) => void' is not assignable to parameter of type '(transition: Transition<SVGSVGElement, unknown, null, undefined>, ...args: any[]) => any'.
+  Types of parameters 'selection' and 'transition' are incompatible.
+    Type 'Transition<SVGSVGElement, unknown, null, undefined>' is not assignable to type 'Selection<Element, unknown, any, any> | TransitionLike<Element, unknown>'.
+      Type 'Transition<SVGSVGElement, unknown, null, undefined>' is missing the following properties from type 'Selection<Element, unknown, any, any>': classed, property, html, append, and 14 more.
+
+[7m277[0m                         zoom.transform,
+[7m   [0m [91m                        ~~~~~~~~~~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m265[0m:[93m39[0m - [91merror[0m[90m ts(7006): [0mParameter 'n' implicitly has an 'any' type.
+
+[7m265[0m             const match = nodes.find((n) =>
+[7m   [0m [91m                                      ~[0m
+[96msrc/components/Graph.astro[0m:[93m261[0m:[93m17[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m261[0m                 d.title.toLowerCase().includes(searchTerm) ? 1 : 0.2,
+[7m   [0m [91m                ~[0m
+[96msrc/components/Graph.astro[0m:[93m257[0m:[93m17[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m257[0m                 d.title.toLowerCase().includes(searchTerm) ? 12 : 8,
+[7m   [0m [91m                ~[0m
+[96msrc/components/Graph.astro[0m:[93m255[0m:[93m17[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m255[0m                 d.title.toLowerCase().includes(searchTerm) ? 1 : 0.2,
+[7m   [0m [91m                ~[0m
+[96msrc/components/Graph.astro[0m:[93m244[0m:[93m41[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'EventTarget'.
+
+[7m244[0m             const searchTerm = e.target.value.toLowerCase();
+[7m   [0m [91m                                        ~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m244[0m:[93m32[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m244[0m             const searchTerm = e.target.value.toLowerCase();
+[7m   [0m [91m                               ~~~~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m238[0m:[93m23[0m - [91merror[0m[90m ts(2345): [0mArgument of type '(selection: Selection<Element, unknown, any, any> | TransitionLike<Element, unknown>, transform: ZoomTransform | ((this: Element, event: any, d: unknown) => ZoomTransform), point?: [...] | ... 1 more ... | undefined) => void' is not assignable to parameter of type '(transition: Transition<SVGSVGElement, unknown, null, undefined>, ...args: any[]) => any'.
+  Types of parameters 'selection' and 'transition' are incompatible.
+    Type 'Transition<SVGSVGElement, unknown, null, undefined>' is not assignable to type 'Selection<Element, unknown, any, any> | TransitionLike<Element, unknown>'.
+      Type 'Transition<SVGSVGElement, unknown, null, undefined>' is missing the following properties from type 'Selection<Element, unknown, any, any>': classed, property, html, append, and 14 more.
+
+[7m238[0m                 .call(zoom.transform, initialTransform);
+[7m   [0m [91m                      ~~~~~~~~~~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m216[0m:[93m28[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m216[0m             const bounds = g.node().getBBox();
+[7m   [0m [91m                           ~~~~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m214[0m:[93m13[0m - [91merror[0m[90m ts(7034): [0mVariable 'initialTransform' implicitly has type 'any' in some locations where its type cannot be determined.
+
+[7m214[0m         let initialTransform = null;
+[7m   [0m [91m            ~~~~~~~~~~~~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m210[0m:[93m58[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m210[0m             label.attr("x", (d) => d.x).attr("y", (d) => d.y);
+[7m   [0m [91m                                                         ~[0m
+[96msrc/components/Graph.astro[0m:[93m210[0m:[93m36[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m210[0m             label.attr("x", (d) => d.x).attr("y", (d) => d.y);
+[7m   [0m [91m                                   ~[0m
+[96msrc/components/Graph.astro[0m:[93m208[0m:[93m59[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m208[0m             node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+[7m   [0m [91m                                                          ~[0m
+[96msrc/components/Graph.astro[0m:[93m208[0m:[93m36[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m208[0m             node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+[7m   [0m [91m                                   ~[0m
+[96msrc/components/Graph.astro[0m:[93m206[0m:[93m36[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m206[0m                 .attr("y2", (d) => d.target.y);
+[7m   [0m [91m                                   ~[0m
+[96msrc/components/Graph.astro[0m:[93m205[0m:[93m36[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m205[0m                 .attr("x2", (d) => d.target.x)
+[7m   [0m [91m                                   ~[0m
+[96msrc/components/Graph.astro[0m:[93m204[0m:[93m36[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m204[0m                 .attr("y1", (d) => d.source.y)
+[7m   [0m [91m                                   ~[0m
+[96msrc/components/Graph.astro[0m:[93m203[0m:[93m36[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m203[0m             link.attr("x1", (d) => d.source.x)
+[7m   [0m [91m                                   ~[0m
+[96msrc/components/Graph.astro[0m:[93m190[0m:[93m57[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m190[0m                 l.source.id === d.id || l.target.id === d.id ? 1 : 0.1,
+[7m   [0m [91m                                                        ~[0m
+[96msrc/components/Graph.astro[0m:[93m190[0m:[93m41[0m - [91merror[0m[90m ts(18046): [0m'l' is of type 'unknown'.
+
+[7m190[0m                 l.source.id === d.id || l.target.id === d.id ? 1 : 0.1,
+[7m   [0m [91m                                        ~[0m
+[96msrc/components/Graph.astro[0m:[93m190[0m:[93m33[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m190[0m                 l.source.id === d.id || l.target.id === d.id ? 1 : 0.1,
+[7m   [0m [91m                                ~[0m
+[96msrc/components/Graph.astro[0m:[93m190[0m:[93m17[0m - [91merror[0m[90m ts(18046): [0m'l' is of type 'unknown'.
+
+[7m190[0m                 l.source.id === d.id || l.target.id === d.id ? 1 : 0.1,
+[7m   [0m [91m                ~[0m
+[96msrc/components/Graph.astro[0m:[93m188[0m:[93m61[0m - [91merror[0m[90m ts(18046): [0m'n' is of type 'unknown'.
+
+[7m188[0m             label.style("opacity", (n) => (connectedIds.has(n.id) ? 1 : 0.15));
+[7m   [0m [91m                                                            ~[0m
+[96msrc/components/Graph.astro[0m:[93m187[0m:[93m60[0m - [91merror[0m[90m ts(18046): [0m'n' is of type 'unknown'.
+
+[7m187[0m             node.style("opacity", (n) => (connectedIds.has(n.id) ? 1 : 0.15));
+[7m   [0m [91m                                                           ~[0m
+[96msrc/components/Graph.astro[0m:[93m183[0m:[93m37[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m183[0m                 if (l.target.id === d.id) connectedIds.add(l.source.id);
+[7m   [0m [91m                                    ~[0m
+[96msrc/components/Graph.astro[0m:[93m182[0m:[93m37[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m182[0m                 if (l.source.id === d.id) connectedIds.add(l.target.id);
+[7m   [0m [91m                                    ~[0m
+[96msrc/components/Graph.astro[0m:[93m181[0m:[93m28[0m - [91merror[0m[90m ts(7006): [0mParameter 'l' implicitly has an 'any' type.
+
+[7m181[0m             links.forEach((l) => {
+[7m   [0m [91m                           ~[0m
+[96msrc/components/Graph.astro[0m:[93m179[0m:[93m30[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m179[0m             connectedIds.add(d.id);
+[7m   [0m [91m                             ~[0m
+[96msrc/components/Graph.astro[0m:[93m172[0m:[93m45[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m172[0m             window.location.href = `/maps/${d.id}`;
+[7m   [0m [91m                                            ~[0m
+[96msrc/components/Graph.astro[0m:[93m168[0m:[93m42[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m168[0m         node.append("title").text((d) => d.title);
+[7m   [0m [91m                                         ~[0m
+[96msrc/components/Graph.astro[0m:[93m159[0m:[93m26[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m159[0m             .text((d) => d.title)
+[7m   [0m [91m                         ~[0m
+[96msrc/components/Graph.astro[0m:[93m151[0m:[93m19[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'DragBehavior<Element, unknown, unknown>' is not assignable to parameter of type '(selection: Selection<BaseType | SVGCircleElement, unknown, SVGGElement, unknown>) => void'.
+  Types of parameters 'selection' and 'selection' are incompatible.
+    Type 'Selection<BaseType | SVGCircleElement, unknown, SVGGElement, unknown>' is not assignable to type 'Selection<Element, unknown, any, any>'.
+      Types of property 'select' are incompatible.
+        Type '{ <DescElement extends BaseType>(selector: string): Selection<DescElement, unknown, SVGGElement, unknown>; <DescElement extends BaseType>(selector: null): Selection<null, undefined, SVGGElement, unknown>; <DescElement extends BaseType>(selector: ValueFn<...>): Selection<...>; }' is not assignable to type '{ <DescElement extends BaseType>(selector: string): Selection<DescElement, unknown, any, any>; <DescElement extends BaseType>(selector: null): Selection<null, undefined, any, any>; <DescElement extends BaseType>(selector: ValueFn<...>): Selection<...>; }'.
+          Types of parameters 'selector' and 'selector' are incompatible.
+            Types of parameters 'groups' and 'groups' are incompatible.
+              Type '(BaseType | SVGCircleElement)[] | ArrayLike<BaseType | SVGCircleElement>' is not assignable to type 'Element[] | ArrayLike<Element>'.
+                Type '(BaseType | SVGCircleElement)[]' is not assignable to type 'Element[] | ArrayLike<Element>'.
+                  Type '(BaseType | SVGCircleElement)[]' is not assignable to type 'Element[]'.
+                    Type 'BaseType | SVGCircleElement' is not assignable to type 'Element'.
+                      Type 'null' is not assignable to type 'Element'.
+
+[7m151[0m             .call(drag(simulation));
+[7m   [0m [91m                  ~~~~~~~~~~~~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m148[0m:[93m31[0m - [91merror[0m[90m ts(18046): [0m'd' is of type 'unknown'.
+
+[7m148[0m                 return colors[d.group] || "#64748b";
+[7m   [0m [91m                              ~[0m
+[96msrc/components/Graph.astro[0m:[93m148[0m:[93m24[0m - [91merror[0m[90m ts(7053): [0mElement implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ moc: string; synthesis: string; literature: string; conceptual: string; }'.
+
+[7m148[0m                 return colors[d.group] || "#64748b";
+[7m   [0m [91m                       ~~~~~~~~~~~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m113[0m:[93m34[0m - [91merror[0m[90m ts(2339): [0mProperty 'id' does not exist on type 'SimulationNodeDatum'.
+
+[7m113[0m                     .id((d) => d.id)
+[7m   [0m [91m                                 ~~[0m
+[96msrc/components/Graph.astro[0m:[93m104[0m:[93m18[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'ZoomBehavior<Element, unknown>' is not assignable to parameter of type '(selection: Selection<SVGSVGElement, unknown, null, undefined>) => void'.
+  Types of parameters 'selection' and 'selection' are incompatible.
+    Type 'Selection<SVGSVGElement, unknown, null, undefined>' is not assignable to type 'Selection<Element, unknown, any, any>'.
+      Types of property 'merge' are incompatible.
+        Type '(other: Selection<SVGSVGElement, unknown, null, undefined> | TransitionLike<SVGSVGElement, unknown>) => Selection<SVGSVGElement, unknown, null, undefined>' is not assignable to type '(other: Selection<Element, unknown, any, any> | TransitionLike<Element, unknown>) => Selection<Element, unknown, any, any>'.
+          Types of parameters 'other' and 'other' are incompatible.
+            Type 'Selection<Element, unknown, any, any> | TransitionLike<Element, unknown>' is not assignable to type 'Selection<SVGSVGElement, unknown, null, undefined> | TransitionLike<SVGSVGElement, unknown>'.
+              Type 'Selection<Element, unknown, any, any>' is not assignable to type 'Selection<SVGSVGElement, unknown, null, undefined> | TransitionLike<SVGSVGElement, unknown>'.
+                Type 'Selection<Element, unknown, any, any>' is not assignable to type 'Selection<SVGSVGElement, unknown, null, undefined>'.
+                  Types of property 'select' are incompatible.
+                    Type '{ <DescElement extends BaseType>(selector: string): Selection<DescElement, unknown, any, any>; <DescElement extends BaseType>(selector: null): Selection<null, undefined, any, any>; <DescElement extends BaseType>(selector: ValueFn<...>): Selection<...>; }' is not assignable to type '{ <DescElement extends BaseType>(selector: string): Selection<DescElement, unknown, null, undefined>; <DescElement extends BaseType>(selector: null): Selection<null, undefined, null, undefined>; <DescElement extends BaseType>(selector: ValueFn<...>): Selection<...>; }'.
+                      Types of parameters 'selector' and 'selector' are incompatible.
+                        Types of parameters 'groups' and 'groups' are incompatible.
+                          Type 'Element[] | ArrayLike<Element>' is not assignable to type 'SVGSVGElement[] | ArrayLike<SVGSVGElement>'.
+                            Type 'Element[]' is not assignable to type 'SVGSVGElement[] | ArrayLike<SVGSVGElement>'.
+                              Type 'Element[]' is not assignable to type 'SVGSVGElement[]'.
+                                Type 'Element' is missing the following properties from type 'SVGSVGElement': currentScale, currentTranslate, height, width, and 158 more.
+
+[7m104[0m         svg.call(zoom);
+[7m   [0m [91m                 ~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m176[0m:[93m41[0m - [93mwarning[0m[90m ts(6133): [0m'event' is declared but its value is never read.
+
+[7m176[0m         node.on("mouseenter", function (event, d) {
+[7m   [0m [93m                                        ~~~~~[0m
+[96msrc/components/Graph.astro[0m:[93m171[0m:[93m27[0m - [93mwarning[0m[90m ts(6133): [0m'event' is declared but its value is never read.
+
+[7m171[0m         node.on("click", (event, d) => {
+[7m   [0m [93m                          ~~~~~[0m
+
+[96msrc/layouts/BaseLayout.astro[0m:[93m83[0m:[93m13[0m - [93mwarning[0m[90m ts(6133): [0m'html' is declared but its value is never read.
+
+[7m83[0m       const html = document.documentElement;
+[7m  [0m [93m            ~~~~[0m
+[96msrc/layouts/BaseLayout.astro[0m:[93m28[0m:[93m11[0m - [93mwarning[0m[90m astro(4000): [0mThis script will be treated as if it has the `is:inline` directive because it contains an attribute. Therefore, features that require processing (e.g. using TypeScript or npm packages in the script) are unavailable.
+
+See docs for more details: https://docs.astro.build/en/guides/client-side-scripts/#script-processing.
+
+Add the `is:inline` directive explicitly to silence this hint.
+
+[7m28[0m   <script src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous"></script>
+[7m  [0m [93m          ~~~[0m
+
+[96msrc/pages/about.astro[0m:[93m8[0m:[93m3[0m - [91merror[0m[90m ts(2322): [0mType '{ children: any; title: string; description: string; mode: string; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'mode' does not exist on type 'IntrinsicAttributes & Props'.
+
+[7m8[0m   mode="academic"
+[7m [0m [91m  ~~~~[0m
+
+[96msrc/pages/research-static.astro[0m:[93m8[0m:[93m3[0m - [91merror[0m[90m ts(2322): [0mType '{ children: any[]; title: string; description: string; mode: string; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'mode' does not exist on type 'IntrinsicAttributes & Props'.
+
+[7m8[0m   mode="academic"
+[7m [0m [91m  ~~~~[0m
+
+[96msrc/pages/frameworks/complexity-pluralism.astro[0m:[93m8[0m:[93m3[0m - [91merror[0m[90m ts(2322): [0mType '{ children: any; title: string; description: string; mode: string; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'mode' does not exist on type 'IntrinsicAttributes & Props'.
+
+[7m8[0m   mode="academic"
+[7m [0m [91m  ~~~~[0m
+
+[96msrc/pages/frameworks/index.astro[0m:[93m8[0m:[93m3[0m - [91merror[0m[90m ts(2322): [0mType '{ children: any[]; title: string; description: string; mode: string; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'mode' does not exist on type 'IntrinsicAttributes & Props'.
+
+[7m8[0m   mode="academic"
+[7m [0m [91m  ~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m440[0m:[93m17[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m440[0m       noResults.style.display = 'none';
+[7m   [0m [91m                ~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m437[0m:[93m13[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m437[0m     section.style.display = 'block';
+[7m   [0m [91m            ~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m437[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'section' is possibly 'null'.
+
+[7m437[0m     section.style.display = 'block';
+[7m   [0m [91m    ~~~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m435[0m:[93m15[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m435[0m     noResults.style.display = 'block';
+[7m   [0m [91m              ~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m433[0m:[93m7[0m - [91merror[0m[90m ts(18047): [0m'resultsContainer' is possibly 'null'.
+
+[7m433[0m       resultsContainer.appendChild(noResults);
+[7m   [0m [91m      ~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m427[0m:[93m13[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m427[0m     section.style.display = 'none';
+[7m   [0m [91m            ~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m427[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'section' is possibly 'null'.
+
+[7m427[0m     section.style.display = 'none';
+[7m   [0m [91m    ~~~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m419[0m:[93m21[0m - [91merror[0m[90m ts(18047): [0m'section' is possibly 'null'.
+
+[7m419[0m   const countSpan = section.querySelector('.frameworks-count');
+[7m   [0m [91m                    ~~~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m412[0m:[93m12[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m412[0m       card.style.display = 'none';
+[7m   [0m [91m           ~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m409[0m:[93m12[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m409[0m       card.style.display = 'block';
+[7m   [0m [91m           ~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m378[0m:[93m63[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m378[0m   const scopeFilter = document.getElementById('scope-filter').value;
+[7m   [0m [91m                                                              ~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m378[0m:[93m23[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m378[0m   const scopeFilter = document.getElementById('scope-filter').value;
+[7m   [0m [91m                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m377[0m:[93m69[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m377[0m   const maturityFilter = document.getElementById('maturity-filter').value;
+[7m   [0m [91m                                                                    ~~~~~[0m
+[96msrc/pages/frameworks/index.astro[0m:[93m377[0m:[93m26[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m377[0m   const maturityFilter = document.getElementById('maturity-filter').value;
+[7m   [0m [91m                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/pages/maps/index.astro[0m:[93m259[0m:[93m24[0m - [91merror[0m[90m ts(18048): [0m'map.data.patterns' is possibly 'undefined'.
+
+[7m259[0m                       {map.data.patterns.map((pattern) => (
+[7m   [0m [91m                       ~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m55[0m:[93m33[0m - [91merror[0m[90m ts(7005): [0mVariable 'links' implicitly has an 'any[]' type.
+
+[7m55[0m     <Graph nodes={nodes} links={links} />
+[7m  [0m [91m                                ~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m31[0m:[93m7[0m - [91merror[0m[90m ts(7034): [0mVariable 'links' implicitly has type 'any[]' in some locations where its type cannot be determined.
+
+[7m31[0m const links = [];
+[7m  [0m [91m      ~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m639[0m:[93m29[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m639[0m     const toggle = e.target.closest(".patterns-toggle");
+[7m   [0m [91m                            ~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m639[0m:[93m20[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m639[0m     const toggle = e.target.closest(".patterns-toggle");
+[7m   [0m [91m                   ~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m632[0m:[93m14[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m632[0m         item.style.opacity = "0";
+[7m   [0m [91m             ~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m631[0m:[93m14[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m631[0m         item.style.display = "none";
+[7m   [0m [91m             ~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m629[0m:[93m14[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m629[0m         item.style.opacity = "1";
+[7m   [0m [91m             ~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m628[0m:[93m14[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m628[0m         item.style.display = "";
+[7m   [0m [91m             ~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m508[0m:[93m22[0m - [91merror[0m[90m ts(7053): [0mElement implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ cognition: { bg: string; border: string; text: string; hoverBg: string; hoverBorder: string; }; computation: { bg: string; border: string; text: string; hoverBg: string; hoverBorder: string; }; code: { ...; }; ... 4 more ...; coordination: { ...; }; }'.
+
+[7m508[0m       const colors = aspectColors[value];
+[7m   [0m [91m                     ~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m439[0m:[93m48[0m - [91merror[0m[90m ts(7006): [0mParameter 'label' implicitly has an 'any' type.
+
+[7m439[0m   function createFilterChip(value, filterType, label) {
+[7m   [0m [91m                                               ~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m439[0m:[93m36[0m - [91merror[0m[90m ts(7006): [0mParameter 'filterType' implicitly has an 'any' type.
+
+[7m439[0m   function createFilterChip(value, filterType, label) {
+[7m   [0m [91m                                   ~~~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m439[0m:[93m29[0m - [91merror[0m[90m ts(7006): [0mParameter 'value' implicitly has an 'any' type.
+
+[7m439[0m   function createFilterChip(value, filterType, label) {
+[7m   [0m [91m                            ~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m415[0m:[93m49[0m - [91merror[0m[90m ts(2339): [0mProperty 'slice' does not exist on type 'never'.
+
+[7m415[0m         aspect.charAt(0).toUpperCase() + aspect.slice(1),
+[7m   [0m [91m                                                ~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m415[0m:[93m16[0m - [91merror[0m[90m ts(2339): [0mProperty 'charAt' does not exist on type 'never'.
+
+[7m415[0m         aspect.charAt(0).toUpperCase() + aspect.slice(1),
+[7m   [0m [91m               ~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m388[0m:[93m7[0m - [91merror[0m[90m ts(7053): [0mElement implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ mapType: string; aspects: never[]; patterns: never[]; }'.
+
+[7m388[0m       activeFilters[filterType].push(value);
+[7m   [0m [91m      ~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m386[0m:[93m7[0m - [91merror[0m[90m ts(7053): [0mElement implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ mapType: string; aspects: never[]; patterns: never[]; }'.
+
+[7m386[0m       activeFilters[filterType].splice(index, 1);
+[7m   [0m [91m      ~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m384[0m:[93m19[0m - [91merror[0m[90m ts(7053): [0mElement implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ mapType: string; aspects: never[]; patterns: never[]; }'.
+
+[7m384[0m     const index = activeFilters[filterType].indexOf(value);
+[7m   [0m [91m                  ~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m383[0m:[93m37[0m - [91merror[0m[90m ts(7006): [0mParameter 'value' implicitly has an 'any' type.
+
+[7m383[0m   function toggleFilter(filterType, value) {
+[7m   [0m [91m                                    ~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m383[0m:[93m25[0m - [91merror[0m[90m ts(7006): [0mParameter 'filterType' implicitly has an 'any' type.
+
+[7m383[0m   function toggleFilter(filterType, value) {
+[7m   [0m [91m                        ~~~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m368[0m:[93m33[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m368[0m     const patternTag = e.target.closest(".pattern-tag");
+[7m   [0m [91m                                ~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m368[0m:[93m24[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m368[0m     const patternTag = e.target.closest(".pattern-tag");
+[7m   [0m [91m                       ~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m367[0m:[93m34[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m367[0m     const aspectBadge = e.target.closest(".aspect-badge");
+[7m   [0m [91m                                 ~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m367[0m:[93m25[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m367[0m     const aspectBadge = e.target.closest(".aspect-badge");
+[7m   [0m [91m                        ~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m343[0m:[93m25[0m - [91merror[0m[90m ts(2538): [0mType 'null' cannot be used as an index type.
+
+[7m343[0m           activeFilters[filterType] = value;
+[7m   [0m [91m                        ~~~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m335[0m:[93m29[0m - [91merror[0m[90m ts(2538): [0mType 'null' cannot be used as an index type.
+
+[7m335[0m               activeFilters[filterType].push(value);
+[7m   [0m [91m                            ~~~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m332[0m:[93m29[0m - [91merror[0m[90m ts(2538): [0mType 'null' cannot be used as an index type.
+
+[7m332[0m               activeFilters[filterType].splice(index, 1);
+[7m   [0m [91m                            ~~~~~~~~~~[0m
+[96msrc/pages/maps/index.astro[0m:[93m330[0m:[93m41[0m - [91merror[0m[90m ts(2538): [0mType 'null' cannot be used as an index type.
+
+[7m330[0m             const index = activeFilters[filterType].indexOf(value);
+[7m   [0m [91m                                        ~~~~~~~~~~[0m
+
+[96msrc/pages/meta/[...slug].astro[0m:[93m110[0m:[93m37[0m - [91merror[0m[90m ts(2532): [0mObject is possibly 'undefined'.
+
+[7m110[0m                 const displayName = map
+[7m   [0m [91m                                    ~~~[0m
+[7m111[0m                   .split("/")
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[7m112[0m                   .pop()
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/meta/[...slug].astro[0m:[93m67[0m:[93m26[0m - [91merror[0m[90m ts(18048): [0m'post.data.thinkers' is possibly 'undefined'.
+
+[7m67[0m                 {index < post.data.thinkers.length - 1 ? ", " : ""}
+[7m  [0m [91m                         ~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/pages/process/all.astro[0m:[93m122[0m:[93m31[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m122[0m                         entry.style.display = "none";
+[7m   [0m [91m                              ~~~~~[0m
+[96msrc/pages/process/all.astro[0m:[93m120[0m:[93m31[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m120[0m                         entry.style.display = "flex";
+[7m   [0m [91m                              ~~~~~[0m
+[96msrc/pages/process/all.astro[0m:[93m118[0m:[93m31[0m - [91merror[0m[90m ts(2339): [0mProperty 'dataset' does not exist on type 'Element'.
+
+[7m118[0m                         entry.dataset.dimension === filter
+[7m   [0m [91m                              ~~~~~~~[0m
+[96msrc/pages/process/all.astro[0m:[93m110[0m:[93m36[0m - [91merror[0m[90m ts(2339): [0mProperty 'dataset' does not exist on type 'Element'.
+
+[7m110[0m                 const filter = tab.dataset.filter;
+[7m   [0m [91m                                   ~~~~~~~[0m
+
+[96msrc/pages/process/index.astro[0m:[93m60[0m:[93m7[0m - [93mwarning[0m[90m ts(6133): [0m'lastUpdate' is declared but its value is never read.
+
+[7m60[0m const lastUpdate = allProcess[0]?.data.date;
+[7m  [0m [93m      ~~~~~~~~~~[0m
+
+[96msrc/pages/process/topics/index.astro[0m:[93m63[0m:[93m37[0m - [91merror[0m[90m ts(2322): [0mType 'unknown' is not assignable to type 'string | null | undefined'.
+
+[7m63[0m                                     title={dim}
+[7m  [0m [91m                                    ~~~~~[0m
+
+[96msrc/pages/project/[...slug].astro[0m:[93m57[0m:[93m44[0m - [91merror[0m[90m ts(18048): [0m'project.data.collaborators' is possibly 'undefined'.
+
+[7m57[0m               <span>{collaborator}{index < project.data.collaborators.length - 1 ? ', ' : ''}</span>
+[7m  [0m [91m                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/pages/research/[...slug].astro[0m:[93m117[0m:[93m96[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; date: Date; description: string; dimension: "formal" | ... 3 more ... | "exploration"; ... 8 more ...; seriesFocus?: string | undefined; }; rendered?: RenderedContent | undefined; f...'.
+  Property 'slug' does not exist on type '{ id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; date: Date; description: string; dimension: "formal" | "empirical" | "implementation" | "troubleshooting" | "exploration"; ... 8 more ...; seriesFocus?: string | undefined; }; rende...'.
+
+[7m117[0m           Academic Research Project. Retrieved from https://sambitmaps.systems/research/{entry.slug}
+[7m   [0m [91m                                                                                               ~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m103[0m:[93m54[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; date: Date; description: string; dimension: "formal" | ... 3 more ... | "exploration"; ... 8 more ...; seriesFocus?: string | undefined; }; rendered?: RenderedContent | undefined; f...'.
+  Property 'slug' does not exist on type '{ id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; date: Date; description: string; dimension: "formal" | "empirical" | "implementation" | "troubleshooting" | "exploration"; ... 8 more ...; seriesFocus?: string | undefined; }; rende...'.
+
+[7m103[0m           hx-get={`/api/frameworks/connected/${entry.slug}`}
+[7m   [0m [91m                                                     ~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m92[0m:[93m50[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; date: Date; description: string; dimension: "formal" | ... 3 more ... | "exploration"; ... 8 more ...; seriesFocus?: string | undefined; }; rendered?: RenderedContent | undefined; f...'.
+  Property 'slug' does not exist on type '{ id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; date: Date; description: string; dimension: "formal" | "empirical" | "implementation" | "troubleshooting" | "exploration"; ... 8 more ...; seriesFocus?: string | undefined; }; rende...'.
+
+[7m92[0m           hx-get={`/api/related/research/${entry.slug}`}
+[7m  [0m [91m                                                 ~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m83[0m:[93m26[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; date: Date; description: string; dimension: "formal" | ... 3 more ... | "exploration"; ... 8 more ...; seriesFocus?: string | undefined; }; rendered?: RenderedContent | undefined; f...'.
+  Property 'slug' does not exist on type '{ id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; date: Date; description: string; dimension: "formal" | "empirical" | "implementation" | "troubleshooting" | "exploration"; ... 8 more ...; seriesFocus?: string | undefined; }; rende...'.
+
+[7m83[0m       currentSlug={entry.slug}
+[7m  [0m [91m                         ~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m82[0m:[93m31[0m - [91merror[0m[90m ts(2339): [0mProperty 'connections' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+  Property 'connections' does not exist on type '{ title: string; date: Date; description: string; framework: string; category: string; maturity: "seedling" | "budding" | "evergreen"; diagram?: string | undefined; thinkers?: string[] | undefined; relatedMaps?: string[] | undefined; tags?: string[] | undefined; }'.
+
+[7m82[0m       connections={entry.data.connections || []}
+[7m  [0m [91m                              ~~~~~~~~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m69[0m:[93m34[0m - [91merror[0m[90m ts(7006): [0mParameter 'tag' implicitly has an 'any' type.
+
+[7m69[0m             {entry.data.tags.map(tag => (
+[7m  [0m [91m                                 ~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m69[0m:[93m25[0m - [91merror[0m[90m ts(2339): [0mProperty 'tags' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+  Property 'tags' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+
+[7m69[0m             {entry.data.tags.map(tag => (
+[7m  [0m [91m                        ~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m62[0m:[93m28[0m - [91merror[0m[90m ts(2339): [0mProperty 'collaborators' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+  Property 'collaborators' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+
+[7m62[0m             <p>{entry.data.collaborators.join(', ')}</p>
+[7m  [0m [91m                           ~~~~~~~~~~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m59[0m:[93m49[0m - [91merror[0m[90m ts(2339): [0mProperty 'collaborators' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+  Property 'collaborators' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+
+[7m59[0m         {entry.data.collaborators && entry.data.collaborators.length > 0 && (
+[7m  [0m [91m                                                ~~~~~~~~~~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m59[0m:[93m21[0m - [91merror[0m[90m ts(2339): [0mProperty 'collaborators' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+  Property 'collaborators' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+
+[7m59[0m         {entry.data.collaborators && entry.data.collaborators.length > 0 && (
+[7m  [0m [91m                    ~~~~~~~~~~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m53[0m:[93m41[0m - [91merror[0m[90m ts(7006): [0mParameter 'method' implicitly has an 'any' type.
+
+[7m53[0m             {entry.data.methodology.map(method => (
+[7m  [0m [91m                                        ~~~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m53[0m:[93m25[0m - [91merror[0m[90m ts(2339): [0mProperty 'methodology' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+  Property 'methodology' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+
+[7m53[0m             {entry.data.methodology.map(method => (
+[7m  [0m [91m                        ~~~~~~~~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m34[0m:[93m25[0m - [91merror[0m[90m ts(2339): [0mProperty 'confidence' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+  Property 'confidence' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+
+[7m34[0m             {entry.data.confidence}
+[7m  [0m [91m                        ~~~~~~~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m33[0m:[93m70[0m - [91merror[0m[90m ts(2339): [0mProperty 'confidence' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+  Property 'confidence' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+
+[7m33[0m           <span class="confidence-badge" data-confidence={entry.data.confidence}>
+[7m  [0m [91m                                                                     ~~~~~~~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m31[0m:[93m25[0m - [91merror[0m[90m ts(2339): [0mProperty 'status' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+  Property 'status' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+
+[7m31[0m             {entry.data.status}
+[7m  [0m [91m                        ~~~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m30[0m:[93m62[0m - [91merror[0m[90m ts(2339): [0mProperty 'status' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+  Property 'status' does not exist on type '{ title: string; date: Date; description: string; mapType: "moc" | "synthesis" | "literature" | "conceptual"; aspects: ("code" | "cognition" | "computation" | "culture" | "complexity" | "constraint" | "causation" | "coordination")[]; patterns?: string[] | undefined; connections?: string[] | undefined; diagram?: stri...'.
+
+[7m30[0m           <span class="status-badge" data-status={entry.data.status}>
+[7m  [0m [91m                                                             ~~~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m20[0m:[93m3[0m - [91merror[0m[90m ts(2322): [0mType '{ children: any; title: string; description: string; mode: string; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'mode' does not exist on type 'IntrinsicAttributes & Props'.
+
+[7m20[0m   mode="academic"
+[7m  [0m [91m  ~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m14[0m:[93m33[0m - [91merror[0m[90m ts(2551): [0mProperty 'render' does not exist on type '{ id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; date: Date; description: string; dimension: "formal" | ... 3 more ... | "exploration"; ... 8 more ...; seriesFocus?: string | undefined; }; rendered?: RenderedContent | undefined; f...'. Did you mean 'rendered'?
+  Property 'render' does not exist on type '{ id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; date: Date; description: string; dimension: "formal" | "empirical" | "implementation" | "troubleshooting" | "exploration"; ... 8 more ...; seriesFocus?: string | undefined; }; rende...'.
+
+[7m14[0m const { Content } = await entry.render();
+[7m  [0m [91m                                ~~~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m9[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; date: Date; description: string; dimension: "formal" | ... 3 more ... | "exploration"; ... 8 more ...; seriesFocus?: string | undefined; }; rendered?: RenderedContent | undefined; f...'.
+  Property 'slug' does not exist on type '{ id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; date: Date; description: string; dimension: "formal" | "empirical" | "implementation" | "troubleshooting" | "exploration"; ... 8 more ...; seriesFocus?: string | undefined; }; rende...'.
+
+[7m9[0m     params: { slug: entry.slug }, props: { entry },
+[7m [0m [91m                          ~~~~[0m
+[96msrc/pages/research/[...slug].astro[0m:[93m7[0m:[93m47[0m - [91merror[0m[90m ts(2769): [0mNo overload matches this call.
+  Overload 1 of 2, '(collection: keyof DataEntryMap, filter?: ((entry: { id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; ... 11 more ...; seriesFocus?: string | undefined; }; rendered?: RenderedContent | undefined; filePath?: string | undefined; } | { ...; } | { ...; } | { ...; }) => entry is { ...; } | ... 2 more ... | { ...; }) | undefined): Promise<...>', gave the following error.
+    Argument of type '"research"' is not assignable to parameter of type 'keyof DataEntryMap'.
+  Overload 2 of 2, '(collection: keyof DataEntryMap, filter?: ((entry: { id: string; body?: string | undefined; collection: "process"; data: { title: string; status: "completed" | "in-progress" | "blocked"; ... 11 more ...; seriesFocus?: string | undefined; }; rendered?: RenderedContent | undefined; filePath?: string | undefined; } | { ...; } | { ...; } | { ...; }) => unknown) | undefined): Promise<...>', gave the following error.
+    Argument of type '"research"' is not assignable to parameter of type 'keyof DataEntryMap'.
+
+[7m7[0m   const researchEntries = await getCollection('research');
+[7m [0m [91m                                              ~~~~~~~~~~[0m
+
+[96msrc/pages/research/index.astro[0m:[93m8[0m:[93m3[0m - [91merror[0m[90m ts(2322): [0mType '{ children: any[]; title: string; description: string; mode: string; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'mode' does not exist on type 'IntrinsicAttributes & Props'.
+
+[7m8[0m   mode="academic"
+[7m [0m [91m  ~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m419[0m:[93m17[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m419[0m       noResults.style.display = 'none';
+[7m   [0m [91m                ~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m416[0m:[93m13[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m416[0m     section.style.display = 'block';
+[7m   [0m [91m            ~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m416[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'section' is possibly 'null'.
+
+[7m416[0m     section.style.display = 'block';
+[7m   [0m [91m    ~~~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m414[0m:[93m15[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m414[0m     noResults.style.display = 'block';
+[7m   [0m [91m              ~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m412[0m:[93m7[0m - [91merror[0m[90m ts(18047): [0m'resultsContainer' is possibly 'null'.
+
+[7m412[0m       resultsContainer.appendChild(noResults);
+[7m   [0m [91m      ~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m406[0m:[93m13[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m406[0m     section.style.display = 'none';
+[7m   [0m [91m            ~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m406[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'section' is possibly 'null'.
+
+[7m406[0m     section.style.display = 'none';
+[7m   [0m [91m    ~~~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m398[0m:[93m21[0m - [91merror[0m[90m ts(18047): [0m'section' is possibly 'null'.
+
+[7m398[0m   const countSpan = section.querySelector('.status-count');
+[7m   [0m [91m                    ~~~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m391[0m:[93m12[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m391[0m       card.style.display = 'none';
+[7m   [0m [91m           ~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m388[0m:[93m12[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m388[0m       card.style.display = 'block';
+[7m   [0m [91m           ~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m369[0m:[93m31[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m369[0m     const cardMethodologies = card.getAttribute('data-methodology').split(',');
+[7m   [0m [91m                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m357[0m:[93m75[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m357[0m   const methodologyFilter = document.getElementById('methodology-filter').value;
+[7m   [0m [91m                                                                          ~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m357[0m:[93m29[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m357[0m   const methodologyFilter = document.getElementById('methodology-filter').value;
+[7m   [0m [91m                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m356[0m:[93m65[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m356[0m   const statusFilter = document.getElementById('status-filter').value;
+[7m   [0m [91m                                                                ~~~~~[0m
+[96msrc/pages/research/index.astro[0m:[93m356[0m:[93m24[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m356[0m   const statusFilter = document.getElementById('status-filter').value;
+[7m   [0m [91m                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+Result (29 files): 
+- 137 errors
+- 0 warnings
+- 9 hints
+

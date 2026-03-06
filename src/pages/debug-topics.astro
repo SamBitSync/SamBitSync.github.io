@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content";
+
+const topics = await getCollection("topics");
+const process = await getCollection("process");
+---
+
+<h1>Debug Topics</h1>
+
+<h2>Topics Collection ({topics.length})</h2>
+<ul>
+    {
+        topics.map((t) => (
+            <li>
+                <strong>Slug:</strong> {t.slug} <br />
+                <strong>Title:</strong> {t.data.title} <br />
+                <strong>Domain:</strong> {t.data.domain}
+            </li>
+        ))
+    }
+</ul>
+
+<h2>Process Projects</h2>
+<ul>
+    {
+        Array.from(
+            new Set(process.map((p) => p.data.project).filter(Boolean)),
+        ).map((p) => <li>{p}</li>)
+    }
+</ul>

@@ -1,1142 +1,459 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const maps = (await getCollection('maps')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+const maps = (await getCollection("maps")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
-// Extract unique aspects from all maps
-const allAspects = new Set<string>();
-maps.forEach(map => {
-  map.data.aspects.forEach(aspect => allAspects.add(aspect));
-});
-const uniqueAspects = Array.from(allAspects).sort();
+// Group maps by type for the new layout
+const coreMaps = maps.filter(
+  (m) => m.data.mapType === "moc" || !m.data.mapType,
+);
+const syntheses = maps.filter((m) => m.data.mapType === "synthesis");
+const conceptMaps = maps.filter((m) => m.data.mapType === "conceptual");
+const litMaps = maps.filter((m) => m.data.mapType === "literature");
+const otherMaps = maps.filter(
+  (m) =>
+    !["moc", "synthesis", "conceptual", "literature"].includes(
+      m.data.mapType || "",
+    ),
+);
 
-// Extract unique patterns from all maps
-const allPatterns = new Set<string>();
-maps.forEach(map => {
-  map.data.patterns?.forEach(pattern => allPatterns.add(pattern));
-});
-const uniquePatterns = Array.from(allPatterns).sort();
+// Helper to get visual icons
+const getVisualIcons = (types: string[]) => {
+  if (!types) return null;
+  return types
+    .map((t) => {
+      if (t === "diagram") return "📊";
+      if (t === "animation") return "🎬";
+      if (t === "data-viz") return "📈";
+      if (t === "interactive") return "🎯";
+      return "";
+    })
+    .filter(Boolean);
+};
 ---
 
 <BaseLayout title="Maps | Sambit">
-  <header class="page-header">
-    <h1>Maps</h1>
-    <p class="lead">Cross-domain connections, pattern synthesis, conceptual mappings, and maps of content</p>
-  </header>
-
-  <!-- Notion-style Filters -->
-  <div class="filters-bar">
-    <div class="filter-group">
-      <label class="filter-label">Type</label>
-      <div class="select-wrapper" data-filter="mapType" data-multi="false">
-        <button class="filter-select" type="button">
-          <span class="select-value">All</span>
-          <svg class="select-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <div class="select-dropdown" hidden>
-          <button class="dropdown-item" data-value="">All Types</button>
-          <button class="dropdown-item" data-value="moc">Map of Content</button>
-          <button class="dropdown-item" data-value="synthesis">Synthesis</button>
-          <button class="dropdown-item" data-value="literature">Literature Review</button>
-          <button class="dropdown-item" data-value="conceptual">Conceptual</button>
-        </div>
+  <div class="maps-container">
+    <header class="page-header">
+      <div class="header-content">
+        <h1>Maps</h1>
+        <p class="lead">
+          Visualizing the topology of knowledge. Cross-domain connections,
+          pattern synthesis, and conceptual models.
+        </p>
       </div>
-    </div>
+    </header>
 
-    <div class="filter-group">
-      <label class="filter-label">Aspects</label>
-      <div class="select-wrapper" data-filter="aspects" data-multi="true">
-        <button class="filter-select" type="button">
-          <span class="select-value">Select...</span>
-          <svg class="select-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <div class="select-dropdown" hidden>
-          {uniqueAspects.map(aspect => (
-            <button class="dropdown-item multiselect-item" data-value={aspect} data-aspect={aspect}>
-              {aspect.charAt(0).toUpperCase() + aspect.slice(1)}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-
-    <div class="filter-group">
-      <label class="filter-label">Patterns</label>
-      <div class="select-wrapper" data-filter="patterns" data-multi="true">
-        <button class="filter-select" type="button">
-          <span class="select-value">Select...</span>
-          <svg class="select-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <div class="select-dropdown" hidden>
-          {uniquePatterns.map(pattern => (
-            <button class="dropdown-item multiselect-item" data-value={pattern}>
-              {pattern}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-
-    <!-- Active filter chips -->
-    <div class="active-filters" data-active-filters></div>
-
-    <button class="clear-filters" type="button" hidden>
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <path d="M3.5 3.5L10.5 10.5M10.5 3.5L3.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-      Clear
-    </button>
-  </div>
-
-  <div class="maps-gallery" data-gallery>
-    {maps.map((map) => {
-      const primaryType = map.data.visualType?.[0] || 'diagram';
-      const mapType = map.data.mapType;
-      const patternCount = map.data.patterns?.length || 0;
-      return (
-        <article class="gallery-item" data-map-type={mapType} data-aspects={map.data.aspects.join(',')} data-patterns={map.data.patterns?.join(',') || ''}>
-          <a href={`/maps/${map.id}`} class="gallery-link">
-            <div class={`visual-preview ${primaryType}`}>
-              <div class="preview-pattern"></div>
-
-              {/* MapType badge - top left */}
-              <div class="maptype-label">
-                <span class="maptype-badge">{mapType}</span>
-              </div>
-
-              {/* VisualType icons - top right */}
-              {map.data.visualType && map.data.visualType.length > 0 && (
-                <div class="visual-type-icons">
-                  {map.data.visualType.map((vType) => (
-                    <span class="visual-icon" data-visual-type={vType} title={vType}>
-                      {vType === 'diagram' && '📊'}
-                      {vType === 'animation' && '🎬'}
-                      {vType === 'data-viz' && '📈'}
-                      {vType === 'interactive' && '🎯'}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div class="gallery-content">
-              {/* Aspects - primary semantic info */}
-              <div class="aspects-row">
-                {map.data.aspects.map((aspect) => (
-                  <span class="aspect-badge" data-aspect={aspect}>
-                    {aspect}
-                  </span>
-                ))}
-              </div>
-
-              <h2>{map.data.title}</h2>
-              <p class="description">{map.data.description}</p>
-
-              {/* Patterns - collapsed by default, shows count */}
-              {patternCount > 0 && (
-                <div class="patterns-section">
-                  <button class="patterns-toggle" type="button">
-                    <span class="pattern-count">⋯ {patternCount} pattern{patternCount !== 1 ? 's' : ''}</span>
-                    <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </button>
-                  <div class="patterns-list" hidden>
-                    {map.data.patterns.map((pattern) => (
-                      <span class="pattern-tag">{pattern}</span>
-                    ))}
+    <main class="maps-stack">
+      <!-- Section: Core Frameworks (MOCs) -->
+      {
+        coreMaps.length > 0 && (
+          <section class="map-section">
+            <header class="section-header">
+              <h2>Core Frameworks</h2>
+              <p class="section-desc">
+                High-level maps of content and orientation frameworks.
+              </p>
+            </header>
+            <div class="maps-grid feature-grid">
+              {coreMaps.map((map) => (
+                <a href={`/maps/${map.id}`} class="map-card feature-card">
+                  <div class="card-visual">
+                    <span class="visual-pattern" />
+                    <div class="card-badges">
+                      <span class="type-badge core">MOC</span>
+                      {map.data.visualType?.includes("interactive") && (
+                        <span class="interactive-badge">Interactive</span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                  <div class="card-content">
+                    <h3>{map.data.title}</h3>
+                    <p>{map.data.description}</p>
+                    <div class="card-meta">
+                      <span class="date">
+                        {map.data.date.toLocaleDateString(undefined, {
+                          year: "numeric",
+                          month: "short",
+                        })}
+                      </span>
+                      <div class="aspects">
+                        {map.data.aspects.slice(0, 3).map((a) => (
+                          <span class="mini-tag">{a}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              ))}
             </div>
-          </a>
-        </article>
-      );
-    })}
-  </div>
+          </section>
+        )
+      }
 
-  {maps.length === 0 && (
-    <div class="empty-state">
-      <p>No maps yet. Check back soon.</p>
-    </div>
-  )}
+      <!-- Section: Syntheses -->
+      {
+        syntheses.length > 0 && (
+          <section class="map-section">
+            <header class="section-header">
+              <h2>Syntheses</h2>
+              <p class="section-desc">
+                Deep dives integrating multiple domains and patterns.
+              </p>
+            </header>
+            <div class="maps-grid">
+              {syntheses.map((map) => (
+                <a href={`/maps/${map.id}`} class="map-card">
+                  <div class="card-visual synthesis-visual">
+                    <div class="card-badges">
+                      <span class="type-badge synthesis">Synthesis</span>
+                    </div>
+                  </div>
+                  <div class="card-content">
+                    <h3>{map.data.title}</h3>
+                    <p>{map.data.description}</p>
+                    <div class="card-meta">
+                      <div class="aspects">
+                        {map.data.aspects.slice(0, 2).map((a) => (
+                          <span class="mini-tag">{a}</span>
+                        ))}
+                      </div>
+                      <div class="visual-icons">
+                        {getVisualIcons(map.data.visualType)?.map((icon) => (
+                          <span>{icon}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- Section: Literature Reviews -->
+      {
+        litMaps.length > 0 && (
+          <section class="map-section">
+            <header class="section-header">
+              <h2>Literature Maps</h2>
+              <p class="section-desc">
+                Surveys of academic landscape and theoretical perspectives.
+              </p>
+            </header>
+            <div class="maps-grid compact-grid">
+              {litMaps.map((map) => (
+                <a href={`/maps/${map.id}`} class="map-card compact-card">
+                  <div class="card-content">
+                    <div class="compact-header">
+                      <h3>{map.data.title}</h3>
+                      <div class="visual-icons">
+                        {getVisualIcons(map.data.visualType)?.map((icon) => (
+                          <span class="icon" title="Visual">
+                            {icon}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <p>{map.data.description}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- Section: Conceptual Models -->
+      {
+        conceptMaps.length > 0 && (
+          <section class="map-section">
+            <header class="section-header">
+              <h2>Conceptual Models</h2>
+              <p class="section-desc">
+                Specific mental models and dynamic systems.
+              </p>
+            </header>
+            <div class="maps-grid compact-grid">
+              {conceptMaps.map((map) => (
+                <a href={`/maps/${map.id}`} class="map-card compact-card">
+                  <div class="card-content">
+                    <div class="compact-header">
+                      <h3>{map.data.title}</h3>
+                      {getVisualIcons(map.data.visualType)?.map((icon) => (
+                        <span class="icon" title="Visual">
+                          {icon}
+                        </span>
+                      ))}
+                    </div>
+                    <p>{map.data.description}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- Section: Other -->
+      {
+        otherMaps.length > 0 && (
+          <section class="map-section">
+            <header class="section-header">
+              <h2>Library</h2>
+            </header>
+            <div class="maps-grid">
+              {otherMaps.map((map) => (
+                <a href={`/maps/${map.id}`} class="map-card">
+                  <div class="card-content">
+                    <h3>{map.data.title}</h3>
+                    <p>{map.data.description}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </main>
+  </div>
 </BaseLayout>
 
-<script>
-  // Notion-style multi-select filter system
-  let activeFilters = {
-    mapType: '',
-    aspects: [],
-    patterns: []
-  };
-
-  const activeFiltersContainer = document.querySelector('[data-active-filters]');
-  const clearButton = document.querySelector('.clear-filters');
-
-  // Initialize dropdowns
-  document.querySelectorAll('.select-wrapper').forEach(wrapper => {
-    const selectButton = wrapper.querySelector('.filter-select');
-    const dropdown = wrapper.querySelector('.select-dropdown');
-    const filterType = wrapper.getAttribute('data-filter');
-    const isMulti = wrapper.getAttribute('data-multi') === 'true';
-
-    // Toggle dropdown
-    selectButton?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isOpen = !dropdown?.hasAttribute('hidden');
-
-      // Close all other dropdowns
-      document.querySelectorAll('.select-dropdown').forEach(d => d.setAttribute('hidden', ''));
-
-      // Toggle this dropdown
-      if (isOpen) {
-        dropdown?.setAttribute('hidden', '');
-      } else {
-        dropdown?.removeAttribute('hidden');
-      }
-    });
-
-    // Handle dropdown item clicks
-    dropdown?.querySelectorAll('.dropdown-item').forEach(item => {
-      item.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const value = item.getAttribute('data-value') || '';
-        const label = item.textContent?.trim() || '';
-
-        if (isMulti) {
-          // Multi-select behavior
-          if (value) {
-            const index = activeFilters[filterType].indexOf(value);
-            if (index > -1) {
-              activeFilters[filterType].splice(index, 1);
-              item.classList.remove('selected');
-            } else {
-              activeFilters[filterType].push(value);
-              item.classList.add('selected');
-            }
-            updateFilterDisplay();
-            applyFilters();
-          }
-        } else {
-          // Single-select behavior
-          activeFilters[filterType] = value;
-
-          const valueSpan = selectButton?.querySelector('.select-value');
-          if (valueSpan) {
-            valueSpan.textContent = value ? label : 'All';
-          }
-
-          dropdown.setAttribute('hidden', '');
-          updateFilterDisplay();
-          applyFilters();
-        }
-      });
-    });
-  });
-
-  // Close dropdowns when clicking outside
-  document.addEventListener('click', () => {
-    document.querySelectorAll('.select-dropdown').forEach(d => d.setAttribute('hidden', ''));
-  });
-
-  // Make badges clickable to toggle filters
-  document.addEventListener('click', (e) => {
-    const aspectBadge = e.target.closest('.aspect-badge');
-    const patternTag = e.target.closest('.pattern-tag');
-
-    if (aspectBadge) {
-      e.preventDefault();
-      e.stopPropagation();
-      const aspect = aspectBadge.getAttribute('data-aspect');
-      toggleFilter('aspects', aspect);
-    } else if (patternTag) {
-      e.preventDefault();
-      e.stopPropagation();
-      const pattern = patternTag.textContent?.trim();
-      if (pattern) toggleFilter('patterns', pattern);
-    }
-  });
-
-  function toggleFilter(filterType, value) {
-    const index = activeFilters[filterType].indexOf(value);
-    if (index > -1) {
-      activeFilters[filterType].splice(index, 1);
-    } else {
-      activeFilters[filterType].push(value);
-    }
-
-    // Update visual state of dropdown items
-    document.querySelectorAll(`[data-filter="${filterType}"] .dropdown-item[data-value="${value}"]`).forEach(item => {
-      item.classList.toggle('selected');
-    });
-
-    updateFilterDisplay();
-    applyFilters();
-  }
-
-  function updateFilterDisplay() {
-    if (!activeFiltersContainer) return;
-
-    // Clear existing chips
-    activeFiltersContainer.innerHTML = '';
-
-    // Add chips for selected aspects
-    activeFilters.aspects.forEach(aspect => {
-      const chip = createFilterChip(aspect, 'aspects', aspect.charAt(0).toUpperCase() + aspect.slice(1));
-      activeFiltersContainer.appendChild(chip);
-    });
-
-    // Add chips for selected patterns
-    activeFilters.patterns.forEach(pattern => {
-      const chip = createFilterChip(pattern, 'patterns', pattern);
-      activeFiltersContainer.appendChild(chip);
-    });
-
-    // Show/hide clear button
-    const hasActiveFilters = activeFilters.mapType ||
-                           activeFilters.aspects.length > 0 ||
-                           activeFilters.patterns.length > 0;
-
-    if (hasActiveFilters) {
-      clearButton?.removeAttribute('hidden');
-    } else {
-      clearButton?.setAttribute('hidden', '');
-    }
-  }
-
-  function createFilterChip(value, filterType, label) {
-    const chip = document.createElement('button');
-    chip.className = 'filter-chip';
-
-    // Ensure consistent padding and rounding for all chips
-    chip.style.padding = '0.375rem 1rem';
-    chip.style.borderRadius = '1rem';
-
-    // Apply colors matching aspect badges on cards
-    if (filterType === 'aspects') {
-      const aspectColors = {
-        'cognition': {
-          bg: 'rgba(59, 130, 246, 0.12)',
-          border: 'rgba(59, 130, 246, 0.4)',
-          text: '#1e40af',
-          hoverBg: 'rgba(59, 130, 246, 0.18)',
-          hoverBorder: 'rgba(59, 130, 246, 0.6)'
-        },
-        'computation': {
-          bg: 'rgba(6, 182, 212, 0.12)',
-          border: 'rgba(6, 182, 212, 0.4)',
-          text: '#0e7490',
-          hoverBg: 'rgba(6, 182, 212, 0.18)',
-          hoverBorder: 'rgba(6, 182, 212, 0.6)'
-        },
-        'code': {
-          bg: 'rgba(34, 197, 94, 0.12)',
-          border: 'rgba(34, 197, 94, 0.4)',
-          text: '#15803d',
-          hoverBg: 'rgba(34, 197, 94, 0.18)',
-          hoverBorder: 'rgba(34, 197, 94, 0.6)'
-        },
-        'culture': {
-          bg: 'rgba(236, 72, 153, 0.12)',
-          border: 'rgba(236, 72, 153, 0.4)',
-          text: '#9f1239',
-          hoverBg: 'rgba(236, 72, 153, 0.18)',
-          hoverBorder: 'rgba(236, 72, 153, 0.6)'
-        },
-        'complexity': {
-          bg: 'rgba(139, 92, 246, 0.12)',
-          border: 'rgba(139, 92, 246, 0.4)',
-          text: '#6b21a8',
-          hoverBg: 'rgba(139, 92, 246, 0.18)',
-          hoverBorder: 'rgba(139, 92, 246, 0.6)'
-        },
-        'constraint': {
-          bg: 'rgba(245, 158, 11, 0.12)',
-          border: 'rgba(245, 158, 11, 0.4)',
-          text: '#92400e',
-          hoverBg: 'rgba(245, 158, 11, 0.18)',
-          hoverBorder: 'rgba(245, 158, 11, 0.6)'
-        },
-        'causation': {
-          bg: 'rgba(239, 68, 68, 0.12)',
-          border: 'rgba(239, 68, 68, 0.4)',
-          text: '#991b1b',
-          hoverBg: 'rgba(239, 68, 68, 0.18)',
-          hoverBorder: 'rgba(239, 68, 68, 0.6)'
-        },
-        'coordination': {
-          bg: 'rgba(20, 184, 166, 0.12)',
-          border: 'rgba(20, 184, 166, 0.4)',
-          text: '#115e59',
-          hoverBg: 'rgba(20, 184, 166, 0.18)',
-          hoverBorder: 'rgba(20, 184, 166, 0.6)'
-        }
-      };
-
-      const colors = aspectColors[value];
-      if (colors) {
-        chip.style.backgroundColor = colors.bg;
-        chip.style.border = `1.5px solid ${colors.border}`;
-        chip.style.color = colors.text;
-
-        chip.addEventListener('mouseenter', () => {
-          chip.style.backgroundColor = colors.hoverBg;
-          chip.style.borderColor = colors.hoverBorder;
-        });
-        chip.addEventListener('mouseleave', () => {
-          chip.style.backgroundColor = colors.bg;
-          chip.style.borderColor = colors.border;
-        });
-      }
-    } else if (filterType === 'patterns') {
-      // Pattern chips use subtle slate color scheme to match pattern tags on cards
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-
-      const patternColors = isDark ? {
-        bg: 'rgba(148, 163, 184, 0.12)',
-        border: 'rgba(148, 163, 184, 0.3)',
-        text: '#94a3b8',
-        hoverBg: 'rgba(148, 163, 184, 0.18)',
-        hoverBorder: 'rgba(148, 163, 184, 0.4)'
-      } : {
-        bg: 'rgba(100, 116, 139, 0.1)',
-        border: 'rgba(100, 116, 139, 0.25)',
-        text: '#475569',
-        hoverBg: 'rgba(100, 116, 139, 0.15)',
-        hoverBorder: 'rgba(100, 116, 139, 0.35)'
-      };
-
-      chip.style.backgroundColor = patternColors.bg;
-      chip.style.border = `1.5px solid ${patternColors.border}`;
-      chip.style.color = patternColors.text;
-
-      chip.addEventListener('mouseenter', () => {
-        chip.style.backgroundColor = patternColors.hoverBg;
-        chip.style.borderColor = patternColors.hoverBorder;
-      });
-      chip.addEventListener('mouseleave', () => {
-        chip.style.backgroundColor = patternColors.bg;
-        chip.style.borderColor = patternColors.border;
-      });
-    }
-
-    chip.innerHTML = `
-      ${label}
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-        <path d="M3 3L9 9M9 3L3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-    `;
-    chip.addEventListener('click', () => {
-      toggleFilter(filterType, value);
-    });
-    return chip;
-  }
-
-  // Clear filters button
-  clearButton?.addEventListener('click', () => {
-    activeFilters = { mapType: '', aspects: [], patterns: [] };
-
-    // Reset all select buttons
-    document.querySelectorAll('.select-value').forEach(span => {
-      const wrapper = span.closest('.select-wrapper');
-      const isMulti = wrapper?.getAttribute('data-multi') === 'true';
-      span.textContent = isMulti ? 'Select...' : 'All';
-    });
-
-    // Remove selected class from all items
-    document.querySelectorAll('.dropdown-item.selected').forEach(item => {
-      item.classList.remove('selected');
-    });
-
-    updateFilterDisplay();
-    applyFilters();
-  });
-
-  function applyFilters() {
-    const items = document.querySelectorAll('.gallery-item');
-
-    items.forEach(item => {
-      const mapType = item.getAttribute('data-map-type');
-      const aspects = item.getAttribute('data-aspects')?.split(',').filter(Boolean) || [];
-      const patterns = item.getAttribute('data-patterns')?.split(',').filter(Boolean) || [];
-
-      let show = true;
-
-      // Filter by mapType (single select)
-      if (activeFilters.mapType && mapType !== activeFilters.mapType) {
-        show = false;
-      }
-
-      // Filter by aspects (multi-select - item must have ALL selected aspects)
-      if (activeFilters.aspects.length > 0) {
-        const hasAllAspects = activeFilters.aspects.every(aspect => aspects.includes(aspect));
-        if (!hasAllAspects) {
-          show = false;
-        }
-      }
-
-      // Filter by patterns (multi-select - item must have ALL selected patterns)
-      if (activeFilters.patterns.length > 0) {
-        const hasAllPatterns = activeFilters.patterns.every(pattern => patterns.includes(pattern));
-        if (!hasAllPatterns) {
-          show = false;
-        }
-      }
-
-      if (show) {
-        item.style.display = '';
-        item.style.opacity = '1';
-      } else {
-        item.style.display = 'none';
-        item.style.opacity = '0';
-      }
-    });
-  }
-
-  // Handle pattern toggle expansion
-  document.addEventListener('click', (e) => {
-    const toggle = e.target.closest('.patterns-toggle');
-    if (!toggle) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    const patternsList = toggle.nextElementSibling;
-    const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-
-    if (isExpanded) {
-      toggle.setAttribute('aria-expanded', 'false');
-      patternsList.setAttribute('hidden', '');
-    } else {
-      toggle.setAttribute('aria-expanded', 'true');
-      patternsList.removeAttribute('hidden');
-    }
-  });
-</script>
-
 <style>
+  .maps-container {
+    padding: 2rem 0;
+  }
+
   .page-header {
     margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-content h1 {
+    font-family: var(--font-sans);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
   }
 
   .lead {
+    font-family: var(--font-serif);
     font-size: 1.125rem;
+    font-style: italic;
     color: var(--text-secondary);
-    margin-top: 0.5rem;
+    line-height: 1.6;
   }
 
-  /* Notion-style Filters */
-  .filters-bar {
+  .maps-stack {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 6rem;
   }
 
-  .filter-group {
+  .map-section {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .filter-label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-  }
-
-  .select-wrapper {
-    position: relative;
-  }
-
-  .filter-select {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.375rem 0.75rem;
-    font-size: 0.875rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 0.375rem;
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: all 0.15s ease;
-    min-width: 140px;
-  }
-
-  .filter-select:hover {
-    background: var(--surface-hover);
-    border-color: var(--text-tertiary);
-  }
-
-  .select-value {
-    flex: 1;
-    text-align: left;
-    font-weight: 400;
-  }
-
-  .select-icon {
-    color: var(--text-tertiary);
-    transition: transform 0.2s ease;
-  }
-
-  .filter-select:hover .select-icon {
-    color: var(--text-secondary);
-  }
-
-  .select-dropdown {
-    position: absolute;
-    top: calc(100% + 0.25rem);
-    left: 0;
-    min-width: 180px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 0.25rem;
-    z-index: 100;
-  }
-
-  [data-theme="dark"] .select-dropdown {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  }
-
-  .dropdown-item {
-    display: block;
-    width: 100%;
-    text-align: left;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-    background: transparent;
-    border: none;
-    border-radius: 0.25rem;
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: background 0.15s ease;
-  }
-
-  .dropdown-item:hover {
-    background: var(--surface-hover);
-  }
-
-  .clear-filters {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.375rem 0.75rem;
-    font-size: 0.875rem;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 0.375rem;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.15s ease;
-    margin-left: auto;
-  }
-
-  .clear-filters:hover {
-    background: var(--surface-hover);
-    color: var(--text-primary);
-    border-color: var(--text-tertiary);
-  }
-
-  .clear-filters svg {
-    width: 14px;
-    height: 14px;
-  }
-
-  /* Active filter chips */
-  .active-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: center;
-  }
-
-  .filter-chip {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.375rem 1rem; /* Increased horizontal padding for better text spacing in pills */
-    font-size: 0.8125rem;
-    color: white;
-    border: none;
-    border-radius: 1rem; /* Rounded pill shape */
-    cursor: pointer;
-    transition: all 0.15s ease;
-    font-weight: 500;
-  }
-
-  /* Pattern chips use default accent color (aspects get inline styles from JS) */
-  .filter-chip {
-    background: var(--accent);
-  }
-
-  .filter-chip:hover {
-    transform: translateY(-1px);
-  }
-
-  .filter-chip svg {
-    width: 12px;
-    height: 12px;
-  }
-
-  /* Multi-select dropdown items - cleaner, less gaudy */
-  .multiselect-item.selected {
-    background: var(--surface-elevated);
-    font-weight: 500;
-    position: relative;
-    padding-left: 2rem;
-    color: var(--text-primary);
-  }
-
-  /* Add checkmark for selected items */
-  .multiselect-item.selected::before {
-    content: '✓';
-    position: absolute;
-    left: 0.625rem;
-    color: var(--accent);
-    font-weight: 600;
-    font-size: 1rem;
-  }
-
-  .multiselect-item.selected:hover {
-    background: var(--border);
-  }
-
-  /* Make badges clickable */
-  .aspect-badge {
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .aspect-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .pattern-tag {
-    cursor: pointer;
-  }
-
-  .pattern-tag:hover {
-    background: var(--surface);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  .maps-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    flex-direction: column;
     gap: 2rem;
   }
 
-  .gallery-item {
-    background: var(--surface);
+  .section-header {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .section-header h2 {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin: 0;
+  }
+
+  .section-desc {
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    margin: 0;
+  }
+
+  /* Grid Layouts */
+  .maps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .feature-grid {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+
+  .compact-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  /* Cards */
+  .map-card {
+    display: flex;
+    flex-direction: column;
+    background: transparent;
     border: 1px solid var(--border);
-    border-radius: 0.75rem;
+    border-radius: 2px;
     overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.4s ease,
-                transform 0.3s ease;
-  }
-
-  .gallery-item:hover {
-    border-color: var(--accent);
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-6px);
-  }
-
-  .gallery-link {
     text-decoration: none;
     color: inherit;
-    display: block;
+    transition: border-color 0.2s ease;
+    height: 100%;
   }
 
-  /* Visual Preview Area */
-  .visual-preview {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  .map-card:hover {
+    border-color: var(--accent);
   }
 
-  [data-theme="dark"] .visual-preview {
-    background: linear-gradient(135deg, #0c4a6e 0%, #075985 100%);
-  }
-
-  .visual-preview.diagram {
-    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-  }
-
-  [data-theme="dark"] .visual-preview.diagram {
-    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-  }
-
-  .visual-preview.animation {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  }
-
-  [data-theme="dark"] .visual-preview.animation {
-    background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
-  }
-
-  .visual-preview.data-viz {
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-  }
-
-  [data-theme="dark"] .visual-preview.data-viz {
-    background: linear-gradient(135deg, #14532d 0%, #166534 100%);
-  }
-
-  .visual-preview.interactive {
-    background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%);
-  }
-
-  [data-theme="dark"] .visual-preview.interactive {
-    background: linear-gradient(135deg, #581c87 0%, #6b21a8 100%);
-  }
-
-  /* Preview Patterns - Abstract Visual Representations */
-  .preview-pattern {
-    position: absolute;
-    inset: 0;
-    opacity: 0.15;
-  }
-
-  .diagram .preview-pattern {
-    background-image:
-      linear-gradient(0deg, transparent 24%, rgba(59, 130, 246, 0.3) 25%, rgba(59, 130, 246, 0.3) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, 0.3) 75%, rgba(59, 130, 246, 0.3) 76%, transparent 77%, transparent),
-      linear-gradient(90deg, transparent 24%, rgba(59, 130, 246, 0.3) 25%, rgba(59, 130, 246, 0.3) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, 0.3) 75%, rgba(59, 130, 246, 0.3) 76%, transparent 77%, transparent);
-    background-size: 50px 50px;
-  }
-
-  .animation .preview-pattern {
-    background: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 20px,
-      rgba(251, 191, 36, 0.3) 20px,
-      rgba(251, 191, 36, 0.3) 22px
-    );
-  }
-
-  .data-viz .preview-pattern {
-    background-image: linear-gradient(90deg, transparent 79px, rgba(34, 197, 94, 0.3) 79px, rgba(34, 197, 94, 0.3) 81px, transparent 81px),
-      linear-gradient(rgba(34, 197, 94, 0.2) 0.5px, transparent 0.5px);
-    background-size: 80px 20px;
-  }
-
-  .interactive .preview-pattern {
-    background-image: radial-gradient(circle, rgba(168, 85, 247, 0.3) 1px, transparent 1px);
-    background-size: 30px 30px;
-  }
-
-  .maptype-label {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .maptype-badge {
-    font-size: 0.6875rem;
-    padding: 0.25rem 0.625rem;
-    background: rgba(0, 0, 0, 0.75);
-    color: white;
-    border-radius: 0.25rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.075em;
-    border: 1.5px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(8px);
-    display: inline-block;
-  }
-
-  [data-theme="dark"] .maptype-badge {
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    border: 1.5px solid rgba(255, 255, 255, 0.35);
-    backdrop-filter: blur(8px);
-  }
-
-  /* Visual Type Icons - top right corner */
-  .visual-type-icons {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    display: flex;
-    gap: 0.25rem;
-    z-index: 2;
-  }
-
-  .visual-icon {
-    font-size: 1.125rem;
-    opacity: 0.7;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-    transition: all 0.2s ease;
-  }
-
-  .visual-icon:hover {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-
-  /* Gallery Content */
-  .gallery-content {
-    padding: 1.5rem;
-  }
-
-  .aspects-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  /* Swiss Design: High Contrast Minimal with Semantic Color */
-  .aspect-badge {
-    font-size: 0.6875rem;
-    padding: 0.375rem 1rem;
-    background: rgba(0, 0, 0, 0.05);
-    color: var(--text-primary);
-    border: 1.5px solid rgba(0, 0, 0, 0.15);
-    border-radius: 1rem; /* Rounded pill shape to match filter chips */
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.075em;
-    display: inline-block;
-  }
-
-  /* Cognition - Blue */
-  .aspect-badge[data-aspect="cognition"] {
-    background: rgba(59, 130, 246, 0.08);
-    border-color: rgba(59, 130, 246, 0.25);
-    color: #1e40af;
-  }
-
-  /* Computation - Cyan */
-  .aspect-badge[data-aspect="computation"] {
-    background: rgba(6, 182, 212, 0.08);
-    border-color: rgba(6, 182, 212, 0.25);
-    color: #0e7490;
-  }
-
-  /* Code - Green */
-  .aspect-badge[data-aspect="code"] {
-    background: rgba(34, 197, 94, 0.08);
-    border-color: rgba(34, 197, 94, 0.25);
-    color: #15803d;
-  }
-
-  /* Culture - Pink */
-  .aspect-badge[data-aspect="culture"] {
-    background: rgba(236, 72, 153, 0.08);
-    border-color: rgba(236, 72, 153, 0.25);
-    color: #9f1239;
-  }
-
-  /* Complexity - Purple */
-  .aspect-badge[data-aspect="complexity"] {
-    background: rgba(139, 92, 246, 0.08);
-    border-color: rgba(139, 92, 246, 0.25);
-    color: #6b21a8;
-  }
-
-  /* Constraint - Amber */
-  .aspect-badge[data-aspect="constraint"] {
-    background: rgba(245, 158, 11, 0.08);
-    border-color: rgba(245, 158, 11, 0.25);
-    color: #92400e;
-  }
-
-  /* Causation - Red */
-  .aspect-badge[data-aspect="causation"] {
-    background: rgba(239, 68, 68, 0.08);
-    border-color: rgba(239, 68, 68, 0.25);
-    color: #991b1b;
-  }
-
-  /* Coordination - Teal */
-  .aspect-badge[data-aspect="coordination"] {
-    background: rgba(20, 184, 166, 0.08);
-    border-color: rgba(20, 184, 166, 0.25);
-    color: #115e59;
-  }
-
-  [data-theme="dark"] .aspect-badge {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: var(--text-secondary);
-  }
-
-  /* Dark mode semantic colors - more visible */
-  [data-theme="dark"] .aspect-badge[data-aspect="cognition"] {
-    background: rgba(59, 130, 246, 0.15);
-    border-color: rgba(59, 130, 246, 0.4);
-    color: #93c5fd;
-  }
-
-  [data-theme="dark"] .aspect-badge[data-aspect="computation"] {
-    background: rgba(6, 182, 212, 0.15);
-    border-color: rgba(6, 182, 212, 0.4);
-    color: #67e8f9;
-  }
-
-  [data-theme="dark"] .aspect-badge[data-aspect="code"] {
-    background: rgba(34, 197, 94, 0.15);
-    border-color: rgba(34, 197, 94, 0.4);
-    color: #86efac;
-  }
-
-  [data-theme="dark"] .aspect-badge[data-aspect="culture"] {
-    background: rgba(236, 72, 153, 0.15);
-    border-color: rgba(236, 72, 153, 0.4);
-    color: #f9a8d4;
-  }
-
-  [data-theme="dark"] .aspect-badge[data-aspect="complexity"] {
-    background: rgba(139, 92, 246, 0.15);
-    border-color: rgba(139, 92, 246, 0.4);
-    color: #c4b5fd;
-  }
-
-  [data-theme="dark"] .aspect-badge[data-aspect="constraint"] {
-    background: rgba(245, 158, 11, 0.15);
-    border-color: rgba(245, 158, 11, 0.4);
-    color: #fcd34d;
-  }
-
-  [data-theme="dark"] .aspect-badge[data-aspect="causation"] {
-    background: rgba(239, 68, 68, 0.15);
-    border-color: rgba(239, 68, 68, 0.4);
-    color: #fca5a5;
-  }
-
-  [data-theme="dark"] .aspect-badge[data-aspect="coordination"] {
-    background: rgba(20, 184, 166, 0.15);
-    border-color: rgba(20, 184, 166, 0.4);
-    color: #5eead4;
-  }
-
-  .gallery-item h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin: 0 0 0.625rem 0;
-    line-height: 1.3;
-    color: var(--text-primary);
-    font-family: var(--font-serif);
-  }
-
-  .description {
-    color: var(--text-secondary);
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    margin: 0 0 1rem 0;
-  }
-
-  /* Patterns Section - Collapsed by default */
-  .patterns-section {
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .patterns-toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    background: none;
-    border: none;
-    color: var(--text-tertiary);
-    font-size: 0.8125rem;
-    cursor: pointer;
-    padding: 0;
-    transition: color 0.2s ease;
-    font-family: var(--font-sans);
-  }
-
-  .patterns-toggle:hover {
-    color: var(--text-secondary);
-  }
-
-  .patterns-toggle .chevron {
-    transition: transform 0.2s ease;
-  }
-
-  .patterns-toggle[aria-expanded="true"] .chevron {
-    transform: rotate(180deg);
-  }
-
-  .pattern-count {
-    font-style: italic;
-  }
-
-  .patterns-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-  }
-
-  .patterns-list[hidden] {
+  /* Hide decorative visual header blocks */
+  .card-visual {
     display: none;
   }
 
-  .pattern-tag {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.75rem;
-    background: rgba(100, 116, 139, 0.06); /* Soft slate background */
-    border: 1px solid rgba(100, 116, 139, 0.18);
-    color: #475569; /* Slate-600 */
-    border-radius: 1rem; /* Rounded pill shape */
-    font-style: italic;
-    font-weight: 400;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  .card-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
   }
 
-  .pattern-tag:hover {
-    background: rgba(100, 116, 139, 0.1);
-    border-color: rgba(100, 116, 139, 0.28);
-    color: #334155; /* Slate-700 */
+  .type-badge {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-tertiary);
   }
 
-  [data-theme="dark"] .pattern-tag {
-    background: rgba(148, 163, 184, 0.08); /* Slightly lighter slate for dark mode */
-    border-color: rgba(148, 163, 184, 0.2);
-    color: #94a3b8; /* Slate-400 */
+  .interactive-badge {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+    background: var(--accent-subtle);
+    border: 1px solid rgba(139, 69, 19, 0.2);
+    color: var(--accent);
   }
 
-  [data-theme="dark"] .pattern-tag:hover {
-    background: rgba(148, 163, 184, 0.12);
-    border-color: rgba(148, 163, 184, 0.3);
-    color: #cbd5e1; /* Slate-300 */
+  .card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
   }
 
-  .empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
+  .map-card h3 {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+    color: var(--text-primary);
+  }
+
+  .map-card p {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
     color: var(--text-secondary);
+    margin: 0 0 1.25rem 0;
+    line-height: 1.55;
+    flex-grow: 1;
+  }
+
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+  }
+
+  .aspects {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .mini-tag {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+
+  /* Compact Card Override */
+  .compact-card .card-content {
+    padding: 1.25rem;
+  }
+
+  .compact-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 0.5rem;
+  }
+
+  .compact-header h3 {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  .compact-card p {
+    font-size: 0.9rem;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .visual-icons {
+    display: flex;
+    gap: 0.25rem;
+    color: var(--text-tertiary);
   }
 
   @media (max-width: 768px) {
-    .maps-gallery {
+    .header-content h1 {
+      font-size: 2.5rem;
+    }
+
+    .maps-grid,
+    .feature-grid,
+    .compact-grid {
       grid-template-columns: 1fr;
     }
 
-    .visual-preview {
-      height: 180px;
+    .section-header {
+      flex-direction: column;
+      gap: 0.25rem;
     }
   }
 </style>

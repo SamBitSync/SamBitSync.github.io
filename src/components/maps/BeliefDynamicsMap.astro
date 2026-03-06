@@ -1,0 +1,344 @@
+<!-- 
+  BELIEF DYNAMICS MAP
+  Interactive Attractor Landscape visualization.
+  Demonstrates: stability, resistance, and phase transitions.
+-->
+<div class="emergence-map">
+  <div class="canvas-container">
+    <canvas id="attractor-canvas"></canvas>
+    <!-- Overlay Labels -->
+    <div class="label basin-label" style="top: 30%; left: 25%;">
+      Stable State A
+    </div>
+    <div class="label basin-label" style="top: 30%; left: 75%;">
+      Stable State B
+    </div>
+  </div>
+  <div class="controls">
+    <button class="control-btn" id="btn-perturb"
+      >Perturb System (Evidence)</button
+    >
+    <button class="control-btn" id="btn-deepen">Deepen Basins (Learning)</button
+    >
+    <button class="control-btn" id="btn-flatten"
+      >Flatten Landscape (Unlearning)</button
+    >
+  </div>
+  <div class="status-panel">
+    <div class="status-item">
+      <span class="status-label">System State:</span>
+      <span class="status-value" id="state-val">Stabilizing...</span>
+    </div>
+    <div class="status-item">
+      <span class="status-label">Energy:</span>
+      <span class="status-value" id="energy-val">Low</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const canvas = document.getElementById("attractor-canvas");
+    if (!canvas) return;
+
+    // Explicit 2D context with no alpha for performance if desired,
+    // but here we need transparency for gradients
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+
+    // Physics State
+    let particle = { x: 0, y: 0, vx: 0, vy: 0 };
+    let basins = [
+      { x: 0.25, y: 0.5, strength: 0.05, radius: 0.2, color: "#3b82f6" }, // Blue hull
+      { x: 0.75, y: 0.5, strength: 0.05, radius: 0.2, color: "#10b981" }, // Green hull
+    ];
+    let noise = 0;
+    let width, height;
+
+    function resize() {
+      if (!canvas.parentElement) return;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+
+      // Aspect ratio handled by CSS, match internal resolution to display
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+
+      // Reset particle if out of bounds
+      if (particle.x > width || particle.y > height) {
+        particle.x = width * 0.5;
+        particle.y = height * 0.5;
+      }
+
+      // Initial centering if at 0,0
+      if (particle.x === 0 && particle.y === 0) {
+        particle.x = width * 0.5;
+        particle.y = height * 0.5;
+      }
+    }
+
+    // Initial resize
+    resize();
+    window.addEventListener("resize", resize);
+
+    // Physics Loop
+    function update() {
+      // Apply forces from basins
+      let fx = 0,
+        fy = 0;
+
+      basins.forEach((basin) => {
+        const bx = basin.x * width;
+        const by = basin.y * height;
+        const dx = bx - particle.x;
+        const dy = by - particle.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Attraction force (gradient of potential)
+        // U = -strength * exp(-dist^2 / 2sigma^2)
+        const range = Math.min(width, height) * basin.radius;
+        // Avoid division by zero
+        if (range === 0) return;
+
+        const force =
+          basin.strength *
+          (dist / range) *
+          Math.exp(-(dist * dist) / (2 * range * range));
+        fx += force * dx;
+        fy += force * dy;
+      });
+
+      // Friction - balanced to allow some glide but not infinite
+      particle.vx *= 0.925;
+      particle.vy *= 0.925;
+
+      // Apply acceleration
+      particle.vx += fx;
+      particle.vy += fy;
+
+      // Random thermal noise (simulating ongoing neural activity)
+      particle.vx += (Math.random() - 0.5) * noise;
+      particle.vy += (Math.random() - 0.5) * noise;
+
+      // Update position
+      particle.x += particle.vx;
+      particle.y += particle.vy;
+
+      // Boundaries
+      if (particle.x < 0 || particle.x > width) particle.vx *= -1;
+      if (particle.y < 0 || particle.y > height) particle.vy *= -1;
+
+      // Clamp
+      particle.x = Math.max(0, Math.min(width, particle.x));
+      particle.y = Math.max(0, Math.min(height, particle.y));
+
+      // Decay noise
+      noise *= 0.95;
+
+      // Update UI
+      updateUI();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw Basins (Potential Fields)
+      basins.forEach((basin) => {
+        const bx = basin.x * width;
+        const by = basin.y * height;
+        const r = Math.min(width, height) * basin.radius * 2; // Visual radius
+
+        const grad = ctx.createRadialGradient(bx, by, 0, bx, by, r);
+
+        // Check theme for visibility logic
+        const isDark = document.documentElement.classList.contains("dark");
+        // Dark mode: 40% opacity glow (hex 66).
+        // Light mode: Need much stronger opacity to be visible (hex CC = 80%).
+        const alpha = isDark ? "66" : "CC";
+
+        grad.addColorStop(0, basin.color + alpha);
+        grad.addColorStop(1, basin.color + "00"); // Fade out
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(bx, by, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Add a visible ring/stroke to outline the basin clearly in both modes
+        ctx.strokeStyle = basin.color + "80"; // 50% opacity line
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+
+      // Draw Particle trail (history) -- simplified to current point
+      ctx.beginPath();
+      // Particle color: Text Primary handles adaptation automatically
+      ctx.fillStyle = "var(--text-primary)";
+      ctx.arc(particle.x, particle.y, 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Halo for contrast
+      ctx.strokeStyle = "var(--bg)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      requestAnimationFrame(() => {
+        update();
+        draw();
+      });
+    }
+
+    function updateUI() {
+      const stateEl = document.getElementById("state-val");
+      const energyEl = document.getElementById("energy-val");
+      if (!stateEl || !energyEl) return;
+
+      const speed = Math.sqrt(
+        particle.vx * particle.vx + particle.vy * particle.vy,
+      );
+
+      // Determine state
+      const b1x = basins[0].x * width;
+      const b2x = basins[1].x * width;
+      const dist1 = Math.abs(particle.x - b1x);
+      const dist2 = Math.abs(particle.x - b2x);
+
+      if (speed > 2) {
+        stateEl.textContent = "Transitioning...";
+        stateEl.style.color = "var(--accent)";
+      } else if (dist1 < width * 0.15) {
+        stateEl.textContent = "Locked in State A";
+        stateEl.style.color = basins[0].color;
+      } else if (dist2 < width * 0.15) {
+        stateEl.textContent = "Locked in State B";
+        stateEl.style.color = basins[1].color;
+      } else {
+        stateEl.textContent = "Unstable";
+        stateEl.style.color = "var(--text-tertiary)";
+      }
+
+      energyEl.textContent = noise > 0.5 ? "High (Flexible)" : "Low (Stable)";
+    }
+
+    // Controls
+    const btnPerturb = document.getElementById("btn-perturb");
+    if (btnPerturb) {
+      btnPerturb.addEventListener("click", () => {
+        // "Counter-Evidence": Pushes away from the current belief state
+        const center = width * 0.5;
+        // If x < center, we are in State A (Left), so kick Right (+).
+        // If x > center, we are in State B (Right), so kick Left (-).
+        const direction = particle.x < center ? 1 : -1;
+
+        // Tuned Power: Moderate kick (requires multiple clicks)
+        const kickStrength = 20;
+        const randomComponent = (Math.random() - 0.5) * 30; // High randomness
+
+        particle.vx += direction * kickStrength + randomComponent;
+        particle.vy += (Math.random() - 0.5) * 40;
+
+        noise = 3; // Heat up the system momentarily
+      });
+    }
+
+    const btnDeepen = document.getElementById("btn-deepen");
+    if (btnDeepen) {
+      btnDeepen.addEventListener("click", () => {
+        basins.forEach((b) => (b.strength = 0.15)); // Stronger pull
+        noise = 0; // Cool down
+        setTimeout(() => basins.forEach((b) => (b.strength = 0.05)), 1000);
+      });
+    }
+
+    const btnFlatten = document.getElementById("btn-flatten");
+    if (btnFlatten) {
+      btnFlatten.addEventListener("click", () => {
+        basins.forEach((b) => (b.strength = 0.005)); // Weak pull
+        noise = 2; // High temp
+        // Keeps it flat for a bit
+        setTimeout(() => basins.forEach((b) => (b.strength = 0.05)), 2000);
+      });
+    }
+
+    // Start loop
+    draw();
+  });
+</script>
+
+<style>
+  .emergence-map {
+    font-family: var(--font-mono);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .canvas-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    background: radial-gradient(
+      circle at center,
+      var(--surface) 0%,
+      var(--bg) 100%
+    );
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+  .label {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    pointer-events: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .controls {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .control-btn {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-mono);
+  }
+  .control-btn:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+  }
+  .control-btn:active {
+    background: var(--text-primary);
+    color: var(--bg);
+  }
+  .status-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.75rem;
+    background: var(--bg);
+  }
+  .status-label {
+    color: var(--text-tertiary);
+    margin-right: 0.5rem;
+  }
+  .status-value {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+</style>

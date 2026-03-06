@@ -1,0 +1,431 @@
+---
+interface Props {
+    nodes: { id: string; title: string; group: string }[];
+    links: { source: string; target: string }[];
+}
+
+const { nodes, links } = Astro.props;
+---
+
+<div class="graph-wrapper">
+    <div class="graph-controls">
+        <input
+            type="text"
+            id="graph-search"
+            class="graph-search"
+            placeholder="Search nodes..."
+        />
+        <button id="graph-reset" class="graph-reset-btn" title="Reset view">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                    d="M8 2C4.686 2 2 4.686 2 8s2.686 6 6 6 6-2.686 6-6"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"></path>
+                <path
+                    d="M14 8h-3M14 8l-2-2M14 8l-2 2"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+            </svg>
+            Reset
+        </button>
+    </div>
+    <div
+        id="graph-container"
+        class="graph-container"
+        data-nodes={JSON.stringify(nodes)}
+        data-links={JSON.stringify(links)}
+    >
+    </div>
+</div>
+
+<script>
+    import * as d3 from "d3";
+
+    function initGraph() {
+        console.log("Graph: Initializing...");
+        const container = document.getElementById("graph-container");
+        if (!container) {
+            console.error("Graph: Container not found");
+            return;
+        }
+
+        // Read data from attributes
+        let nodes = [];
+        let links = [];
+        try {
+            nodes = JSON.parse(container.dataset.nodes || "[]");
+            links = JSON.parse(container.dataset.links || "[]");
+        } catch (e) {
+            console.error("Graph: Failed to parse data attributes", e);
+            return;
+        }
+
+        // Debug logging
+        console.log("Graph: Data received", { nodes, links });
+
+        if (!nodes || nodes.length === 0) {
+            console.warn("Graph: No nodes data available");
+            container.innerHTML =
+                '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-secondary);">No graph data available</div>';
+            return;
+        }
+
+        const width =
+            container.clientWidth ||
+            container.getBoundingClientRect().width ||
+            800;
+        const height = 400;
+
+        // Clear existing graph
+        container.innerHTML = "";
+
+        const svg = d3
+            .select(container)
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", height)
+            .attr("viewBox", [0, 0, width, height])
+            .attr("style", "max-width: 100%; height: auto;");
+
+        // Add zoom group
+        const g = svg.append("g");
+
+        // Zoom behavior
+        const zoom = d3
+            .zoom()
+            .scaleExtent([0.25, 4])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+
+        svg.call(zoom);
+
+        // Simulation setup
+        const simulation = d3
+            .forceSimulation(nodes)
+            .force(
+                "link",
+                d3
+                    .forceLink(links)
+                    .id((d) => d.id)
+                    .distance(100),
+            )
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collide", d3.forceCollide().radius(30));
+
+        // Draw links
+        const link = g
+            .append("g")
+            .attr("stroke", "var(--border)")
+            .attr("stroke-opacity", 0.6)
+            .selectAll("line")
+            .data(links)
+            .join("line")
+            .attr("stroke-width", 1.5)
+            .attr("class", "graph-link");
+
+        // Draw nodes
+        const node = g
+            .append("g")
+            .attr("stroke", "#fff")
+            .attr("stroke-width", 1.5)
+            .selectAll("circle")
+            .data(nodes)
+            .join("circle")
+            .attr("r", 8)
+            .attr("fill", (d) => {
+                // Color based on group (mapType)
+                const colors = {
+                    moc: "#3b82f6", // Blue
+                    synthesis: "#8b5cf6", // Purple
+                    literature: "#10b981", // Emerald
+                    conceptual: "#f59e0b", // Amber
+                };
+                return colors[d.group] || "#64748b";
+            })
+            .attr("class", "graph-node")
+            .call(drag(simulation));
+
+        // Add labels
+        const label = g
+            .append("g")
+            .selectAll("text")
+            .data(nodes)
+            .join("text")
+            .text((d) => d.title)
+            .attr("font-size", "10px")
+            .attr("dx", 12)
+            .attr("dy", 4)
+            .attr("fill", "var(--text-secondary)")
+            .attr("class", "graph-label")
+            .style("pointer-events", "none");
+
+        // Add titles for hover
+        node.append("title").text((d) => d.title);
+
+        // Click to navigate
+        node.on("click", (event, d) => {
+            window.location.href = `/maps/${d.id}`;
+        });
+
+        // Hover highlighting
+        node.on("mouseenter", function (event, d) {
+            // Get connected node IDs
+            const connectedIds = new Set();
+            connectedIds.add(d.id);
+
+            links.forEach((l) => {
+                if (l.source.id === d.id) connectedIds.add(l.target.id);
+                if (l.target.id === d.id) connectedIds.add(l.source.id);
+            });
+
+            // Dim unconnected nodes
+            node.style("opacity", (n) => (connectedIds.has(n.id) ? 1 : 0.15));
+            label.style("opacity", (n) => (connectedIds.has(n.id) ? 1 : 0.15));
+            link.style("opacity", (l) =>
+                l.source.id === d.id || l.target.id === d.id ? 1 : 0.1,
+            );
+        });
+
+        node.on("mouseleave", function () {
+            // Reset opacity
+            node.style("opacity", 1);
+            label.style("opacity", 1);
+            link.style("opacity", 1);
+        });
+
+        // Update positions on tick
+        simulation.on("tick", () => {
+            link.attr("x1", (d) => d.source.x)
+                .attr("y1", (d) => d.source.y)
+                .attr("x2", (d) => d.target.x)
+                .attr("y2", (d) => d.target.y);
+
+            node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+
+            label.attr("x", (d) => d.x).attr("y", (d) => d.y);
+        });
+
+        // Auto-fit: center and scale to fit all nodes after simulation stabilizes
+        let initialTransform = null;
+        simulation.on("end", () => {
+            const bounds = g.node().getBBox();
+            const fullWidth = width;
+            const fullHeight = height;
+            const midX = bounds.x + bounds.width / 2;
+            const midY = bounds.y + bounds.height / 2;
+
+            if (bounds.width === 0 || bounds.height === 0) return;
+
+            const scale =
+                0.9 /
+                Math.max(bounds.width / fullWidth, bounds.height / fullHeight);
+            const translate = [
+                fullWidth / 2 - scale * midX,
+                fullHeight / 2 - scale * midY,
+            ];
+
+            initialTransform = d3.zoomIdentity
+                .translate(translate[0], translate[1])
+                .scale(scale);
+
+            svg.transition()
+                .duration(750)
+                .call(zoom.transform, initialTransform);
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById("graph-search");
+        searchInput?.addEventListener("input", (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+
+            if (!searchTerm) {
+                // Reset highlighting
+                node.style("opacity", 1).attr("r", 8);
+                label.style("opacity", 1);
+                return;
+            }
+
+            // Highlight matching nodes
+            node.style("opacity", (d) =>
+                d.title.toLowerCase().includes(searchTerm) ? 1 : 0.2,
+            ).attr("r", (d) =>
+                d.title.toLowerCase().includes(searchTerm) ? 12 : 8,
+            );
+
+            label.style("opacity", (d) =>
+                d.title.toLowerCase().includes(searchTerm) ? 1 : 0.2,
+            );
+
+            // Zoom to first match
+            const match = nodes.find((n) =>
+                n.title.toLowerCase().includes(searchTerm),
+            );
+            if (match) {
+                const scale = 1.5;
+                const translate = [
+                    width / 2 - scale * match.x,
+                    height / 2 - scale * match.y,
+                ];
+                svg.transition()
+                    .duration(500)
+                    .call(
+                        zoom.transform,
+                        d3.zoomIdentity
+                            .translate(translate[0], translate[1])
+                            .scale(scale),
+                    );
+            }
+        });
+
+        // Reset view button
+        const resetBtn = document.getElementById("graph-reset");
+        resetBtn?.addEventListener("click", () => {
+            if (initialTransform) {
+                svg.transition()
+                    .duration(750)
+                    .call(zoom.transform, initialTransform);
+            }
+            // Reset search
+            if (searchInput) {
+                searchInput.value = "";
+                node.style("opacity", 1).attr("r", 8);
+                label.style("opacity", 1);
+            }
+        });
+
+        // Drag behavior
+        function drag(simulation) {
+            function dragstarted(event) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                event.subject.fx = event.subject.x;
+                event.subject.fy = event.subject.y;
+            }
+
+            function dragged(event) {
+                event.subject.fx = event.x;
+                event.subject.fy = event.y;
+            }
+
+            function dragended(event) {
+                if (!event.active) simulation.alphaTarget(0);
+                event.subject.fx = null;
+                event.subject.fy = null;
+            }
+
+            return d3
+                .drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended);
+        }
+    }
+
+    // Initialize on load
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initGraph);
+    } else {
+        initGraph();
+    }
+
+    // Handle resize
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(initGraph, 250);
+    });
+</script>
+
+<style>
+    .graph-wrapper {
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+
+    .graph-controls {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+        align-items: center;
+    }
+
+    .graph-search {
+        flex: 1;
+        max-width: 300px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        background: var(--surface);
+        color: var(--text-primary);
+        transition: all 0.2s ease;
+    }
+
+    .graph-search:focus {
+        outline: none;
+        border-color: var(--text-tertiary);
+        box-shadow: 0 0 0 3px rgba(var(--text-tertiary-rgb, 100, 116, 139), 0.1);
+    }
+
+    .graph-search::placeholder {
+        color: var(--text-tertiary);
+    }
+
+    .graph-reset-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.5rem 0.875rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        background: var(--surface);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .graph-reset-btn:hover {
+        background: var(--surface-hover);
+        color: var(--text-primary);
+        border-color: var(--text-tertiary);
+    }
+
+    .graph-reset-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .graph-container {
+        width: 100%;
+        height: 400px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        overflow: hidden;
+    }
+
+    .graph-node {
+        cursor: pointer;
+        transition:
+            opacity 0.2s ease,
+            r 0.2s ease;
+    }
+
+    .graph-node:hover {
+        stroke-width: 2.5;
+    }
+
+    .graph-label {
+        transition: opacity 0.2s ease;
+    }
+
+    .graph-link {
+        transition: opacity 0.2s ease;
+    }
+</style>

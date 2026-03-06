@@ -1,82 +1,121 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const allMeta = await getCollection('meta');
+const allMeta = await getCollection("meta");
 
 // Group by category
-const metaByCategory = allMeta.reduce((acc, entry) => {
-  const category = entry.data.category;
-  if (!acc[category]) acc[category] = [];
-  acc[category].push(entry);
-  return acc;
-}, {} as Record<string, typeof allMeta>);
+const metaByCategory = allMeta.reduce(
+  (acc, entry) => {
+    const category = entry.data.category;
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(entry);
+    return acc;
+  },
+  {} as Record<string, typeof allMeta>,
+);
 
 // Sort entries within each category alphabetically by framework name
-Object.keys(metaByCategory).forEach(category => {
+Object.keys(metaByCategory).forEach((category) => {
   metaByCategory[category].sort((a, b) =>
-    a.data.framework.localeCompare(b.data.framework)
+    a.data.framework.localeCompare(b.data.framework),
   );
 });
 
 // Get sorted category names
 const categories = Object.keys(metaByCategory).sort();
+
+const maturityIcons = {
+  seedling: "🌱",
+  budding: "🌿",
+  evergreen: "🌳",
+};
 ---
 
 <BaseLayout title="Meta | Sambit">
   <header class="page-header">
     <h1>Meta</h1>
-    <p class="lead">Meta frameworks that shape my thinking: epistemology, philosophy of science, philosophy of mind, methodology, and heuristics</p>
+    <p class="lead">
+      Meta frameworks that shape my thinking: epistemology, philosophy of
+      science, philosophy of mind, methodology, and heuristics
+    </p>
+
+    <div class="maturity-legend">
+      <span class="legend-item"
+        ><span class="legend-icon">🌱</span> Seedling</span
+      >
+      <span class="legend-item"
+        ><span class="legend-icon">🌿</span> Budding</span
+      >
+      <span class="legend-item"
+        ><span class="legend-icon">🌳</span> Evergreen</span
+      >
+    </div>
   </header>
 
-  {categories.map((category, idx) => (
-    <section class="category-section">
-      {idx > 0 && <div class="category-divider"></div>}
-      <h2 class="category-heading">{category}</h2>
+  {
+    categories.map((category, idx) => (
+      <section class="category-section">
+        {idx > 0 && <div class="category-divider" />}
+        <h2 class="category-heading">{category}</h2>
 
-      <dl class="index-list">
-        {metaByCategory[category].map((entry) => (
-          <div class="index-entry">
-            <dt class="framework-term">
-              <a href={`/meta/${entry.id}`}>{entry.data.framework}</a>
-            </dt>
-            <dd class="framework-def">
-              <a href={`/meta/${entry.id}`}>
-                <span class="def-text">{entry.data.title}</span>
-              </a>
-            </dd>
-          </div>
-        ))}
-      </dl>
+        <dl class="index-list">
+          {metaByCategory[category].map((entry) => (
+            <div class="index-entry">
+              <dt class="framework-term">
+                <span
+                  class="maturity-icon"
+                  title={`Maturity: ${entry.data.maturity}`}
+                >
+                  {maturityIcons[entry.data.maturity]}
+                </span>
+                <a href={`/meta/${entry.id}`}>{entry.data.framework}</a>
+              </dt>
+              <dd class="framework-def">
+                <a href={`/meta/${entry.id}`}>
+                  <span class="def-text">{entry.data.title}</span>
+                </a>
+              </dd>
+            </div>
+          ))}
+        </dl>
 
-      {category === "Epistemology & Ontology" && (
-        <aside class="pluralism-note" data-reveal="hidden">
-          Some frameworks below may contradict. Given reality's stratification and that models leave residuals, theoretical pluralism seems necessary.
-        </aside>
-      )}
-    </section>
-  ))}
+        {category === "Epistemology & Ontology" && (
+          <aside class="pluralism-note" data-reveal="hidden">
+            Some frameworks below may contradict. Given reality's stratification
+            and that models leave residuals, theoretical pluralism seems
+            necessary.
+          </aside>
+        )}
+      </section>
+    ))
+  }
 
-  {categories.length === 0 && (
-    <div class="empty-state">
-      <p>No framework entries yet. Check back soon.</p>
-    </div>
-  )}
+  {
+    categories.length === 0 && (
+      <div class="empty-state">
+        <p>No framework entries yet. Check back soon.</p>
+      </div>
+    )
+  }
 </BaseLayout>
 
 <script>
   // Scroll reveal for pluralism note
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('revealed');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, {
-    threshold: 0.5,
-    rootMargin: '0px'
-  });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("revealed");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.5,
+      rootMargin: "0px",
+    },
+  );
 
   const note = document.querySelector('.pluralism-note[data-reveal="hidden"]');
   if (note) observer.observe(note);
@@ -88,13 +127,39 @@ const categories = Object.keys(metaByCategory).sort();
   }
 
   .lead {
+    font-family: var(--font-serif);
     font-size: 1.125rem;
+    font-style: italic;
     color: var(--text-secondary);
     margin-top: 0.5rem;
+    line-height: 1.6;
+  }
+
+  .maturity-legend {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .legend-icon {
+    font-size: 1rem;
+    line-height: 1;
   }
 
   /* Swiss Design: High Contrast Minimal */
   .pluralism-note {
+    font-family: var(--font-serif);
     font-size: 0.9375rem;
     line-height: 1.7;
     color: var(--text-secondary);
@@ -103,11 +168,12 @@ const categories = Object.keys(metaByCategory).sort();
     margin: 2.5rem 0 0 0;
     padding: 1.25rem 1.75rem;
     border: none;
-    border-left: 3px solid var(--text-primary);
+    border-left: 2px solid var(--accent);
     border-radius: 0;
     background: transparent;
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Scroll reveal states */
@@ -142,11 +208,12 @@ const categories = Object.keys(metaByCategory).sort();
   }
 
   .category-heading {
-    font-size: 0.875rem;
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-secondary);
+    letter-spacing: 0.12em;
+    color: var(--text-tertiary);
     margin: 0 0 1.5rem 0;
   }
 
@@ -181,6 +248,15 @@ const categories = Object.keys(metaByCategory).sort();
     font-weight: 600;
     margin: 0;
     line-height: 1.4;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .maturity-icon {
+    font-size: 0.875rem;
+    line-height: 1;
+    cursor: help;
   }
 
   .framework-term a {

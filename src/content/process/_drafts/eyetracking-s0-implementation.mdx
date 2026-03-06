@@ -1,0 +1,25 @@
+---
+title: "Calculating fixations from raw coordinate streams"
+description: "Implementation details for parsing raw (x,y) data into fixation events"
+date: 2025-11-28
+dimension: "implementation"
+project: "Eyetracking"
+series: "0"
+seriesTitle: "What Eye Movements Actually Reveal"
+status: "in-progress"
+tags: ["eye-tracking", "VWP", "implementation"]
+---
+
+# Calculating fixations from raw coordinate streams
+
+Raw data is a stream of (t, x, y).
+
+```python
+def identify_fixations(stream, velocity_threshold=30):
+    # Calculate velocity between points
+    # If velocity < threshold for > min_duration:
+    #   It's a fixation
+    pass
+```
+
+We need a robust algorithm to separate saccades (high velocity) from fixations (low velocity).

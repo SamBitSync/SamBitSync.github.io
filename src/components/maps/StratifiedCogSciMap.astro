@@ -1,0 +1,326 @@
+---
+const programmes = [
+  {
+    id: "symbolic",
+    label: "Symbolic",
+    color: "var(--color-amber)",
+    bg: "var(--color-amber-soft)",
+  },
+  {
+    id: "connectionist",
+    label: "Connectionist",
+    color: "var(--color-violet)",
+    bg: "var(--color-violet-soft)",
+  },
+  {
+    id: "bayesian",
+    label: "Bayesian",
+    color: "var(--color-blue)",
+    bg: "var(--color-blue-soft)",
+  },
+  {
+    id: "enactive",
+    label: "Enactive",
+    color: "var(--color-emerald)",
+    bg: "var(--color-emerald-soft)",
+  },
+  {
+    id: "dynamical",
+    label: "Dynamical",
+    color: "var(--color-pink)",
+    bg: "var(--color-pink-soft)",
+  },
+];
+
+const strata = [
+  { id: "ontological", label: "Ontological", desc: "What cognition IS" },
+  {
+    id: "explanatory",
+    label: "Explanatory",
+    desc: "What counts as explanation",
+  },
+  { id: "methodological", label: "Methodological", desc: "How to investigate" },
+];
+
+const nodes = [
+  // SYMBOLIC
+  {
+    prog: "symbolic",
+    strat: "ontological",
+    title: "Computation",
+    text: "Rule-governed symbol manipulation & syntax.",
+  },
+  {
+    prog: "symbolic",
+    strat: "explanatory",
+    title: "Algorithm",
+    text: "Program-level description of information processing.",
+  },
+  {
+    prog: "symbolic",
+    strat: "methodological",
+    title: "Behavioral",
+    text: "Reaction times, error rates, logic proofs.",
+  },
+
+  // CONNECTIONIST
+  {
+    prog: "connectionist",
+    strat: "ontological",
+    title: "Vector Transform",
+    text: "Pattern transformation across distributed nodes.",
+  },
+  {
+    prog: "connectionist",
+    strat: "explanatory",
+    title: "Network Dynamics",
+    text: "Learning rules, weight changes, energy landscapes.",
+  },
+  {
+    prog: "connectionist",
+    strat: "methodological",
+    title: "Simulation",
+    text: "Training artificial neural networks on tasks.",
+  },
+
+  // BAYESIAN
+  {
+    prog: "bayesian",
+    strat: "ontological",
+    title: "Inference",
+    text: "Approximate optimal inference under uncertainty.",
+  },
+  {
+    prog: "bayesian",
+    strat: "explanatory",
+    title: "Optimality",
+    text: "Rational analysis: why is this behavior optimal?",
+  },
+  {
+    prog: "bayesian",
+    strat: "methodological",
+    title: "Ideal Models",
+    text: "Comparing behavior to ideal observer models.",
+  },
+
+  // ENACTIVE
+  {
+    prog: "enactive",
+    strat: "ontological",
+    title: "Coupling",
+    text: "Inseparable from bodily action & environment.",
+  },
+  {
+    prog: "enactive",
+    strat: "explanatory",
+    title: "History",
+    text: "History of structural coupling & viability.",
+  },
+  {
+    prog: "enactive",
+    strat: "methodological",
+    title: "Phenomenology",
+    text: "First-person experience + ethology.",
+  },
+
+  // DYNAMICAL
+  {
+    prog: "dynamical",
+    strat: "ontological",
+    title: "Evolution",
+    text: "Continuous state-space evolution in time.",
+  },
+  {
+    prog: "dynamical",
+    strat: "explanatory",
+    title: "Attractor",
+    text: "Phase portraits, manifolds, stability analysis.",
+  },
+  {
+    prog: "dynamical",
+    strat: "methodological",
+    title: "Diff Eq",
+    text: "Differential equations & coordination dynamics.",
+  },
+];
+
+function getNode(pId: string, sId: string) {
+  return nodes.find((n) => n.prog === pId && n.strat === sId);
+}
+---
+
+<div class="stratified-matrix-container">
+  <div class="matrix-scroll-wrapper">
+    <div class="stratified-matrix">
+      <!-- Header Row -->
+      <div class="matrix-corner"></div>
+      {
+        programmes.map((p) => (
+          <div class="matrix-col-header" style={`--accent: ${p.color}`}>
+            <span class="prog-label">{p.label}</span>
+          </div>
+        ))
+      }
+
+      <!-- Matrix Rows -->
+      {
+        strata.map((s) => (
+          <>
+            <div class="matrix-row-header">
+              <span class="strata-label">{s.label}</span>
+              <span class="strata-desc">{s.desc}</span>
+            </div>
+            {programmes.map((p) => {
+              const node = getNode(p.id, s.id);
+              return (
+                <div
+                  class="matrix-cell"
+                  style={`--accent: ${p.color}; --accent-bg: ${p.bg}`}
+                >
+                  {node && (
+                    <div class="commitment-card">
+                      <span class="commitment-title">{node.title}</span>
+                      <span class="commitment-text">{node.text}</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .stratified-matrix-container {
+    width: 100%;
+    margin: 3rem 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+
+    /* Define colors locally if not interactive global vars yet */
+    --color-amber: #f59e0b;
+    --color-amber-soft: #fffbeb;
+    --color-violet: #8b5cf6;
+    --color-violet-soft: #f5f3ff;
+    --color-blue: #3b82f6;
+    --color-blue-soft: #eff6ff;
+    --color-emerald: #10b981;
+    --color-emerald-soft: #ecfdf5;
+    --color-pink: #ec4899;
+    --color-pink-soft: #fdf2f8;
+  }
+
+  [data-theme="dark"] .stratified-matrix-container {
+    --color-amber-soft: rgba(245, 158, 11, 0.1);
+    --color-violet-soft: rgba(139, 92, 246, 0.1);
+    --color-blue-soft: rgba(59, 130, 246, 0.1);
+    --color-emerald-soft: rgba(16, 185, 129, 0.1);
+    --color-pink-soft: rgba(236, 72, 153, 0.1);
+  }
+
+  .matrix-scroll-wrapper {
+    overflow-x: auto;
+    padding: 1.5rem;
+  }
+
+  .stratified-matrix {
+    display: grid;
+    grid-template-columns: 140px repeat(5, minmax(160px, 1fr));
+    gap: 1rem;
+    min-width: 900px; /* Ensure expanding on mobile */
+  }
+
+  /* headers */
+  .matrix-corner {
+    grid-column: 1;
+  }
+
+  .matrix-col-header {
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9375rem;
+  }
+
+  .matrix-row-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 1rem;
+    border-right: 1px dashed var(--border);
+  }
+
+  .strata-label {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-primary);
+    /* text-transform: uppercase; */
+    /* letter-spacing: 0.05em; */
+  }
+
+  .strata-desc {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin-top: 0.25rem;
+    line-height: 1.3;
+  }
+
+  /* Cells */
+  .matrix-cell {
+    background: var(--surface);
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    height: 100%;
+  }
+
+  .commitment-card {
+    height: 100%;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .matrix-cell:hover {
+    background: var(--accent-bg);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .commitment-title {
+    font-weight: 600;
+    font-size: 0.8125rem;
+    color: var(--text-primary);
+    text-align: center;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .matrix-cell:hover .commitment-title {
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--accent);
+  }
+
+  .commitment-text {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .matrix-cell:hover .commitment-text {
+    color: var(--text-primary);
+  }
+</style>

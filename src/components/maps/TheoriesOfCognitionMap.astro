@@ -1,0 +1,500 @@
+---
+/**
+ * THEORIES OF COGNITION MAP
+ *
+ * Horizontal 3-column layout for clearer arrow visibility.
+ */
+
+interface Theory {
+    id: string;
+    name: string;
+    shortName: string;
+    cluster: "computational" | "embodied" | "process";
+    claim: string;
+    description: string;
+}
+
+const theories: Theory[] = [
+    {
+        id: "computationalism",
+        name: "Computationalism",
+        shortName: "COMP",
+        cluster: "computational",
+        claim: "Cognition as symbol manipulation",
+        description:
+            "Mind is to brain as software is to hardware. Mental processes are computations over symbolic representations. The classical AI view.",
+    },
+    {
+        id: "functionalism",
+        name: "Functionalism",
+        shortName: "FUNC",
+        cluster: "computational",
+        claim: "Mental states defined by role",
+        description:
+            "What matters is the functional organization, not the substrate. Multiple realizability — same mind, different hardware. Opens door to machine minds.",
+    },
+    {
+        id: "embodied",
+        name: "Embodied Cognition",
+        shortName: "EMB",
+        cluster: "embodied",
+        claim: "Body shapes thought",
+        description:
+            "Cognition is inseparable from bodily experience. Not just brain-in-a-vat — the body's sensorimotor capacities structure conceptual understanding.",
+    },
+    {
+        id: "extended",
+        name: "Extended Mind",
+        shortName: "EXT",
+        cluster: "embodied",
+        claim: "Mind extends into world",
+        description:
+            "Cognitive processes extend beyond skull into environment. Otto's notebook IS part of his memory. The parity principle: if it walks like cognition...",
+    },
+    {
+        id: "predictive",
+        name: "Predictive Processing",
+        shortName: "PP",
+        cluster: "process",
+        claim: "Brain as prediction machine",
+        description:
+            "Perception is controlled hallucination. Brain generates predictions, updates on error. Active inference — action and perception unified under one principle.",
+    },
+    {
+        id: "complexity",
+        name: "Complexity/Dynamical",
+        shortName: "DYN",
+        cluster: "process",
+        claim: "Cognition as emergent dynamics",
+        description:
+            "Mental phenomena emerge from self-organizing dynamics. Attractors, phase transitions, coupled oscillators. Skip the representations, study the trajectories.",
+    },
+];
+
+const clusterColors: Record<string, string> = {
+    computational: "#3b82f6",
+    embodied: "#10b981",
+    process: "#8b5cf6",
+};
+
+const clusterLabels: Record<string, string> = {
+    computational: "Computational",
+    embodied: "Embodied/Embedded",
+    process: "Process-Oriented",
+};
+
+// Horizontal 3-column layout
+const positions: Record<string, { x: number; y: number }> = {
+    computationalism: { x: 80, y: 100 },
+    functionalism: { x: 80, y: 180 },
+    embodied: { x: 220, y: 100 },
+    extended: { x: 220, y: 180 },
+    predictive: { x: 360, y: 100 },
+    complexity: { x: 360, y: 180 },
+};
+---
+
+<div class="cognition-map">
+    <!-- Cluster Legend -->
+    <div class="cluster-legend">
+        {
+            Object.entries(clusterLabels).map(([key, label]) => (
+                <span class="cluster-item" data-cluster={key}>
+                    <span
+                        class="cluster-dot"
+                        style={`background: ${clusterColors[key]}`}
+                    />
+                    {label}
+                </span>
+            ))
+        }
+    </div>
+
+    <!-- Main Diagram - Horizontal 3-column -->
+    <div class="diagram-container">
+        <svg viewBox="0 0 440 280" preserveAspectRatio="xMidYMid meet">
+            <defs>
+                <marker
+                    id="theory-arrow"
+                    markerWidth="8"
+                    markerHeight="8"
+                    refX="6"
+                    refY="4"
+                    orient="auto"
+                >
+                    <path d="M 0 0 L 8 4 L 0 8 Z" fill="var(--text-secondary)"
+                    ></path>
+                </marker>
+            </defs>
+
+            <!-- Cluster backgrounds - 3 columns -->
+            <rect
+                x="20"
+                y="50"
+                width="120"
+                height="170"
+                rx="8"
+                fill="var(--surface)"
+                stroke={clusterColors.computational}
+                stroke-width="1.5"
+                stroke-dasharray="4 2"
+                opacity="0.4"></rect>
+            <rect
+                x="160"
+                y="50"
+                width="120"
+                height="170"
+                rx="8"
+                fill="var(--surface)"
+                stroke={clusterColors.embodied}
+                stroke-width="1.5"
+                stroke-dasharray="4 2"
+                opacity="0.4"></rect>
+            <rect
+                x="300"
+                y="50"
+                width="120"
+                height="170"
+                rx="8"
+                fill="var(--surface)"
+                stroke={clusterColors.process}
+                stroke-width="1.5"
+                stroke-dasharray="4 2"
+                opacity="0.4"></rect>
+
+            <!-- Cluster labels -->
+            <text
+                x="80"
+                y="68"
+                text-anchor="middle"
+                class="cluster-label"
+                fill={clusterColors.computational}>Computational</text
+            >
+            <text
+                x="220"
+                y="68"
+                text-anchor="middle"
+                class="cluster-label"
+                fill={clusterColors.embodied}>Embodied</text
+            >
+            <text
+                x="360"
+                y="68"
+                text-anchor="middle"
+                class="cluster-label"
+                fill={clusterColors.process}>Process</text
+            >
+
+            <!-- ARROWS - Clear horizontal/vertical paths -->
+
+            <!-- FUNC → COMP (vertical up) -->
+            <path
+                d="M 80 152 L 80 128"
+                fill="none"
+                stroke="var(--text-secondary)"
+                stroke-width="2"
+                opacity="0.6"
+                marker-end="url(#theory-arrow)"></path>
+
+            <!-- FUNC → EXT (horizontal right) -->
+            <path
+                d="M 108 180 L 192 180"
+                fill="none"
+                stroke="var(--text-secondary)"
+                stroke-width="2"
+                opacity="0.6"
+                marker-end="url(#theory-arrow)"></path>
+
+            <!-- EMB → EXT (vertical down) -->
+            <path
+                d="M 220 128 L 220 152"
+                fill="none"
+                stroke="var(--text-secondary)"
+                stroke-width="2"
+                opacity="0.6"
+                marker-end="url(#theory-arrow)"></path>
+
+            <!-- EMB → PP (horizontal right) -->
+            <path
+                d="M 248 100 L 332 100"
+                fill="none"
+                stroke="var(--text-secondary)"
+                stroke-width="2"
+                opacity="0.6"
+                marker-end="url(#theory-arrow)"></path>
+
+            <!-- DYN → PP (vertical up) -->
+            <path
+                d="M 360 152 L 360 128"
+                fill="none"
+                stroke="var(--text-secondary)"
+                stroke-width="2"
+                opacity="0.6"
+                marker-end="url(#theory-arrow)"></path>
+
+            <!-- DYN → EMB (horizontal left, goes above) -->
+            <path
+                d="M 332 180 Q 280 155 248 180"
+                fill="none"
+                stroke="var(--text-secondary)"
+                stroke-width="2"
+                opacity="0.5"
+                marker-end="url(#theory-arrow)"></path>
+
+            <!-- PP → COMP (dashed, challenges - curve over top) -->
+            <path
+                d="M 332 90 Q 220 30 108 90"
+                fill="none"
+                stroke="var(--text-secondary)"
+                stroke-width="2"
+                stroke-dasharray="6 4"
+                opacity="0.5"
+                marker-end="url(#theory-arrow)"></path>
+
+            <!-- Theory nodes -->
+            {
+                theories.map((theory) => {
+                    const pos = positions[theory.id];
+                    const color = clusterColors[theory.cluster];
+                    return (
+                        <g class="theory-node" data-theory={theory.id}>
+                            <circle
+                                cx={pos.x}
+                                cy={pos.y}
+                                r="25"
+                                fill="var(--surface)"
+                                stroke={color}
+                                stroke-width="2.5"
+                            />
+                            <text
+                                x={pos.x}
+                                y={pos.y + 4}
+                                text-anchor="middle"
+                                class="theory-label"
+                                fill={color}
+                            >
+                                {theory.shortName}
+                            </text>
+                        </g>
+                    );
+                })
+            }
+
+            <!-- Connection legend at bottom -->
+            <line
+                x1="30"
+                y1="245"
+                x2="60"
+                y2="245"
+                stroke="var(--text-secondary)"
+                stroke-width="2"></line>
+            <text x="65" y="248" class="legend-text" fill="var(--text-tertiary)"
+                >informs</text
+            >
+
+            <line
+                x1="130"
+                y1="245"
+                x2="160"
+                y2="245"
+                stroke="var(--text-secondary)"
+                stroke-width="2"
+                stroke-dasharray="6 4"></line>
+            <text
+                x="165"
+                y="248"
+                class="legend-text"
+                fill="var(--text-tertiary)">challenges</text
+            >
+        </svg>
+    </div>
+
+    <!-- Description Panel -->
+    <div class="theory-panel">
+        <div class="theory-name" id="theory-name">Hover over a theory</div>
+        <div class="theory-claim" id="theory-claim"></div>
+        <div class="theory-description" id="theory-description">
+            Click or hover on nodes to explore each perspective.
+        </div>
+    </div>
+
+    <!-- Tensions -->
+    <div class="tensions-note">
+        <span class="tension-label">Key tensions:</span>
+        <span class="tension">representations vs. dynamics</span>
+        <span class="divider">•</span>
+        <span class="tension">inside vs. extended</span>
+        <span class="divider">•</span>
+        <span class="tension">substrate vs. function</span>
+    </div>
+</div>
+
+<script define:vars={{ theories }}>
+    document.addEventListener("DOMContentLoaded", () => {
+        const container = document.querySelector(".cognition-map");
+        if (!container) return;
+
+        const nodes = container.querySelectorAll(".theory-node");
+        const nameEl = document.getElementById("theory-name");
+        const claimEl = document.getElementById("theory-claim");
+        const descEl = document.getElementById("theory-description");
+
+        const theoryMap = Object.fromEntries(theories.map((t) => [t.id, t]));
+
+        nodes.forEach((node) => {
+            node.addEventListener("mouseenter", () => {
+                const theoryId = node.dataset.theory;
+                const theory = theoryMap[theoryId];
+                if (theory) {
+                    nameEl.textContent = theory.name;
+                    claimEl.textContent = theory.claim;
+                    descEl.textContent = theory.description;
+                    container
+                        .querySelector(".theory-panel")
+                        .classList.add("active");
+                }
+            });
+
+            node.addEventListener("mouseleave", () => {
+                nameEl.textContent = "Hover over a theory";
+                claimEl.textContent = "";
+                descEl.textContent =
+                    "Click or hover on nodes to explore each perspective.";
+                container
+                    .querySelector(".theory-panel")
+                    .classList.remove("active");
+            });
+        });
+    });
+</script>
+
+<style>
+    .cognition-map {
+        font-family: var(--font-mono);
+        background: var(--bg);
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+    }
+
+    .cluster-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    .cluster-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .cluster-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+
+    .diagram-container {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .diagram-container svg {
+        width: 100%;
+        height: auto;
+    }
+
+    .cluster-label {
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+    }
+
+    .theory-node {
+        cursor: pointer;
+    }
+
+    .theory-node:hover circle {
+        stroke-width: 3.5;
+    }
+
+    .theory-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+
+    .legend-text {
+        font-size: 8px;
+    }
+
+    .theory-panel {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        border-radius: var(--radius-md);
+        min-height: 5rem;
+    }
+
+    .theory-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        margin-bottom: 0.25rem;
+        font-family: var(--font-sans);
+    }
+
+    .theory-panel.active .theory-name {
+        color: var(--text-primary);
+    }
+
+    .theory-claim {
+        font-size: 0.875rem;
+        color: var(--accent);
+        font-style: italic;
+        margin-bottom: 0.5rem;
+    }
+
+    .theory-description {
+        font-size: 0.8125rem;
+        color: var(--text-tertiary);
+        line-height: 1.6;
+        font-family: var(--font-sans);
+    }
+
+    .theory-panel.active .theory-description {
+        color: var(--text-secondary);
+    }
+
+    .tensions-note {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .tension-label {
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .tension {
+        font-style: italic;
+    }
+
+    .divider {
+        opacity: 0.5;
+    }
+</style>

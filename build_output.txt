@@ -1,0 +1,16 @@
+07:49:38 [content] Syncing content
+07:49:38 [content] Synced content
+07:49:38 [types] Generated 702ms
+07:49:38 [build] output: "static"
+07:49:38 [build] mode: "static"
+07:49:38 [build] directory: C:\Users\rimal\code_w\zettelkasten-astro\dist\
+07:49:38 [build] Collecting build info...
+07:49:38 [build] Γ£ô Completed in 736ms.
+07:49:38 [build] Building static entrypoints...
+07:49:41 [ERROR] [vite] Γ£ù Build failed in 2.56s
+[@mdx-js/rollup] Unexpected character `1` (U+0031) before name, expected a character that can start a name, such as a letter, `$`, or `_`
+file: C:/Users/rimal/code_w/zettelkasten-astro/src/content/process/eyetracking-s3-empirical.mdx:24:18
+  Location:
+    C:/Users/rimal/code_w/zettelkasten-astro/src/content/process/eyetracking-s3-empirical.mdx:24:18
+  Stack trace:
+    at Object.transform (file:///C:/Users/rimal/code_w/zettelkasten-astro/node_modules/@astrojs/mdx/dist/vite-plugin-mdx.js:62:15)
