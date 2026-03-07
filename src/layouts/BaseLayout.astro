@@ -6,10 +6,12 @@ export interface Props {
 
 const {
   title,
-  description = "Sambit's portfolio and external memory system - cognitive science research, epistemic practice, and cross-domain synthesis",
+  description = "Sambit Rimal's portfolio and external memory system - cognitive science research, epistemic practice, and cross-domain synthesis",
 } = Astro.props;
 
 const lastUpdated = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+const canonicalURL = new URL(Astro.url.pathname, 'https://sambitmaps.systems').href;
+const fullTitle = title.includes('Sambit') ? title : `${title} | Sambit Rimal`;
 ---
 
 <!doctype html>
@@ -19,13 +21,27 @@ const lastUpdated = new Date().toLocaleDateString('en-US', { month: 'long', year
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
+    <link rel="canonical" href={canonicalURL} />
 
-    <meta name="author" content="Sambit" />
+    <meta name="google-site-verification" content="RzTSpNlIAsHb0itUoSZ_llh-ztYM1sU7Xp4Rk-6hfXk" />
+    <meta name="author" content="Sambit Rimal" />
     <meta
       name="keywords"
-      content="cognitive science, epistemology, complexity science, research portfolio"
+      content="Sambit Rimal, cognitive science, epistemology, complexity science, research portfolio"
     />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Sambit Rimal" />
+
+    <!-- Twitter/X -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
