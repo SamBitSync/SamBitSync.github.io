@@ -1,4 +1,6 @@
 ---
+import { getCollection } from 'astro:content';
+
 export interface Props {
   title: string;
   description?: string;
@@ -9,8 +11,22 @@ const {
   description = "Sambit Rimal's portfolio and external memory system - cognitive science research, epistemic practice, and cross-domain synthesis",
 } = Astro.props;
 
-const lastUpdated = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-const canonicalURL = new URL(Astro.url.pathname, 'https://sambitmaps.systems').href;
+// "Last plank replaced" = the newest content date across all collections,
+// so the footer reflects actual writing activity rather than deploy time.
+const allEntries = (
+  await Promise.all([
+    getCollection('maps'),
+    getCollection('meta'),
+    getCollection('process'),
+    getCollection('project'),
+  ])
+).flat();
+const latestDate = allEntries.reduce(
+  (max, entry) => (entry.data.date > max ? entry.data.date : max),
+  new Date(0),
+);
+const lastUpdated = latestDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://sambit.com.np').href;
 const fullTitle = title.includes('Sambit') ? title : `${title} | Sambit Rimal`;
 ---
 
@@ -77,9 +93,33 @@ const fullTitle = title.includes('Sambit') ? title : `${title} | Sambit Rimal`;
     <div id="app">
       <header class="header">
         <nav class="nav">
-          <a href="/" class="brand">Sambit</a>
+          <a href="/" class="brand">
+            <svg
+              class="brand-mark"
+              width="15"
+              height="15"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M8 2.4 14.2 13.2H1.8Z"
+                stroke="currentColor"
+                stroke-width="1.1"
+                stroke-linejoin="round"></path>
+              <circle
+                cx="8"
+                cy="9.6"
+                r="1.7"
+                stroke="currentColor"
+                stroke-width="1"></circle>
+            </svg>
+            <span>Sambit</span>
+          </a>
 
           <div class="nav-links">
+            <a href="/about" class="nav-link">About</a>
             <a href="/maps" class="nav-link">Maps</a>
             <a href="/meta" class="nav-link">Meta</a>
             <a href="/process" class="nav-link">Process</a>
@@ -134,6 +174,8 @@ const fullTitle = title.includes('Sambit') ? title : `${title} | Sambit Rimal`;
       </main>
 
       <footer class="footer">
+        <span class="footer-coords">27.7172° N · 85.3240° E</span>
+        <span class="footer-sep">·</span>
         <span class="footer-status">Constantly changing.</span>
         <span class="footer-sep">·</span>
         <a href="/meta/neuraths-boat" class="footer-nodock">No dry dock.</a>
@@ -185,22 +227,23 @@ const fullTitle = title.includes('Sambit') ? title : `${title} | Sambit Rimal`;
   }
 
   :root {
-    /* Light mode - Warm Paper (Stone based) */
-    --bg: #f7f5f0; /* Warm Paper */
-    --bg-elevated: #ffffff;
-    --surface: #ffffff;
-    --surface-elevated: #fafaf9;
+    /* Light mode - Chart Paper: the cyanotype's day side */
+    --bg: #e9eff1; /* Pale chart blue-grey */
+    --bg-elevated: #f7fafb;
+    --surface: #f7fafb;
+    --surface-elevated: #eef4f6;
 
-    --text-primary: #1c1917; /* Stone 900 */
-    --text-secondary: #44403c; /* Stone 700 */
-    --text-tertiary: #78716c; /* Stone 500 */
+    --text-primary: #16232c; /* Ink slate */
+    --text-secondary: #3c5260;
+    --text-tertiary: #6d8390;
 
-    --border: #e7e5e4; /* Stone 200 */
-    --border-subtle: #f5f5f4; /* Stone 100 */
+    --border: #ccd9dd;
+    --border-subtle: #dee8ea;
 
-    --accent: #8b4513; /* Burnt sienna */
-    --accent-hover: #a0724e; /* Sienna muted */
-    --accent-subtle: rgba(139, 69, 19, 0.06);
+    --accent: #1f5a7d; /* Wayfinding ink - fountain pen, nautical charts */
+    --accent-hover: #3d7ea3; /* Ink diluted */
+    --accent-subtle: rgba(31, 90, 125, 0.08);
+    --annotation: #a23b2e; /* Surveyor's red - stations, plate marks, fig. numbers */
 
     /* Modern Shadows - Diffuse & Layered */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -227,25 +270,26 @@ const fullTitle = title.includes('Sambit') ? title : `${title} | Sambit Rimal`;
     --max-width-wide: 1400px;
   }
 
-  /* Dark mode - auto-detect */
+  /* Dark mode - the cyanotype: the survey at night */
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #09090b; /* Zinc 950 */
-      --bg-elevated: #18181b; /* Zinc 900 */
+      --bg: #0c151d; /* Blueprint blue-black */
+      --bg-elevated: #13202a;
 
-      --surface: #18181b; /* Zinc 900 */
-      --surface-elevated: #27272a; /* Zinc 800 */
+      --surface: #13202a;
+      --surface-elevated: #1a2b37;
 
-      --text-primary: #f4f4f5; /* Zinc 100 */
-      --text-secondary: #a1a1aa; /* Zinc 400 */
-      --text-tertiary: #52525b; /* Zinc 600 */
+      --text-primary: #e8eef2; /* Pale cyan-white linework */
+      --text-secondary: #9fb3bf;
+      --text-tertiary: #5b7280;
 
-      --border: #27272a; /* Zinc 800 */
-      --border-subtle: #18181b; /* Zinc 900 */
+      --border: #22343f;
+      --border-subtle: #13202a;
 
-      --accent: #c17f52; /* Sienna - lighter for dark mode */
-      --accent-hover: #d4a574; /* Sienna highlight */
-      --accent-subtle: rgba(139, 69, 19, 0.15);
+      --accent: #8fb4c9; /* Wayfinding ink - lighter for dark mode */
+      --accent-hover: #aecbdc; /* Ink highlight */
+      --accent-subtle: rgba(143, 180, 201, 0.12);
+      --annotation: #cf7a63; /* Surveyor's red, faded for night */
 
       /* Dark Mode Shadows - Stronger + Border Highlight */
       --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
@@ -258,24 +302,25 @@ const fullTitle = title.includes('Sambit') ? title : `${title} | Sambit Rimal`;
     }
   }
 
-  /* Dark mode - manual override */
+  /* Dark mode - manual override (cyanotype) */
   [data-theme="dark"] {
-    --bg: #09090b;
-    --bg-elevated: #18181b;
+    --bg: #0c151d;
+    --bg-elevated: #13202a;
 
-    --surface: #18181b;
-    --surface-elevated: #27272a;
+    --surface: #13202a;
+    --surface-elevated: #1a2b37;
 
-    --text-primary: #f4f4f5;
-    --text-secondary: #a1a1aa;
-    --text-tertiary: #52525b;
+    --text-primary: #e8eef2;
+    --text-secondary: #9fb3bf;
+    --text-tertiary: #5b7280;
 
-    --border: #27272a;
-    --border-subtle: #18181b;
+    --border: #22343f;
+    --border-subtle: #13202a;
 
-    --accent: #c17f52;
-    --accent-hover: #d4a574;
-    --accent-subtle: rgba(139, 69, 19, 0.15);
+    --accent: #8fb4c9;
+    --accent-hover: #aecbdc;
+    --accent-subtle: rgba(143, 180, 201, 0.12);
+    --annotation: #cf7a63;
 
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
     --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
@@ -288,6 +333,10 @@ const fullTitle = title.includes('Sambit') ? title : `${title} | Sambit Rimal`;
   /* Base Styles */
   html {
     color-scheme: light dark;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 20%, transparent);
   }
 
   body {
@@ -333,6 +382,15 @@ const fullTitle = title.includes('Sambit') ? title : `${title} | Sambit Rimal`;
     color: var(--text-primary);
     text-decoration: none;
     transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .brand-mark {
+    color: var(--annotation);
+    opacity: 0.85;
+    flex-shrink: 0;
   }
 
   .brand:hover {
@@ -439,6 +497,11 @@ const fullTitle = title.includes('Sambit') ? title : `${title} | Sambit Rimal`;
     font-family: var(--font-mono);
     font-size: 0.72rem;
     letter-spacing: 0.04em;
+  }
+
+  .footer-coords {
+    color: var(--text-tertiary);
+    letter-spacing: 0.06em;
   }
 
   .footer-status {
@@ -640,6 +703,106 @@ const fullTitle = title.includes('Sambit') ? title : `${title} | Sambit Rimal`;
 
   .text-tertiary {
     color: var(--text-tertiary);
+  }
+
+  /* Section masthead - shared editorial header for index pages */
+  .masthead {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .masthead-overline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-tertiary);
+    margin-bottom: 1.25rem;
+  }
+
+  .masthead-overline::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border: 1.5px solid var(--annotation);
+    border-radius: 50%;
+    opacity: 0.75;
+    flex-shrink: 0;
+  }
+
+  .masthead h1 {
+    margin-bottom: 0.75rem;
+  }
+
+  .masthead .lead {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 42rem;
+    margin: 0;
+  }
+
+  /* ── Survey grammar: recurring motifs ── */
+
+  /* Plate: cartographic registration marks on opposite corners */
+  .plate {
+    position: relative;
+  }
+
+  .plate::before,
+  .plate::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    opacity: 0.65;
+  }
+
+  .plate::before {
+    top: 0;
+    left: 0;
+    border-top: 1px solid var(--annotation);
+    border-left: 1px solid var(--annotation);
+  }
+
+  .plate::after {
+    bottom: 0;
+    right: 0;
+    border-bottom: 1px solid var(--annotation);
+    border-right: 1px solid var(--annotation);
+  }
+
+  /* Scale rule: a map's scale bar as section divider */
+  .scale-rule {
+    width: 132px;
+    height: 4px;
+    border: 1px solid var(--text-tertiary);
+    background: repeating-linear-gradient(
+      90deg,
+      var(--text-tertiary) 0 22px,
+      transparent 22px 44px
+    );
+    opacity: 0.6;
+    margin: 3rem 0;
+  }
+
+  /* Accession number: chronological document id (F-07, M-02, L-01, A-01) */
+  .accession {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
 
   /* Responsive */

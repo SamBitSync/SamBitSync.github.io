@@ -1,8 +1,10 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { accessionIndex, SHEET_PREFIX } from "../../lib/survey";
 
 const allMeta = await getCollection("meta");
+const acc = accessionIndex(allMeta, SHEET_PREFIX.meta);
 
 // Group by category
 const metaByCategory = allMeta.reduce(
@@ -25,15 +27,11 @@ Object.keys(metaByCategory).forEach((category) => {
 // Get sorted category names
 const categories = Object.keys(metaByCategory).sort();
 
-const maturityIcons = {
-  seedling: "🌱",
-  budding: "🌿",
-  evergreen: "🌳",
-};
 ---
 
 <BaseLayout title="Meta | Sambit">
-  <header class="page-header">
+  <header class="page-header masthead">
+    <span class="masthead-overline">Sheet 02 · Instruments &amp; frameworks</span>
     <h1>Meta</h1>
     <p class="lead">
       Meta frameworks that shape my thinking: epistemology, philosophy of
@@ -42,13 +40,13 @@ const maturityIcons = {
 
     <div class="maturity-legend">
       <span class="legend-item"
-        ><span class="legend-icon">🌱</span> Seedling</span
+        ><span class="maturity-glyph glyph-seedling"></span> Seedling</span
       >
       <span class="legend-item"
-        ><span class="legend-icon">🌿</span> Budding</span
+        ><span class="maturity-glyph glyph-budding"></span> Budding</span
       >
       <span class="legend-item"
-        ><span class="legend-icon">🌳</span> Evergreen</span
+        ><span class="maturity-glyph glyph-evergreen"></span> Evergreen</span
       >
     </div>
   </header>
@@ -63,12 +61,11 @@ const maturityIcons = {
           {metaByCategory[category].map((entry) => (
             <div class="index-entry">
               <dt class="framework-term">
+                <span class="accession">{acc.get(entry.id)}</span>
                 <span
-                  class="maturity-icon"
+                  class={`maturity-glyph glyph-${entry.data.maturity}`}
                   title={`Maturity: ${entry.data.maturity}`}
-                >
-                  {maturityIcons[entry.data.maturity]}
-                </span>
+                ></span>
                 <a href={`/meta/${entry.id}`}>{entry.data.framework}</a>
               </dt>
               <dd class="framework-def">
@@ -152,9 +149,32 @@ const maturityIcons = {
     gap: 0.375rem;
   }
 
-  .legend-icon {
-    font-size: 1rem;
-    line-height: 1;
+  /* Maturity glyphs: open circle grows into a filled one */
+  .maturity-glyph {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+
+  .glyph-seedling {
+    border: 1.5px solid #97742f; /* ochre - open circle */
+  }
+
+  .glyph-budding {
+    border: 1.5px solid #6a7f5f; /* sage - half filled */
+    background: linear-gradient(
+      to top,
+      #6a7f5f 0%,
+      #6a7f5f 50%,
+      transparent 50%
+    );
+  }
+
+  .glyph-evergreen {
+    border: 1.5px solid #46703f; /* forest - filled */
+    background: #46703f;
   }
 
   /* Swiss Design: High Contrast Minimal */
@@ -253,9 +273,7 @@ const maturityIcons = {
     gap: 0.5rem;
   }
 
-  .maturity-icon {
-    font-size: 0.875rem;
-    line-height: 1;
+  .framework-term .maturity-glyph {
     cursor: help;
   }
 
@@ -281,8 +299,9 @@ const maturityIcons = {
   }
 
   .def-text {
+    font-family: var(--font-serif);
     color: var(--text-primary);
-    font-size: 1.0625rem;
+    font-size: 1.125rem;
     font-weight: 500;
   }
 

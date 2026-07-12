@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # Claude Code files
 CLAUDE.md
+
+# local debug logs
+*_output*.txt

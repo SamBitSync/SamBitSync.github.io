@@ -18,8 +18,9 @@ const exploration = process.filter((p) => p.data.dimension === "exploration");
 ---
 
 <BaseLayout title="All Process Entries | Sambit">
-    <header class="page-header">
+    <header class="page-header masthead">
         <a href="/process" class="back-link">← Process</a>
+        <span class="masthead-overline">Sheet 03 · The field log</span>
         <h1>All Entries by Dimension</h1>
         <p class="subtitle">{process.length} total entries</p>
     </header>
@@ -30,21 +31,21 @@ const exploration = process.filter((p) => p.data.dimension === "exploration");
                 All <span class="count">{process.length}</span>
             </button>
             <button class="tab" data-filter="exploration">
-                🔍 Exploration <span class="count">{exploration.length}</span>
+                Exploration <span class="count">{exploration.length}</span>
             </button>
             <button class="tab" data-filter="formal">
-                📐 Formal <span class="count">{formal.length}</span>
+                Formal <span class="count">{formal.length}</span>
             </button>
             <button class="tab" data-filter="empirical">
-                📊 Empirical <span class="count">{empirical.length}</span>
+                Empirical <span class="count">{empirical.length}</span>
             </button>
             <button class="tab" data-filter="implementation">
-                ⚙️ Implementation <span class="count"
+                Implementation <span class="count"
                     >{implementation.length}</span
                 >
             </button>
             <button class="tab" data-filter="troubleshooting">
-                🔧 Troubleshooting <span class="count"
+                Troubleshooting <span class="count"
                     >{troubleshooting.length}</span
                 >
             </button>
@@ -224,23 +225,23 @@ const exploration = process.filter((p) => p.data.dimension === "exploration");
     }
 
     .entry.dimension-exploration {
-        border-left-color: #ec4899;
+        border-left-color: #a0724e; /* terracotta */
     }
 
     .entry.dimension-formal {
-        border-left-color: #3b82f6;
+        border-left-color: #57534e; /* stone */
     }
 
     .entry.dimension-empirical {
-        border-left-color: #10b981;
+        border-left-color: #6a7f5f; /* sage */
     }
 
     .entry.dimension-implementation {
-        border-left-color: #8b5cf6;
+        border-left-color: #8b4513; /* sienna */
     }
 
     .entry.dimension-troubleshooting {
-        border-left-color: #f59e0b;
+        border-left-color: #97742f; /* ochre */
     }
 
     .entry-header {
@@ -262,86 +263,64 @@ const exploration = process.filter((p) => p.data.dimension === "exploration");
         align-items: center;
     }
 
-    .dimension-badge {
-        font-size: 0.6875rem;
-        padding: 0.1875rem 0.5rem;
-        border-radius: 0.25rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.025em;
-    }
-
-    .dimension-badge.dimension-exploration {
-        background: color-mix(in srgb, #ec4899 12%, transparent);
-        color: #f472b6;
-        border: 1px solid color-mix(in srgb, #ec4899 25%, transparent);
-    }
-
-    .dimension-badge.dimension-formal {
-        background: color-mix(in srgb, #3b82f6 12%, transparent);
-        color: #60a5fa;
-        border: 1px solid color-mix(in srgb, #3b82f6 25%, transparent);
-    }
-
-    .dimension-badge.dimension-empirical {
-        background: color-mix(in srgb, #10b981 12%, transparent);
-        color: #34d399;
-        border: 1px solid color-mix(in srgb, #10b981 25%, transparent);
-    }
-
-    .dimension-badge.dimension-implementation {
-        background: color-mix(in srgb, #8b5cf6 12%, transparent);
-        color: #a78bfa;
-        border: 1px solid color-mix(in srgb, #8b5cf6 25%, transparent);
-    }
-
-    .dimension-badge.dimension-troubleshooting {
-        background: color-mix(in srgb, #f59e0b 12%, transparent);
-        color: #fbbf24;
-        border: 1px solid color-mix(in srgb, #f59e0b 25%, transparent);
-    }
-
-    .dimension-badge.dimension-canon {
-        background: color-mix(in srgb, #f43f5e 12%, transparent);
-        color: #fb7185;
-        border: 1px solid color-mix(in srgb, #f43f5e 25%, transparent);
-    }
-
-    .dimension-badge.dimension-structured-learning {
-        background: color-mix(in srgb, #0ea5e9 12%, transparent);
-        color: #38bdf8;
-        border: 1px solid color-mix(in srgb, #0ea5e9 25%, transparent);
-    }
-
-    .dimension-badge.dimension-readings {
-        background: color-mix(in srgb, #eab308 12%, transparent);
-        color: #facc15;
-        border: 1px solid color-mix(in srgb, #eab308 25%, transparent);
-    }
-
+    .dimension-badge,
     .status-badge {
-        font-size: 0.6875rem;
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
         padding: 0.1875rem 0.5rem;
         border-radius: 0.25rem;
         font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        --badge-color: var(--text-tertiary);
+        background: color-mix(in srgb, var(--badge-color) 10%, transparent);
+        color: var(--badge-color);
+        border: 1px solid color-mix(in srgb, var(--badge-color) 30%, transparent);
+    }
+
+    /* Earthy dimension palette - variations on the site's stone/sienna identity */
+    .dimension-badge.dimension-exploration {
+        --badge-color: #a0724e; /* terracotta */
+    }
+
+    .dimension-badge.dimension-formal {
+        --badge-color: #57534e; /* stone */
+    }
+
+    .dimension-badge.dimension-empirical {
+        --badge-color: #6a7f5f; /* sage */
+    }
+
+    .dimension-badge.dimension-implementation {
+        --badge-color: #8b4513; /* sienna */
+    }
+
+    .dimension-badge.dimension-troubleshooting {
+        --badge-color: #97742f; /* ochre */
+    }
+
+    .dimension-badge.dimension-canon {
+        --badge-color: #a14f43; /* brick */
+    }
+
+    .dimension-badge.dimension-structured-learning {
+        --badge-color: #6e5849; /* umber */
+    }
+
+    .dimension-badge.dimension-readings {
+        --badge-color: #8a7a33; /* olive */
     }
 
     .status-badge.status-in-progress {
-        background: color-mix(in srgb, #f59e0b 12%, transparent);
-        color: #fbbf24;
-        border: 1px solid color-mix(in srgb, #f59e0b 25%, transparent);
+        --badge-color: #97742f; /* ochre */
     }
 
     .status-badge.status-blocked {
-        background: color-mix(in srgb, #ef4444 12%, transparent);
-        color: #f87171;
-        border: 1px solid color-mix(in srgb, #ef4444 25%, transparent);
+        --badge-color: #a14f43; /* brick */
     }
 
     .status-badge.status-completed {
-        background: color-mix(in srgb, #10b981 12%, transparent);
-        color: #34d399;
-        border: 1px solid color-mix(in srgb, #10b981 25%, transparent);
+        --badge-color: #46703f; /* forest */
     }
 
     .entry h2 {

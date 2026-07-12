@@ -203,25 +203,25 @@ function getNode(pId: string, sId: string) {
     box-shadow: var(--shadow-sm);
     overflow: hidden;
 
-    /* Define colors locally if not interactive global vars yet */
-    --color-amber: #f59e0b;
-    --color-amber-soft: #fffbeb;
-    --color-violet: #8b5cf6;
-    --color-violet-soft: #f5f3ff;
-    --color-blue: #3b82f6;
-    --color-blue-soft: #eff6ff;
-    --color-emerald: #10b981;
-    --color-emerald-soft: #ecfdf5;
-    --color-pink: #ec4899;
-    --color-pink-soft: #fdf2f8;
+    /* Muted earth palette - matches the site's warm paper identity */
+    --color-amber: #97742f; /* ochre */
+    --color-amber-soft: #f8f4ea;
+    --color-violet: #7d5b78; /* plum */
+    --color-violet-soft: #f4f0f4;
+    --color-blue: #5a708a; /* slate */
+    --color-blue-soft: #eef1f4;
+    --color-emerald: #6a7f5f; /* sage */
+    --color-emerald-soft: #f0f3ee;
+    --color-pink: #a0616a; /* dusty rose */
+    --color-pink-soft: #f7f0f1;
   }
 
   [data-theme="dark"] .stratified-matrix-container {
-    --color-amber-soft: rgba(245, 158, 11, 0.1);
-    --color-violet-soft: rgba(139, 92, 246, 0.1);
-    --color-blue-soft: rgba(59, 130, 246, 0.1);
-    --color-emerald-soft: rgba(16, 185, 129, 0.1);
-    --color-pink-soft: rgba(236, 72, 153, 0.1);
+    --color-amber-soft: rgba(151, 116, 47, 0.12);
+    --color-violet-soft: rgba(125, 91, 120, 0.12);
+    --color-blue-soft: rgba(90, 112, 138, 0.12);
+    --color-emerald-soft: rgba(106, 127, 95, 0.12);
+    --color-pink-soft: rgba(160, 97, 106, 0.12);
   }
 
   .matrix-scroll-wrapper {

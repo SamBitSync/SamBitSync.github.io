@@ -1,0 +1,54 @@
+---
+// The station mark: the survey triangle with one vertex filled, showing
+// which method an entry was sighted from. "language" fills the centroid.
+interface Props {
+  station: "philosophy" | "experiments" | "modeling" | "language";
+  size?: number;
+}
+
+const { station, size = 13 } = Astro.props;
+
+const vertex: Record<string, [number, number]> = {
+  philosophy: [8, 2.4],
+  experiments: [1.8, 13.2],
+  modeling: [14.2, 13.2],
+};
+---
+
+<svg
+  class="station-mark"
+  width={size}
+  height={size}
+  viewBox="0 0 16 16"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label={`sighted from: ${station}`}
+>
+  <title>{`sighted from: ${station}`}</title>
+  <path
+    d="M8 2.4 14.2 13.2H1.8Z"
+    stroke="currentColor"
+    stroke-width="1"
+    stroke-linejoin="round"></path>
+  {
+    station === "language" ? (
+      <circle cx="8" cy="9.6" r="1.8" stroke="currentColor" stroke-width="1" />
+    ) : (
+      <circle
+        cx={vertex[station][0]}
+        cy={vertex[station][1]}
+        r="2.1"
+        fill="currentColor"
+      />
+    )
+  }
+</svg>
+
+<style>
+  .station-mark {
+    display: inline-block;
+    vertical-align: -0.15em;
+    flex-shrink: 0;
+  }
+</style>

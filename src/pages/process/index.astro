@@ -90,40 +90,26 @@ const domainOrder: DomainKey[] = [
   "uncategorized",
 ];
 
-const dimensionIcons: Record<string, string> = {
-  exploration: "🔍",
-  formal: "📐",
-  empirical: "📊",
-  implementation: "⚙️",
-  troubleshooting: "🔧",
-  canon: "🏛️",
-  "structured-learning": "🎓",
-  readings: "📑",
+const dimensionLabels: Record<string, string> = {
+  exploration: "expl",
+  formal: "form",
+  empirical: "emp",
+  implementation: "impl",
+  troubleshooting: "fix",
+  canon: "canon",
+  "structured-learning": "course",
+  readings: "read",
 };
-
-// Global stats
-const totalEntries = allProcess.length;
-const totalTopics = processedTopics.length;
 ---
 
 <BaseLayout title="Process | Sambit">
   <div class="dashboard-layout">
     <aside class="sidebar">
       <header class="sidebar-header">
+        <span class="masthead-overline">Sheet 03 · The field log</span>
         <h1>Process</h1>
-        <p class="subtitle">Research and learning Dashboard</p>
+        <p class="subtitle">Lab notebook. Work shown, not summarized.</p>
       </header>
-
-      <div class="stats-widget">
-        <div class="stat-item">
-          <span class="stat-value">{totalTopics}</span>
-          <span class="stat-label">Active Topics</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">{totalEntries}</span>
-          <span class="stat-label">Total Entries</span>
-        </div>
-      </div>
 
       <nav class="domain-nav">
         <h3>Index</h3>
@@ -144,7 +130,7 @@ const totalTopics = processedTopics.length;
       </nav>
 
       <div class="activity-stream">
-        <h3>Global Activity</h3>
+        <h3>Recent</h3>
         <div class="stream-list">
           {
             allProcess.slice(0, 8).map((entry) => (
@@ -161,8 +147,8 @@ const totalTopics = processedTopics.length;
                   </time>
                 </div>
                 <div class="stream-title">
-                  <span class="dimension-icon">
-                    {dimensionIcons[entry.data.dimension]}
+                  <span class="dimension-tag">
+                    {dimensionLabels[entry.data.dimension]}
                   </span>
                   {entry.data.title}
                 </div>
@@ -203,8 +189,8 @@ const totalTopics = processedTopics.length;
             <div class="unsorted-grid">
               {unsortedEntries.slice(0, 6).map((entry) => (
                 <a href={`/process/${entry.id}`} class="unsorted-card">
-                  <span class="dimension-icon">
-                    {dimensionIcons[entry.data.dimension]}
+                  <span class="dimension-tag">
+                    {dimensionLabels[entry.data.dimension]}
                   </span>
                   <span class="unsorted-title">{entry.data.title}</span>
                   <time>{entry.data.date.toLocaleDateString()}</time>
@@ -254,41 +240,12 @@ const totalTopics = processedTopics.length;
   }
 
   .subtitle {
+    font-family: var(--font-serif);
+    font-style: italic;
     color: var(--text-secondary);
     margin: 0;
     font-size: 1rem;
     line-height: 1.5;
-  }
-
-  /* Stats - Minimalist */
-  .stats-widget {
-    display: flex;
-    gap: 2rem;
-    padding: 0;
-    background: transparent;
-    border: none;
-  }
-
-  .stat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .stat-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1;
-    margin-bottom: 0.25rem;
-  }
-
-  .stat-label {
-    font-size: 0.75rem;
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 600;
   }
 
   /* Domain Nav - Clean List */
@@ -397,9 +354,14 @@ const totalTopics = processedTopics.length;
     color: var(--text-primary);
   }
 
-  .dimension-icon {
-    font-size: 0.875rem;
-    opacity: 0.7;
+  .dimension-tag {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
   }
 
   /* Main Content */
@@ -528,10 +490,6 @@ const totalTopics = processedTopics.length;
     .sidebar {
       position: static;
       margin-bottom: 3rem;
-    }
-
-    .stats-widget {
-      justify-content: flex-start;
     }
   }
 </style>

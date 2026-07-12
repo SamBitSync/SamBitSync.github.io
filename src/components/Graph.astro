@@ -140,12 +140,12 @@ const { nodes, links } = Astro.props;
             .attr("fill", (d) => {
                 // Color based on group (mapType)
                 const colors = {
-                    moc: "#3b82f6", // Blue
-                    synthesis: "#8b5cf6", // Purple
-                    literature: "#10b981", // Emerald
-                    conceptual: "#f59e0b", // Amber
+                    moc: "#5a708a", // Slate blue
+                    synthesis: "#7d5b78", // Plum
+                    literature: "#6a7f5f", // Sage
+                    conceptual: "#97742f", // Ochre
                 };
-                return colors[d.group] || "#64748b";
+                return colors[d.group] || "#78716c";
             })
             .attr("class", "graph-node")
             .call(drag(simulation));

@@ -7,7 +7,14 @@ import wikiLinkPlugin from 'remark-wiki-link';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://sambitmaps.systems',
+  site: 'https://sambit.com.np',
+  redirects: {
+    '/research': '/project',
+    '/research-static': '/project',
+    '/frameworks': '/meta',
+    '/notes': '/meta',
+    '/notes/critical-realism': '/meta/critical-realism',
+  },
   integrations: [
     sitemap(),
     mdx({

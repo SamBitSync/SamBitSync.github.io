@@ -98,15 +98,15 @@ const topDimension = Object.entries(dimensionCounts).sort(
     (a, b) => b[1] - a[1],
 )[0];
 
-const dimensionIcons: Record<string, string> = {
-    exploration: "🔍",
-    formal: "📐",
-    empirical: "📊",
-    implementation: "⚙️",
-    troubleshooting: "🔧",
-    canon: "🏛️",
-    "structured-learning": "🎓",
-    readings: "📑",
+const dimensionLabels: Record<string, string> = {
+    exploration: "expl",
+    formal: "form",
+    empirical: "emp",
+    implementation: "impl",
+    troubleshooting: "fix",
+    canon: "canon",
+    "structured-learning": "course",
+    readings: "read",
 };
 
 function shouldShowSeriesId(key: string) {
@@ -163,12 +163,10 @@ function shouldShowSeriesId(key: string) {
                                 </p>
                                 <div class="course-footer">
                                     <span class="course-date">
-                                    <span class="course-date">
                                         {entry.data.date.toLocaleDateString(
                                             "en-US",
                                             { month: "short", year: "numeric" },
                                         )}
-                                    </span>
                                     </span>
                                     <span class="action-link">
                                     <span class="action-link">
@@ -212,11 +210,11 @@ function shouldShowSeriesId(key: string) {
                                         >
                                             <div class="entry-icon">
                                                 <span
-                                                    class="dimension-icon"
+                                                    class="dimension-tag"
                                                     title={entry.data.dimension}
                                                 >
                                                     {
-                                                        dimensionIcons[
+                                                        dimensionLabels[
                                                             entry.data.dimension
                                                         ]
                                                     }
@@ -371,7 +369,9 @@ function shouldShowSeriesId(key: string) {
     }
 
     .description {
-        font-size: 1.25rem;
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 1.1875rem;
         color: var(--text-secondary);
         max-width: 65ch;
         line-height: 1.6;
@@ -537,9 +537,17 @@ function shouldShowSeriesId(key: string) {
     }
 
     .entry-icon {
-        font-size: 1.5rem;
-        padding-top: 0.25rem;
-        opacity: 0.8;
+        padding-top: 0.35rem;
+        min-width: 3.25rem;
+    }
+
+    .dimension-tag {
+        font-family: var(--font-mono);
+        font-size: 0.5625rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-tertiary);
     }
 
     .entry-body {
@@ -696,13 +704,13 @@ function shouldShowSeriesId(key: string) {
         border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
     }
     .status-blocked {
-        background: color-mix(in srgb, #ef4444 15%, transparent);
-        color: #ef4444;
-        border: 1px solid color-mix(in srgb, #ef4444 20%, transparent);
+        background: color-mix(in srgb, #a14f43 15%, transparent);
+        color: #a14f43;
+        border: 1px solid color-mix(in srgb, #a14f43 20%, transparent);
     }
     .status-completed {
-        background: color-mix(in srgb, #10b981 15%, transparent);
-        color: #10b981;
-        border: 1px solid color-mix(in srgb, #10b981 20%, transparent);
+        background: color-mix(in srgb, #46703f 15%, transparent);
+        color: #46703f;
+        border: 1px solid color-mix(in srgb, #46703f 20%, transparent);
     }
 </style>

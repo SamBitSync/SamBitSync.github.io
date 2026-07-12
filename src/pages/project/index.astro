@@ -11,14 +11,15 @@ const regular = projects.filter(p => !p.data.featured);
 ---
 
 <BaseLayout title="Project | Sambit">
-  <header class="page-header">
+  <header class="page-header masthead">
+    <span class="masthead-overline">Sheet 04 · Brought back from the field</span>
     <h1>Project</h1>
-    <p class="lead">Research outputs and deliverables</p>
+    <p class="lead">Artifacts that made it out of the notebook: deployed, published, or otherwise pointed-at-able.</p>
   </header>
 
   {featured.length > 0 && (
     <section class="featured-section">
-      <h2 class="section-title">Featured</h2>
+      {regular.length > 0 && <h2 class="section-title">Featured</h2>}
       <div class="featured-grid">
         {featured.map((project) => (
           <article class="featured-card">
@@ -69,6 +70,7 @@ const regular = projects.filter(p => !p.data.featured);
     </section>
   )}
 
+  {regular.length > 0 && (
   <section class="projects-section">
     {featured.length > 0 && <h2 class="section-title">All Projects</h2>}
     <div class="projects-grid">
@@ -108,6 +110,7 @@ const regular = projects.filter(p => !p.data.featured);
       ))}
     </div>
   </section>
+  )}
 
   {projects.length === 0 && (
     <div class="empty-state">
@@ -119,12 +122,6 @@ const regular = projects.filter(p => !p.data.featured);
 <style>
   .page-header {
     margin-bottom: 3rem;
-  }
-
-  .lead {
-    font-size: 1.125rem;
-    color: var(--text-secondary);
-    margin-top: 0.5rem;
   }
 
   .section-title {
@@ -145,14 +142,16 @@ const regular = projects.filter(p => !p.data.featured);
 
   .featured-card {
     background: var(--surface);
-    border: 2px solid var(--accent);
-    border-radius: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    border-radius: 3px;
     overflow: hidden;
-    transition: transform 0.2s ease;
+    transition: all 0.25s ease;
+    box-shadow: var(--shadow-sm);
   }
 
   .featured-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
+    border-color: var(--accent);
   }
 
   .thumbnail {
@@ -173,6 +172,7 @@ const regular = projects.filter(p => !p.data.featured);
   }
 
   .featured-card h3 {
+    font-family: var(--font-serif);
     font-size: 1.75rem;
     margin: 1rem 0 0.75rem;
   }
@@ -196,7 +196,7 @@ const regular = projects.filter(p => !p.data.featured);
   .project-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 0.5rem;
+    border-radius: 3px;
     padding: 1.5rem;
     transition: all 0.2s ease;
   }
@@ -218,63 +218,27 @@ const regular = projects.filter(p => !p.data.featured);
     margin-bottom: 1rem;
   }
 
-  .type-badge {
-    font-size: 0.75rem;
+  .type-badge,
+  .status-badge {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     padding: 0.25rem 0.625rem;
     border-radius: 0.25rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
   }
 
-  .type-badge.type-research {
-    background: #3b82f620;
-    color: #3b82f6;
-  }
-
-  .type-badge.type-tool {
-    background: #8b5cf620;
-    color: #8b5cf6;
-  }
-
-  .type-badge.type-paper {
-    background: #10b98120;
-    color: #10b981;
-  }
-
-  .type-badge.type-application {
-    background: #f59e0b20;
-    color: #f59e0b;
-  }
-
-  .type-badge.type-storymap {
-    background: #ec489920;
-    color: #ec4899;
+  .type-badge {
+    color: var(--accent);
+    background: var(--accent-subtle);
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
   }
 
   .status-badge {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.625rem;
-    border-radius: 0.25rem;
-    font-weight: 500;
-  }
-
-  .status-badge.status-completed {
-    background: #10b98120;
-    color: #10b981;
-    border: 1px solid #10b98140;
-  }
-
-  .status-badge.status-published {
-    background: #3b82f620;
-    color: #3b82f6;
-    border: 1px solid #3b82f640;
-  }
-
-  .status-badge.status-deployed {
-    background: #8b5cf620;
-    color: #8b5cf6;
-    border: 1px solid #8b5cf640;
+    color: var(--text-tertiary);
+    background: transparent;
+    border: 1px solid var(--border);
   }
 
   .project-card h3 {

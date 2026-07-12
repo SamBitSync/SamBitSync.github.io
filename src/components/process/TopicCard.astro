@@ -20,15 +20,15 @@ interface Props {
 
 const { topic } = Astro.props;
 
-const dimensionIcons: Record<string, string> = {
-    exploration: "🔍",
-    formal: "📐",
-    empirical: "📊",
-    implementation: "⚙️",
-    troubleshooting: "🔧",
-    canon: "🏛️",
-    "structured-learning": "🎓",
-    readings: "📑",
+const dimensionLabels: Record<string, string> = {
+    exploration: "expl",
+    formal: "form",
+    empirical: "emp",
+    implementation: "impl",
+    troubleshooting: "fix",
+    canon: "canon",
+    "structured-learning": "course",
+    readings: "read",
 };
 
 // Get last active relative time
@@ -83,10 +83,10 @@ function timeAgo(date: Date) {
                         topic.entries.slice(0, 3).map((entry) => (
                             <div class="mini-entry">
                                 <span
-                                    class={`dimension-dot dimension-${entry.data.dimension}`}
+                                    class={`dimension-tag dimension-${entry.data.dimension}`}
                                     title={entry.data.dimension}
                                 >
-                                    {dimensionIcons[entry.data.dimension]}
+                                    {dimensionLabels[entry.data.dimension]}
                                 </span>
                                 <span class="entry-title">
                                     {entry.data.title}
@@ -126,61 +126,38 @@ function timeAgo(date: Date) {
     <style>
         .topic-card {
             background: var(--surface);
-            border-radius: var(--radius-lg);
+            border-radius: 3px;
             overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
             height: 100%;
             position: relative;
-            box-shadow: var(--shadow);
-            border: 1px solid transparent; /* Prevent layout shift on hover */
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
         }
 
-        /* Domain Themes - Subtle Gradients & Accents */
+        /* Domain themes - earthy variations on the site palette */
         .topic-card[data-domain="systems"] {
-            --theme-color: #64748b;
-            --theme-bg: var(--surface);
-            --theme-gradient: linear-gradient(
-                to bottom right,
-                color-mix(in srgb, var(--text-primary) 5%, transparent),
-                transparent
-            );
+            --theme-color: #57534e; /* stone */
         }
 
         .topic-card[data-domain="tools"] {
-            --theme-color: #10b981;
-            --theme-bg: var(--surface);
-            --theme-gradient: linear-gradient(
-                to bottom right,
-                color-mix(in srgb, #10b981 10%, transparent),
-                transparent
-            );
+            --theme-color: #6a7f5f; /* sage */
         }
 
         .topic-card[data-domain="patterns"] {
-            --theme-color: #8b5cf6;
-            --theme-bg: var(--surface);
-            --theme-gradient: linear-gradient(
-                to bottom right,
-                color-mix(in srgb, #8b5cf6 10%, transparent),
-                transparent
-            );
+            --theme-color: #a0724e; /* terracotta */
         }
 
         .topic-card[data-domain="courses"] {
-            --theme-color: #3b82f6;
-            --theme-bg: var(--surface);
-            --theme-gradient: linear-gradient(
-                to bottom right,
-                color-mix(in srgb, #3b82f6 10%, transparent),
-                transparent
-            );
+            --theme-color: #97742f; /* ochre */
         }
 
         .topic-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            border-color: color-mix(in srgb, var(--theme-color) 55%, transparent);
+            box-shadow: var(--shadow);
         }
 
         .card-link {
@@ -192,10 +169,11 @@ function timeAgo(date: Date) {
             background: var(--surface);
         }
 
-        /* Header with subtle gradient background */
         .card-header {
             padding: 1.5rem;
-            background: var(--theme-gradient, var(--surface));
+            background: var(--surface);
+            border-top: 2px solid
+                color-mix(in srgb, var(--theme-color) 55%, transparent);
             position: relative;
         }
 
@@ -308,18 +286,20 @@ function timeAgo(date: Date) {
             text-overflow: ellipsis;
         }
 
-        .dimension-dot {
-            font-size: 0.5rem; /* Smaller dot */
+        .dimension-tag {
+            font-family: var(--font-mono);
+            font-size: 0.5625rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
             flex-shrink: 0;
-            opacity: 0.6;
-            filter: grayscale(100%); /* Muted by default */
-            transition: all 0.2s;
+            min-width: 3.25rem;
+            transition: color 0.2s;
         }
 
-        .topic-card:hover .dimension-dot {
-            opacity: 1;
-            filter: none;
-            transform: scale(1.2);
+        .topic-card:hover .dimension-tag {
+            color: var(--theme-color);
         }
 
         .card-footer {

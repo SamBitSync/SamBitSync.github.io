@@ -2,21 +2,26 @@
 import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import StationMark from "../../components/StationMark.astro";
+import { accessionIndex, stationFor, SHEET_PREFIX } from "../../lib/survey";
 
 export async function getStaticPaths() {
   const process = await getCollection("process");
+  const acc = accessionIndex(process, SHEET_PREFIX.process);
   return process.map((post) => ({
     params: { slug: post.id },
-    props: { post },
+    props: { post, accession: acc.get(post.id) },
   }));
 }
 
 interface Props {
   post: CollectionEntry<"process">;
+  accession: string;
 }
 
-const { post } = Astro.props;
+const { post, accession } = Astro.props;
 const { Content } = await render(post);
+const station = stationFor(post.data.dimension);
 ---
 
 <BaseLayout
@@ -26,6 +31,10 @@ const { Content } = await render(post);
   <article class="post">
     <header class="post-header">
       <div class="header-meta">
+        <span class="survey-id">
+          <span class="accession">{accession}</span>
+          <span class="station-glyph"><StationMark station={station} size={12} /></span>
+        </span>
         <span class={`dimension-badge dimension-${post.data.dimension}`}>
           {post.data.dimension}
         </span>
@@ -118,89 +127,95 @@ const { Content } = await render(post);
   .header-meta {
     display: flex;
     gap: 0.75rem;
+    align-items: center;
     margin-bottom: 1rem;
   }
 
+  .survey-id {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-right: 0.75rem;
+    border-right: 1px solid var(--border);
+  }
+
+  .station-glyph {
+    color: var(--annotation);
+    opacity: 0.85;
+    display: inline-flex;
+  }
+
   .dimension-badge {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.625rem;
-    border-radius: 0.25rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
-  }
-
-  .dimension-badge.dimension-formal {
-    background: color-mix(in srgb, #3b82f6 12%, transparent);
-    color: #60a5fa;
-    border: 1px solid color-mix(in srgb, #3b82f6 25%, transparent);
-  }
-
-  .dimension-badge.dimension-empirical {
-    background: color-mix(in srgb, #10b981 12%, transparent);
-    color: #34d399;
-    border: 1px solid color-mix(in srgb, #10b981 25%, transparent);
-  }
-
-  .dimension-badge.dimension-implementation {
-    background: color-mix(in srgb, #8b5cf6 12%, transparent);
-    color: #a78bfa;
-    border: 1px solid color-mix(in srgb, #8b5cf6 25%, transparent);
-  }
-
-  .dimension-badge.dimension-troubleshooting {
-    background: color-mix(in srgb, #f59e0b 12%, transparent);
-    color: #fbbf24;
-    border: 1px solid color-mix(in srgb, #f59e0b 25%, transparent);
-  }
-
-  .dimension-badge.dimension-exploration {
-    background: color-mix(in srgb, #ec4899 12%, transparent);
-    color: #f472b6;
-    border: 1px solid color-mix(in srgb, #ec4899 25%, transparent);
-  }
-
-  .dimension-badge.dimension-canon {
-    background: color-mix(in srgb, #f43f5e 12%, transparent);
-    color: #fb7185;
-    border: 1px solid color-mix(in srgb, #f43f5e 25%, transparent);
-  }
-
-  .dimension-badge.dimension-structured-learning {
-    background: color-mix(in srgb, #0ea5e9 12%, transparent);
-    color: #38bdf8;
-    border: 1px solid color-mix(in srgb, #0ea5e9 25%, transparent);
-  }
-
-  .dimension-badge.dimension-readings {
-    background: color-mix(in srgb, #eab308 12%, transparent);
-    color: #facc15;
-    border: 1px solid color-mix(in srgb, #eab308 25%, transparent);
-  }
-
-  .status-badge {
-    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
     padding: 0.25rem 0.625rem;
     border-radius: 0.25rem;
     font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    --badge-color: var(--text-tertiary);
+    background: color-mix(in srgb, var(--badge-color) 10%, transparent);
+    color: var(--badge-color);
+    border: 1px solid color-mix(in srgb, var(--badge-color) 30%, transparent);
+  }
+
+  /* Earthy dimension palette - variations on the site's stone/sienna identity */
+  .dimension-badge.dimension-formal {
+    --badge-color: #57534e; /* stone */
+  }
+
+  .dimension-badge.dimension-empirical {
+    --badge-color: #6a7f5f; /* sage */
+  }
+
+  .dimension-badge.dimension-implementation {
+    --badge-color: #8b4513; /* sienna */
+  }
+
+  .dimension-badge.dimension-troubleshooting {
+    --badge-color: #97742f; /* ochre */
+  }
+
+  .dimension-badge.dimension-exploration {
+    --badge-color: #a0724e; /* terracotta */
+  }
+
+  .dimension-badge.dimension-canon {
+    --badge-color: #a14f43; /* brick */
+  }
+
+  .dimension-badge.dimension-structured-learning {
+    --badge-color: #6e5849; /* umber */
+  }
+
+  .dimension-badge.dimension-readings {
+    --badge-color: #8a7a33; /* olive */
+  }
+
+  .status-badge {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    --badge-color: var(--text-tertiary);
+    background: color-mix(in srgb, var(--badge-color) 10%, transparent);
+    color: var(--badge-color);
+    border: 1px solid color-mix(in srgb, var(--badge-color) 30%, transparent);
   }
 
   .status-badge.status-in-progress {
-    background: color-mix(in srgb, #f59e0b 12%, transparent);
-    color: #fbbf24;
-    border: 1px solid color-mix(in srgb, #f59e0b 25%, transparent);
+    --badge-color: #97742f; /* ochre */
   }
 
   .status-badge.status-blocked {
-    background: color-mix(in srgb, #ef4444 12%, transparent);
-    color: #f87171;
-    border: 1px solid color-mix(in srgb, #ef4444 25%, transparent);
+    --badge-color: #a14f43; /* brick */
   }
 
   .status-badge.status-completed {
-    background: color-mix(in srgb, #10b981 12%, transparent);
-    color: #34d399;
-    border: 1px solid color-mix(in srgb, #10b981 25%, transparent);
+    --badge-color: #46703f; /* forest */
   }
 
   .post-header h1 {
