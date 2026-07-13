@@ -84,6 +84,11 @@ const projectCollection = defineCollection({
     tags: z.array(z.string()).optional(),
     featured: z.boolean().optional(),
     thumbnail: z.string().optional(),
+    partner: z.object({
+      name: z.string(),
+      url: z.string().optional(),
+      logo: z.string(),
+    }).optional(),
   }),
 });
 

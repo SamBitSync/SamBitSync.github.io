@@ -12,8 +12,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <h1>About</h1>
     </header>
 
-    <section class="about-section">
-      <h2>How to read this site</h2>
+    <section class="about-section conventions">
+      <h2 class="panel-overline">Conventions · How to read this site</h2>
       <p class="guide-why">
         A practical fact first: I have aphantasia. Much of my thinking happens outside my head. This site is where it accumulates.
       </p>
@@ -42,19 +42,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <div class="guide-row">
           <dt><a href="/project">Project</a></dt>
-          <dd>Brought back from the field: deployed, published, finished.</dd>
+          <dd>Finished artifacts: deployed, published, done.</dd>
         </div>
       </dl>
-      <p class="epistemic-note">
-        Nothing here is final. Maturity markers and dates are load ratings, not
-        decoration. If something reads as confident and is marked seedling,
-        trust the marker.
-      </p>
     </section>
 
     <div class="scale-rule" role="presentation"></div>
 
     <section class="about-section">
+      <h2>About Me</h2>
       <p class="bio">
         I'm Sambit Rimal, a graduate student in linguistics exploring the
         intersections of language, cognitive science, and Science &amp;
@@ -213,6 +209,26 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     margin: 0;
   }
 
+  /* Conventions panel: apparatus, not essay. Lab register, boxed like
+     an instrument card so it reads as the sheet's legend. */
+  .conventions {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    box-shadow: var(--shadow-sm);
+    padding: 1.375rem 1.625rem 1.25rem;
+  }
+
+  .about-section h2.panel-overline {
+    font-family: var(--font-mono);
+    font-size: 0.6563rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin: 0 0 1.25rem;
+  }
+
   .guide-why {
     font-size: 0.9375rem;
     margin-bottom: 1.5rem;
@@ -220,7 +236,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   /* Reading guide */
   .reading-guide {
-    margin: 0 0 1.5rem;
+    margin: 0;
     display: flex;
     flex-direction: column;
   }
@@ -239,7 +255,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .guide-row dt {
     min-width: 6rem;
     flex-shrink: 0;
-    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-top: 0.25em;
   }
 
   .guide-row dd {
@@ -247,16 +268,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     color: var(--text-secondary);
     font-size: 0.9375rem;
     line-height: 1.6;
-  }
-
-  .epistemic-note {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: 0.9375rem;
-    color: var(--text-tertiary);
-    border-left: 2px solid var(--annotation);
-    padding-left: 1rem;
-    margin: 0;
   }
 
   /* Records: education, affiliations, selected */

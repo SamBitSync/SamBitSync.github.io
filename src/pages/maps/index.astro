@@ -1,247 +1,109 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { accessionIndex, SHEET_PREFIX } from "../../lib/survey";
 
-const maps = (await getCollection("maps")).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+const maps = await getCollection("maps");
+const acc = accessionIndex(maps, SHEET_PREFIX.maps);
 
-// Group maps by type for the new layout
-const coreMaps = maps.filter(
-  (m) => m.data.mapType === "moc" || !m.data.mapType,
-);
-const syntheses = maps.filter((m) => m.data.mapType === "synthesis");
-const conceptMaps = maps.filter((m) => m.data.mapType === "conceptual");
-const litMaps = maps.filter((m) => m.data.mapType === "literature");
-const otherMaps = maps.filter(
-  (m) =>
-    !["moc", "synthesis", "conceptual", "literature"].includes(
-      m.data.mapType || "",
-    ),
-);
-
-// Visual-type indicators as quiet mono labels (matches the site's tag language)
-const getVisualIcons = (types: string[]) => {
-  if (!types) return null;
-  return types
-    .map((t) => {
-      if (t === "diagram") return "diagram";
-      if (t === "animation") return "anim";
-      if (t === "data-viz") return "data-viz";
-      if (t === "interactive") return "interactive";
-      return "";
-    })
-    .filter(Boolean);
+// One grid, curated reading order: charts of the whole first, then
+// syntheses, literature surveys, and specific conceptual models.
+// Subtypes are differentiated by ink (top rule + kicker color), with a
+// legend up top; the sort keeps same-type cards adjacent as they accumulate.
+// Colors are spread across distinct hue families (blue, terracotta,
+// plum, forest) so the legend reads at a glance.
+const TYPES: Record<string, { order: number; label: string; color: string }> = {
+  moc: { order: 0, label: "map of content", color: "var(--accent)" },
+  synthesis: { order: 1, label: "synthesis", color: "#a0724e" },
+  literature: { order: 2, label: "literature map", color: "#7d5b78" },
+  conceptual: { order: 3, label: "conceptual model", color: "#46703f" },
 };
+
+const ordered = [...maps].sort((a, b) => {
+  const t = TYPES[a.data.mapType].order - TYPES[b.data.mapType].order;
+  return t !== 0 ? t : b.data.date.valueOf() - a.data.date.valueOf();
+});
+
+// Legend shows only the types present, with counts.
+const legend = Object.entries(TYPES)
+  .map(([slug, meta]) => ({
+    ...meta,
+    count: maps.filter((m) => m.data.mapType === slug).length,
+  }))
+  .filter((t) => t.count > 0)
+  .sort((a, b) => a.order - b.order);
+
+const visualLabels = (types?: string[]) =>
+  (types ?? [])
+    .map((t) => (t === "animation" ? "anim" : t === "data-viz" ? "data" : t))
+    .filter(Boolean);
 ---
 
 <BaseLayout title="Maps | Sambit">
-  <div class="maps-container">
-    <header class="page-header masthead">
-      <div class="header-content">
-        <span class="masthead-overline">Sheet 01 · Charts of the territory</span>
-        <h1>Maps</h1>
-        <p class="lead">
-          Visualizing the topology of knowledge. Cross-domain connections,
-          pattern synthesis, and conceptual models.
-        </p>
-      </div>
-    </header>
+  <header class="page-header masthead">
+    <span class="masthead-overline">Sheet 01 · Charts of the territory</span>
+    <h1>Maps</h1>
+    <p class="lead">
+      Visualizing the topology of knowledge. Cross-domain connections, pattern
+      synthesis, and conceptual models.
+    </p>
+  </header>
 
-    <main class="maps-stack">
-      <!-- Section: Core Frameworks (MOCs) -->
-      {
-        coreMaps.length > 0 && (
-          <section class="map-section">
-            <header class="section-header">
-              <h2>Core Frameworks</h2>
-              <p class="section-desc">
-                High-level maps of content and orientation frameworks.
-              </p>
-            </header>
-            <div class="maps-grid feature-grid">
-              {coreMaps.map((map) => (
-                <a href={`/maps/${map.id}`} class="map-card feature-card">
-                  <div class="card-visual">
-                    <span class="visual-pattern" />
-                    <div class="card-badges">
-                      <span class="type-badge core">MOC</span>
-                      {map.data.visualType?.includes("interactive") && (
-                        <span class="interactive-badge">Interactive</span>
-                      )}
-                    </div>
-                  </div>
-                  <div class="card-content">
-                    <h3>{map.data.title}</h3>
-                    <p>{map.data.description}</p>
-                    <div class="card-meta">
-                      <span class="date">
-                        {map.data.date.toLocaleDateString(undefined, {
-                          year: "numeric",
-                          month: "short",
-                        })}
-                      </span>
-                      <div class="aspects">
-                        {map.data.aspects.slice(0, 3).map((a) => (
-                          <span class="mini-tag">{a}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </a>
+  <div class="maps-legend" aria-label="Map types">
+    <span class="legend-title">Legend</span>
+    {
+      legend.map((t) => (
+        <span class="legend-item">
+          <span class="legend-tick" style={`--type-color: ${t.color};`} />
+          {t.label} <span class="legend-count">× {t.count}</span>
+        </span>
+      ))
+    }
+  </div>
+
+  <div class="maps-grid">
+    {
+      ordered.map((map) => (
+        <a
+          href={`/maps/${map.id}`}
+          class="map-card"
+          style={`--type-color: ${TYPES[map.data.mapType].color};`}
+        >
+          <div class="card-top">
+            <span class="accession">{acc.get(map.id)}</span>
+            <span class="card-kicker">{TYPES[map.data.mapType].label}</span>
+            <span class="card-date">
+              {map.data.date.toLocaleDateString("en-US", {
+                month: "short",
+                year: "numeric",
+              })}
+            </span>
+          </div>
+          <h2>{map.data.title}</h2>
+          <p>{map.data.description}</p>
+          <div class="card-foot">
+            <div class="aspects">
+              {map.data.aspects.slice(0, 3).map((a) => (
+                <span class="mini-tag">{a}</span>
               ))}
             </div>
-          </section>
-        )
-      }
-
-      <!-- Section: Syntheses -->
-      {
-        syntheses.length > 0 && (
-          <section class="map-section">
-            <header class="section-header">
-              <h2>Syntheses</h2>
-              <p class="section-desc">
-                Deep dives integrating multiple domains and patterns.
-              </p>
-            </header>
-            <div class="maps-grid">
-              {syntheses.map((map) => (
-                <a href={`/maps/${map.id}`} class="map-card">
-                  <div class="card-visual synthesis-visual">
-                    <div class="card-badges">
-                      <span class="type-badge synthesis">Synthesis</span>
-                    </div>
-                  </div>
-                  <div class="card-content">
-                    <h3>{map.data.title}</h3>
-                    <p>{map.data.description}</p>
-                    <div class="card-meta">
-                      <div class="aspects">
-                        {map.data.aspects.slice(0, 2).map((a) => (
-                          <span class="mini-tag">{a}</span>
-                        ))}
-                      </div>
-                      <div class="visual-icons">
-                        {getVisualIcons(map.data.visualType)?.map((icon) => (
-                          <span>{icon}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
-        )
-      }
-
-      <!-- Section: Literature Reviews -->
-      {
-        litMaps.length > 0 && (
-          <section class="map-section">
-            <header class="section-header">
-              <h2>Literature Maps</h2>
-              <p class="section-desc">
-                Surveys of academic landscape and theoretical perspectives.
-              </p>
-            </header>
-            <div class="maps-grid compact-grid">
-              {litMaps.map((map) => (
-                <a href={`/maps/${map.id}`} class="map-card compact-card">
-                  <div class="card-content">
-                    <div class="compact-header">
-                      <h3>{map.data.title}</h3>
-                      <div class="visual-icons">
-                        {getVisualIcons(map.data.visualType)?.map((icon) => (
-                          <span class="icon" title="Visual">
-                            {icon}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <p>{map.data.description}</p>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
-        )
-      }
-
-      <!-- Section: Conceptual Models -->
-      {
-        conceptMaps.length > 0 && (
-          <section class="map-section">
-            <header class="section-header">
-              <h2>Conceptual Models</h2>
-              <p class="section-desc">
-                Specific mental models and dynamic systems.
-              </p>
-            </header>
-            <div class="maps-grid compact-grid">
-              {conceptMaps.map((map) => (
-                <a href={`/maps/${map.id}`} class="map-card compact-card">
-                  <div class="card-content">
-                    <div class="compact-header">
-                      <h3>{map.data.title}</h3>
-                      {getVisualIcons(map.data.visualType)?.map((icon) => (
-                        <span class="icon" title="Visual">
-                          {icon}
-                        </span>
-                      ))}
-                    </div>
-                    <p>{map.data.description}</p>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
-        )
-      }
-
-      <!-- Section: Other -->
-      {
-        otherMaps.length > 0 && (
-          <section class="map-section">
-            <header class="section-header">
-              <h2>Library</h2>
-            </header>
-            <div class="maps-grid">
-              {otherMaps.map((map) => (
-                <a href={`/maps/${map.id}`} class="map-card">
-                  <div class="card-content">
-                    <h3>{map.data.title}</h3>
-                    <p>{map.data.description}</p>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
-        )
-      }
-    </main>
+            {visualLabels(map.data.visualType).length > 0 && (
+              <div class="visual-icons">
+                {visualLabels(map.data.visualType).map((label) => (
+                  <span>{label}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        </a>
+      ))
+    }
   </div>
 </BaseLayout>
 
 <style>
-  .maps-container {
-    padding: 2rem 0;
-  }
-
   .page-header {
     margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .header-content h1 {
-    font-family: var(--font-sans);
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    margin-bottom: 0.75rem;
-    color: var(--text-primary);
   }
 
   .lead {
@@ -252,215 +114,159 @@ const getVisualIcons = (types: string[]) => {
     line-height: 1.6;
   }
 
-  .maps-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 6rem;
-  }
-
-  .map-section {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .section-header {
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .section-header h2 {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-    margin: 0;
-  }
-
-  .section-desc {
-    color: var(--text-tertiary);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.04em;
-    margin: 0;
-  }
-
-  /* Grid Layouts */
   .maps-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
   }
 
-  .feature-grid {
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  /* Map legend: colored ticks keyed to card top rules */
+  .maps-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 1.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
   }
 
-  .compact-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  .legend-title {
+    color: var(--text-tertiary);
   }
 
-  /* Cards */
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .legend-tick {
+    display: inline-block;
+    width: 20px;
+    height: 4px;
+    border-radius: 1px;
+    background: var(--type-color);
+  }
+
+  /* Dark mode: lift the type inks toward pale linework, the same move
+     the accent makes (#2b5d76 -> #8fb4c9), so ticks and rules read. */
+  :global([data-theme="dark"]) .legend-tick {
+    background: color-mix(in srgb, var(--type-color) 70%, #cfe0ea);
+  }
+
+  :global([data-theme="dark"]) .map-card {
+    border-top-color: color-mix(
+      in srgb,
+      var(--type-color, var(--accent)) 70%,
+      #cfe0ea
+    );
+  }
+
+  .legend-count {
+    color: var(--text-tertiary);
+  }
+
+  /* Index card: hairline border, type-colored top rule, subtle shadow */
   .map-card {
     display: flex;
     flex-direction: column;
-    background: transparent;
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 2px;
-    overflow: hidden;
+    border-top: 4px solid var(--type-color, var(--accent));
+    border-radius: 3px;
+    box-shadow: var(--shadow-sm);
+    padding: 1.125rem 1.375rem 1.25rem;
     text-decoration: none;
     color: inherit;
     transition: border-color 0.2s ease;
-    height: 100%;
   }
 
   .map-card:hover {
     border-color: var(--accent);
+    border-top-color: var(--type-color, var(--accent));
   }
 
-  /* Hide decorative visual header blocks */
-  .card-visual {
-    display: none;
-  }
-
-  .card-badges {
+  .card-top {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .type-badge {
+    align-items: baseline;
+    gap: 0.875rem;
+    margin-bottom: 0.875rem;
     font-family: var(--font-mono);
-    font-size: 0.62rem;
+    font-size: 0.625rem;
     font-weight: 500;
-    text-transform: uppercase;
-    padding: 0.15rem 0.5rem;
-    border-radius: 2px;
     letter-spacing: 0.08em;
-    background: transparent;
-    border: 1px solid var(--border);
+    text-transform: uppercase;
     color: var(--text-tertiary);
   }
 
-  .interactive-badge {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
+  .card-date {
+    margin-left: auto;
+  }
+
+  .map-card h2 {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
     font-weight: 500;
-    text-transform: uppercase;
-    padding: 0.15rem 0.5rem;
-    border-radius: 2px;
-    letter-spacing: 0.08em;
-    background: var(--accent-subtle);
-    border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+    line-height: 1.35;
+    margin: 0 0 0.5rem;
+    color: var(--text-primary);
+    transition: color 0.15s ease;
+  }
+
+  .map-card:hover h2 {
     color: var(--accent);
   }
 
-  .card-content {
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-  }
-
-  .map-card h3 {
-    font-family: var(--font-serif);
-    font-size: 1.125rem;
-    font-weight: 500;
-    margin: 0 0 0.5rem 0;
-    line-height: 1.3;
-    color: var(--text-primary);
-  }
-
   .map-card p {
-    font-family: var(--font-sans);
     font-size: 0.875rem;
     color: var(--text-secondary);
-    margin: 0 0 1.25rem 0;
     line-height: 1.55;
+    margin: 0 0 1.25rem;
     flex-grow: 1;
   }
 
-  .card-meta {
+  .card-foot {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: auto;
-    font-size: 0.85rem;
-    color: var(--text-tertiary);
+    gap: 1rem;
   }
 
   .aspects {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.4rem;
   }
 
   .mini-tag {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
     background: var(--bg);
     border: 1px solid var(--border);
-    padding: 0.15rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
-  }
-
-  /* Compact Card Override */
-  .compact-card .card-content {
-    padding: 1.25rem;
-  }
-
-  .compact-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    margin-bottom: 0.5rem;
-  }
-
-  .compact-header h3 {
-    font-size: 1.1rem;
-    margin: 0;
-  }
-
-  .compact-card p {
-    font-size: 0.9rem;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    border-radius: 2px;
+    padding: 0.125rem 0.5rem;
   }
 
   .visual-icons {
     display: flex;
-    gap: 0.5rem;
-    color: var(--text-tertiary);
+    gap: 0.625rem;
     font-family: var(--font-mono);
     font-size: 0.5625rem;
     font-weight: 500;
-    text-transform: uppercase;
     letter-spacing: 0.08em;
-    align-items: center;
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
   }
 
   @media (max-width: 768px) {
-    .header-content h1 {
-      font-size: 2.5rem;
-    }
-
-    .maps-grid,
-    .feature-grid,
-    .compact-grid {
+    .maps-grid {
       grid-template-columns: 1fr;
-    }
-
-    .section-header {
-      flex-direction: column;
-      gap: 0.25rem;
     }
   }
 </style>

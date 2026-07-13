@@ -18,7 +18,7 @@ const catalogue = [
   { n: "01", name: "Maps", desc: "Charts of the territory", href: "/maps", range: accessionRange(maps.length, SHEET_PREFIX.maps) },
   { n: "02", name: "Meta", desc: "Instruments and frameworks", href: "/meta", range: accessionRange(meta.length, SHEET_PREFIX.meta) },
   { n: "03", name: "Process", desc: "The field log", href: "/process", range: accessionRange(process.length, SHEET_PREFIX.process) },
-  { n: "04", name: "Project", desc: "Brought back from the field", href: "/project", range: accessionRange(project.length, SHEET_PREFIX.project) },
+  { n: "04", name: "Project", desc: "Finished artifacts", href: "/project", range: accessionRange(project.length, SHEET_PREFIX.project) },
 ];
 
 type Sounding = { acc: string; date: Date; title: string; href: string };
@@ -33,12 +33,30 @@ const soundings: Sounding[] = [
 
 const neurathAcc = metaAcc.get("neuraths-boat");
 
-const allDates = [...maps, ...meta, ...process, ...project].map((e) => e.data.date);
-const lastRevision = new Date(Math.max(...allDates.map((d) => d.valueOf()))).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+// The build date: every deploy is a revision of the sheet. (The footer's
+// "last plank replaced" stays derived from content dates; different fact.)
+const lastRevision = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
 // Satellites: engagements in slow orbit around the survey network.
 // href: null means "still forming" (drawn as an open node, not linked).
 // period: seconds per revolution. Slow, but visibly in motion.
+// Graduations on the outer ring: the orrery reads as a theodolite's
+// horizontal circle. Minor tick every 10°, major every 90°.
+const graduations = Array.from({ length: 36 }, (_, i) => {
+  const deg = i * 10;
+  const major = deg % 90 === 0;
+  const rad = (deg * Math.PI) / 180;
+  const rOuter = 185;
+  const rInner = rOuter - (major ? 9 : 4.5);
+  return {
+    major,
+    x1: +(220 + rOuter * Math.sin(rad)).toFixed(2),
+    y1: +(220 - rOuter * Math.cos(rad)).toFixed(2),
+    x2: +(220 + rInner * Math.sin(rad)).toFixed(2),
+    y2: +(220 - rInner * Math.cos(rad)).toFixed(2),
+  };
+});
+
 const satellites = [
   { name: "semiotics", href: null, start: 20, period: 55 },
   { name: "predictive processing", href: "/meta/predictive-processing", start: 80, period: 75 },
@@ -106,15 +124,18 @@ const satellites = [
         <svg id="orrery" width="440" height="440" viewBox="0 0 440 440" fill="none" overflow="visible" xmlns="http://www.w3.org/2000/svg">
           <circle cx="220" cy="220" r="130" class="orb-ring"/>
           <circle cx="220" cy="220" r="185" class="orb-ring orb-ring-outer"/>
+          {graduations.map((t) => (
+            <line class={t.major ? "orb-tick orb-tick-major" : "orb-tick"} x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2} />
+          ))}
           <path class="orb-tri" d="M 220 90 L 107.4 285 L 332.6 285 Z"/>
           <line class="orb-faint" x1="220" y1="90" x2="220" y2="220"/>
           <line class="orb-faint" x1="107.4" y1="285" x2="220" y2="220"/>
           <line class="orb-faint" x1="332.6" y1="285" x2="220" y2="220"/>
           <circle class="orb-centroid" cx="220" cy="220" r="4"/>
           <text class="orb-centroid-label" x="220" y="240" text-anchor="middle">LANGUAGE</text>
-          <circle class="orb-vertex" cx="220" cy="90" r="3.5"/>
-          <circle class="orb-vertex" cx="107.4" cy="285" r="3.5"/>
-          <circle class="orb-vertex" cx="332.6" cy="285" r="3.5"/>
+          <circle class="orb-vertex" cx="220" cy="90" r="4"/>
+          <circle class="orb-vertex" cx="107.4" cy="285" r="4"/>
+          <circle class="orb-vertex" cx="332.6" cy="285" r="4"/>
           <text class="orb-vlabel" x="220" y="76" text-anchor="middle">PHILOSOPHY</text>
           <text class="orb-vlabel" x="104" y="306" text-anchor="middle">EXPERIMENTS</text>
           <text class="orb-vlabel" x="336" y="306" text-anchor="middle">MODELING</text>
@@ -321,8 +342,10 @@ const satellites = [
 
   .station-aff {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.05em;
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--accent);
     opacity: 0.8;
     text-decoration: none;
@@ -344,19 +367,47 @@ const satellites = [
   }
 
   .orb-ring {
-    stroke: var(--border);
+    stroke: color-mix(in srgb, var(--text-tertiary) 50%, transparent);
     stroke-width: 1;
     stroke-dasharray: 2 5;
   }
 
   .orb-ring-outer {
-    opacity: 0.55;
+    opacity: 0.75;
+  }
+
+  .orb-tick {
+    stroke: color-mix(in srgb, var(--text-tertiary) 55%, transparent);
+    stroke-width: 0.7;
+  }
+
+  .orb-tick-major {
+    stroke: color-mix(in srgb, var(--text-tertiary) 85%, transparent);
+    stroke-width: 1;
   }
 
   .orb-tri {
-    stroke: color-mix(in srgb, var(--text-tertiary) 55%, transparent);
-    stroke-width: 0.8;
+    stroke: color-mix(in srgb, var(--text-secondary) 70%, transparent);
+    stroke-width: 1;
     fill: none;
+  }
+
+  /* Cyanotype linework needs more ink: --text-tertiary sits too close to
+     the blue-black ground, so step the figure up one level in dark mode. */
+  :global([data-theme="dark"]) .orb-ring {
+    stroke: color-mix(in srgb, var(--text-secondary) 60%, transparent);
+  }
+
+  :global([data-theme="dark"]) .orb-tick {
+    stroke: color-mix(in srgb, var(--text-secondary) 65%, transparent);
+  }
+
+  :global([data-theme="dark"]) .orb-tick-major {
+    stroke: color-mix(in srgb, var(--text-secondary) 95%, transparent);
+  }
+
+  :global([data-theme="dark"]) .orb-tri {
+    stroke: color-mix(in srgb, var(--text-secondary) 85%, transparent);
   }
 
   .orb-faint {
@@ -378,12 +429,12 @@ const satellites = [
     font-size: 8px;
     font-weight: 500;
     letter-spacing: 0.14em;
-    fill: var(--text-tertiary);
+    fill: var(--text-secondary);
   }
 
   .orb-vertex {
     fill: var(--accent);
-    opacity: 0.8;
+    opacity: 0.9;
   }
 
   /* Satellites: pure CSS orbit. The orbit group rotates around the center;
@@ -440,7 +491,7 @@ const satellites = [
 
   .sat-dot {
     fill: var(--accent);
-    opacity: 0.75;
+    opacity: 0.85;
     transition: opacity 0.2s ease;
   }
 

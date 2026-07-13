@@ -12,7 +12,7 @@ const regular = projects.filter(p => !p.data.featured);
 
 <BaseLayout title="Project | Sambit">
   <header class="page-header masthead">
-    <span class="masthead-overline">Sheet 04 · Brought back from the field</span>
+    <span class="masthead-overline">Sheet 04 · Finished artifacts</span>
     <h1>Project</h1>
     <p class="lead">Artifacts that made it out of the notebook: deployed, published, or otherwise pointed-at-able.</p>
   </header>
@@ -29,40 +29,57 @@ const regular = projects.filter(p => !p.data.featured);
               </div>
             )}
             <div class="featured-content">
-              <div class="project-meta">
-                <span class={`type-badge type-${project.data.type}`}>
-                  {project.data.type}
-                </span>
-                <span class={`status-badge status-${project.data.status}`}>
-                  {project.data.status}
-                </span>
+              <div class="featured-main">
+                <div class="project-meta">
+                  <span class={`type-badge type-${project.data.type}`}>
+                    {project.data.type}
+                  </span>
+                  <span class={`status-badge status-${project.data.status}`}>
+                    {project.data.status}
+                  </span>
+                </div>
+
+                <h3>
+                  <a href={`/project/${project.id}`}>{project.data.title}</a>
+                </h3>
+                <p class="description">{project.data.description}</p>
+
+                {project.data.outputs && project.data.outputs.length > 0 && (
+                  <div class="outputs">
+                    {project.data.outputs.map((output) => (
+                      output.url ? (
+                        <a href={output.url} class="output-link" target="_blank" rel="noopener noreferrer">
+                          {output.label || output.type} →
+                        </a>
+                      ) : (
+                        <span class="output-label">{output.label || output.type}</span>
+                      )
+                    ))}
+                  </div>
+                )}
+
+                <time datetime={project.data.date.toISOString()}>
+                  {project.data.date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long'
+                  })}
+                </time>
               </div>
 
-              <h3>
-                <a href={`/project/${project.id}`}>{project.data.title}</a>
-              </h3>
-              <p class="description">{project.data.description}</p>
-
-              {project.data.outputs && project.data.outputs.length > 0 && (
-                <div class="outputs">
-                  {project.data.outputs.map((output) => (
-                    output.url ? (
-                      <a href={output.url} class="output-link" target="_blank" rel="noopener noreferrer">
-                        {output.label || output.type} →
-                      </a>
-                    ) : (
-                      <span class="output-label">{output.label || output.type}</span>
-                    )
-                  ))}
+              {project.data.partner && (
+                <div class="partner">
+                  {project.data.partner.url ? (
+                    <a href={project.data.partner.url} class="partner-chip" target="_blank" rel="noreferrer" aria-label={project.data.partner.name}>
+                      <img src={project.data.partner.logo} alt={project.data.partner.name} />
+                    </a>
+                  ) : (
+                    <span class="partner-chip">
+                      <img src={project.data.partner.logo} alt={project.data.partner.name} />
+                    </span>
+                  )}
+                  <span class="partner-caption">With {project.data.partner.name}</span>
                 </div>
               )}
-
-              <time datetime={project.data.date.toISOString()}>
-                {project.data.date.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long'
-                })}
-              </time>
             </div>
           </article>
         ))}
@@ -169,6 +186,47 @@ const regular = projects.filter(p => !p.data.featured);
 
   .featured-content {
     padding: 2rem;
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .featured-main {
+    min-width: 0;
+  }
+
+  /* Partner mark: a white chip so the logo reads in both themes */
+  .partner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.625rem;
+    flex-shrink: 0;
+  }
+
+  .partner-chip {
+    display: block;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.75rem 1rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .partner-chip img {
+    display: block;
+    width: 150px;
+    height: auto;
+  }
+
+  .partner-caption {
+    font-family: var(--font-mono);
+    font-size: 0.5938rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
   }
 
   .featured-card h3 {
@@ -322,6 +380,13 @@ const regular = projects.filter(p => !p.data.featured);
 
     .featured-content {
       padding: 1.5rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+
+    .partner {
+      align-items: flex-start;
     }
 
     .featured-card h3 {

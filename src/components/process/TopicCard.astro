@@ -108,8 +108,8 @@ function timeAgo(date: Date) {
                     }
                     {
                         topic.domain !== "systems" && (
-                            <span title={`${topic.entryCount} entries`}>
-                                {topic.entryCount} entries
+                            <span title={`${topic.entryCount} ${topic.entryCount === 1 ? "entry" : "entries"}`}>
+                                {topic.entryCount} {topic.entryCount === 1 ? "entry" : "entries"}
                             </span>
                         )
                     }
