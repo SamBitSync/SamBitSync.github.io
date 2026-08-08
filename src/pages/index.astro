@@ -80,22 +80,28 @@ const satellites = [
     <div class="sheet-main">
       <section class="bearings" aria-label="Research bearings">
         <figure class="bearing bearing-problems">
-          <p class="bearing-label"><span>BEARING 01</span> · PROBLEMS</p>
-          <blockquote>
+          <button class="bearing-label" type="button" aria-expanded="false" aria-controls="bearing-problems-quote bearing-problems-source">
+            <span class="bearing-label-copy"><span>BEARING 01</span> · PROBLEMS</span>
+            <span class="bearing-toggle" aria-hidden="true"></span>
+          </button>
+          <blockquote id="bearing-problems-quote">
             “We are not students of some subject matter but students of problems. And problems may cut right across the border of any subject matter or discipline.”
           </blockquote>
-          <figcaption>
+          <figcaption id="bearing-problems-source">
             <span class="bearing-author">Karl R. Popper</span>
             <cite><a class="bearing-source" href="https://padron.entretemas.com.ve/documentos/Popper-Conjectures-Rwefutations-GrowthOfKnowledge.pdf" target="_blank" rel="noreferrer">Conjectures and Refutations: The Growth of Scientific Knowledge</a></cite>
           </figcaption>
         </figure>
 
         <figure class="bearing bearing-questions">
-          <p class="bearing-label"><span>BEARING 02</span> · QUESTIONS</p>
-          <blockquote>
+          <button class="bearing-label" type="button" aria-expanded="false" aria-controls="bearing-questions-quote bearing-questions-source">
+            <span class="bearing-label-copy"><span>BEARING 02</span> · QUESTIONS</span>
+            <span class="bearing-toggle" aria-hidden="true"></span>
+          </button>
+          <blockquote id="bearing-questions-quote">
             “… we are endowed with the ability to come to know that there are things about it that we don’t know, that is, with the ability to formulate and to entertain questions whose answers we know we do not know.”
           </blockquote>
-          <figcaption>
+          <figcaption id="bearing-questions-source">
             <span class="bearing-author">Sylvain Bromberger</span>
             <cite><a class="bearing-source" href="https://web.stanford.edu/group/cslipublications/cslipublications/bromberger-corpus/On-What-We-Know-We-Dont-Know.pdf" target="_blank" rel="noreferrer">On What We Know We Don’t Know: Explanation, Theory, Linguistics, and How Questions Shape Them</a> (1992)</cite>
           </figcaption>
@@ -269,6 +275,43 @@ const satellites = [
   </div>
 </BaseLayout>
 
+<script>
+  const mobileBearingMedia = window.matchMedia("(max-width: 640px)");
+  const bearingFigures = Array.from(document.querySelectorAll<HTMLElement>(".bearing"));
+
+  const configureBearingDisclosures = () => {
+    bearingFigures.forEach((bearing) => {
+      const button = bearing.querySelector<HTMLButtonElement>(".bearing-label");
+      if (!button) return;
+
+      if (mobileBearingMedia.matches) {
+        button.tabIndex = 0;
+        button.setAttribute(
+          "aria-expanded",
+          String(bearing.classList.contains("is-expanded")),
+        );
+      } else {
+        bearing.classList.remove("is-expanded");
+        button.tabIndex = -1;
+        button.setAttribute("aria-expanded", "true");
+      }
+    });
+  };
+
+  bearingFigures.forEach((bearing) => {
+    const button = bearing.querySelector<HTMLButtonElement>(".bearing-label");
+    button?.addEventListener("click", () => {
+      if (!mobileBearingMedia.matches) return;
+
+      const expanded = bearing.classList.toggle("is-expanded");
+      button.setAttribute("aria-expanded", String(expanded));
+    });
+  });
+
+  mobileBearingMedia.addEventListener("change", configureBearingDisclosures);
+  configureBearingDisclosures();
+</script>
+
 <style>
   .sheet {
     padding: 1.5rem 1.75rem 2rem;
@@ -314,17 +357,60 @@ const satellites = [
   }
 
   .bearing-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
     margin: 0 0 1.125rem;
+    padding: 0;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
     font-family: var(--font-mono);
     font-size: 0.6563rem;
     font-weight: 500;
+    line-height: 1.5;
     letter-spacing: 0.14em;
     text-transform: uppercase;
+    text-align: left;
     color: var(--annotation);
+    cursor: default;
+  }
+
+  .bearing-label:hover {
+    color: var(--annotation);
+    background: none;
+  }
+
+  .bearing-label:focus-visible {
+    outline: 1px solid var(--annotation);
+    outline-offset: 4px;
   }
 
   .bearing-label span {
     color: inherit;
+  }
+
+  .bearing-toggle {
+    display: none;
+    flex: 0 0 auto;
+    width: 1rem;
+    height: 1rem;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .bearing-toggle::before {
+    content: "+";
+  }
+
+  .bearing.is-expanded .bearing-toggle::before {
+    content: "−";
   }
 
   .bearing blockquote {
@@ -904,6 +990,24 @@ const satellites = [
 
     .bearings {
       gap: 2rem;
+    }
+
+    .bearing-label {
+      margin-bottom: 0;
+      cursor: pointer;
+    }
+
+    .bearing-toggle {
+      display: inline-flex;
+    }
+
+    .bearing:not(.is-expanded) blockquote,
+    .bearing:not(.is-expanded) figcaption {
+      display: none;
+    }
+
+    .bearing.is-expanded blockquote {
+      margin-top: 1.125rem;
     }
 
     .sheet-head {
