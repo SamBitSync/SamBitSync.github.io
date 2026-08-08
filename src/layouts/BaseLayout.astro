@@ -335,6 +335,11 @@ const fullTitle = title.includes('Sambit') ? title : `${title} | Sambit Rimal`;
     color-scheme: light dark;
   }
 
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
   ::selection {
     background: color-mix(in srgb, var(--accent) 20%, transparent);
   }
