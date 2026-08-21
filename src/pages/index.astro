@@ -78,14 +78,51 @@ const satellites = [
 
     <!-- Main: legend and instrument -->
     <div class="sheet-main">
-      <section class="bearings" aria-label="Research bearings">
+      <section class="orientation-columns" aria-label="Research bearings and orientation">
+        <div class="orientation-column orientation-column-left">
+        <figure class="bearing bearing-questions">
+          <button class="bearing-label" type="button" aria-expanded="false" aria-controls="bearing-questions-quote bearing-questions-source">
+            <span class="bearing-label-copy"><span>BEARING 02</span> · QUESTIONS</span>
+            <span class="bearing-toggle" aria-hidden="true"></span>
+          </button>
+          <blockquote id="bearing-questions-quote">
+            “… we are endowed with the ability to come to know that there are things about it that we don’t know, that is, with the ability to formulate and to entertain <span class="quote-annotation">questions whose answers we know we do not know</span>.”
+          </blockquote>
+          <figcaption id="bearing-questions-source">
+            <span class="bearing-author">Sylvain Bromberger</span>
+            <cite><a class="bearing-source" href="https://web.stanford.edu/group/cslipublications/cslipublications/bromberger-corpus/On-What-We-Know-We-Dont-Know.pdf" target="_blank" rel="noreferrer">On What We Know We Don’t Know: Explanation, Theory, Linguistics, and How Questions Shape Them</a> (1992)</cite>
+          </figcaption>
+        </figure>
+
+        <div class="sheet-statement">
+          <p class="statement-label">My orientation</p>
+          <h1 class="sheet-epigraph">
+            <span class="orientation-action">I meander through questions about</span>
+            <span class="orientation-territory">
+              <span class="orientation-item"><em>language,</em></span>
+              <span class="orientation-item"><em>minds,</em></span>
+              <span class="orientation-item"><span class="orientation-conjunction">and</span> <em>meaning.</em></span>
+            </span>
+          </h1>
+          <p class="sheet-legend">
+            What accumulates here are maps, notes, projects, and the occasional
+            attempt at synthesis.
+          </p>
+          <p class="neurath-note">
+            Rebuilt at sea, plank by plank.
+            <a class="neurath-way" href="/meta/neuraths-boat">Neurath's way.</a>
+          </p>
+        </div>
+        </div>
+
+        <div class="orientation-column orientation-column-right">
         <figure class="bearing bearing-problems">
           <button class="bearing-label" type="button" aria-expanded="false" aria-controls="bearing-problems-quote bearing-problems-source">
             <span class="bearing-label-copy"><span>BEARING 01</span> · PROBLEMS</span>
             <span class="bearing-toggle" aria-hidden="true"></span>
           </button>
           <blockquote id="bearing-problems-quote">
-            “We are not students of some subject matter but students of problems. And problems may cut right across the border of any subject matter or discipline.”
+            “We are not students of some subject matter but <span class="quote-annotation">students of problems</span>. And problems may cut right across the border of any subject matter or discipline.”
           </blockquote>
           <figcaption id="bearing-problems-source">
             <span class="bearing-author">Karl R. Popper</span>
@@ -93,69 +130,8 @@ const satellites = [
           </figcaption>
         </figure>
 
-        <figure class="bearing bearing-questions">
-          <button class="bearing-label" type="button" aria-expanded="false" aria-controls="bearing-questions-quote bearing-questions-source">
-            <span class="bearing-label-copy"><span>BEARING 02</span> · QUESTIONS</span>
-            <span class="bearing-toggle" aria-hidden="true"></span>
-          </button>
-          <blockquote id="bearing-questions-quote">
-            “… we are endowed with the ability to come to know that there are things about it that we don’t know, that is, with the ability to formulate and to entertain questions whose answers we know we do not know.”
-          </blockquote>
-          <figcaption id="bearing-questions-source">
-            <span class="bearing-author">Sylvain Bromberger</span>
-            <cite><a class="bearing-source" href="https://web.stanford.edu/group/cslipublications/cslipublications/bromberger-corpus/On-What-We-Know-We-Dont-Know.pdf" target="_blank" rel="noreferrer">On What We Know We Don’t Know: Explanation, Theory, Linguistics, and How Questions Shape Them</a> (1992)</cite>
-          </figcaption>
-        </figure>
-      </section>
-
-      <div class="sheet-positioning">
-        <div class="sheet-left">
-        <h1 class="sheet-epigraph">
-          I meander through questions about <em>language</em>, <em>minds</em>
-          and <em>meaning</em>.
-        </h1>
-        <p class="sheet-legend">
-          What accumulates here are maps, notes, projects, and the occasional
-          attempt at synthesis.
-          <span class="neurath-note">
-            Rebuilt at sea, plank by plank.
-            <a class="neurath-way" href="/meta/neuraths-boat">Neurath's way.</a>
-          </span>
-        </p>
-
-        <section class="stations">
-          <h2 class="sheet-overline">Stations · present work</h2>
-          <ul>
-            <li>
-              <span class="station-glyph"><StationMark station="experiments" /></span>
-              <div>
-                <h3>Behavioral experiments</h3>
-                <p>Investigating multilingual cognition through psycholinguistic experiments.</p>
-                <a class="station-aff" href="https://cogpsychling-lab.github.io/" target="_blank" rel="noreferrer">Cognitive Science &amp; Psycholinguistics Lab</a>
-              </div>
-            </li>
-            <li>
-              <span class="station-glyph"><StationMark station="philosophy" /></span>
-              <div>
-                <h3>STS research</h3>
-                <p>An ethnography of how scientific knowledge is produced in an emerging cognitive science community.</p>
-                <a class="station-aff" href="https://theopen.institute/" target="_blank" rel="noreferrer">The Open Institute</a>
-              </div>
-            </li>
-            <li>
-              <span class="station-glyph"><StationMark station="modeling" /></span>
-              <div>
-                <h3>Mathematical modeling</h3>
-                <p>Learning mathematical and computational tools for explaining cognition.</p>
-                <a class="station-aff" href="https://github.com/SamBitSync/modeling-mechanisms" target="_blank" rel="noreferrer">modeling-mechanisms</a>
-              </div>
-            </li>
-          </ul>
-        </section>
-      </div>
-
-      <div class="sheet-right">
-        <svg id="orrery" width="440" height="440" viewBox="0 0 440 440" fill="none" overflow="visible" xmlns="http://www.w3.org/2000/svg">
+        <div class="orrery-wrap">
+        <svg id="orrery" width="460" height="460" viewBox="0 0 440 440" fill="none" overflow="visible" xmlns="http://www.w3.org/2000/svg">
           <circle cx="220" cy="220" r="130" class="orb-ring"/>
           <circle cx="220" cy="220" r="185" class="orb-ring orb-ring-outer"/>
           {graduations.map((t) => (
@@ -207,12 +183,50 @@ const satellites = [
           })}
         </svg>
         <p class="tri-caption">
-          <span class="fig-no">fig. 1</span> · The survey network. Three fixed
-          stations sight one phenomenon; the engagements in orbit drift. Open
-          nodes are interests still forming. Hover to hold the sky still.
+          <span class="fig-no">fig. 1</span> · A compass for my questions.
         </p>
-      </div>
-      </div>
+        </div>
+        </div>
+      </section>
+
+      <section class="stations" aria-label="Stations, present work">
+          <h2 class="sheet-overline">Stations · present work</h2>
+          <ul>
+            <li>
+              <div class="station-heading">
+                <span class="station-glyph"><StationMark station="philosophy" /></span>
+                <span class="station-leg">Philosophy</span>
+              </div>
+              <div class="station-copy">
+                <h3>STS research</h3>
+                <p>An ethnography of how scientific knowledge is produced in an emerging cognitive science community.</p>
+                <a class="station-aff" href="https://theopen.institute/" target="_blank" rel="noreferrer">The Open Institute</a>
+              </div>
+            </li>
+            <li>
+              <div class="station-heading">
+                <span class="station-glyph"><StationMark station="experiments" /></span>
+                <span class="station-leg">Experiments</span>
+              </div>
+              <div class="station-copy">
+                <h3>Behavioral experiments</h3>
+                <p>Investigating multilingual cognition through psycholinguistic experiments.</p>
+                <a class="station-aff" href="https://cogpsychling-lab.github.io/" target="_blank" rel="noreferrer">Cognitive Science &amp; Psycholinguistics Lab</a>
+              </div>
+            </li>
+            <li>
+              <div class="station-heading">
+                <span class="station-glyph"><StationMark station="modeling" /></span>
+                <span class="station-leg">Modeling</span>
+              </div>
+              <div class="station-copy">
+                <h3>Mathematical modeling</h3>
+                <p>Learning mathematical and computational tools for explaining cognition.</p>
+                <a class="station-aff" href="https://github.com/SamBitSync/modeling-mechanisms" target="_blank" rel="noreferrer">modeling-mechanisms</a>
+              </div>
+            </li>
+          </ul>
+      </section>
     </div>
 
     <div class="scale-rule" role="presentation"></div>
@@ -342,13 +356,29 @@ const satellites = [
     display: block;
   }
 
-  .bearings {
+  .orientation-columns {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 4rem;
     padding-top: 0.875rem;
     border-top: 1px solid var(--border);
-    margin-bottom: 2.5rem;
+    margin-bottom: 3.25rem;
+    direction: rtl;
+  }
+
+  .orientation-column {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    direction: ltr;
+  }
+
+  .orientation-column-left {
+    gap: 4rem;
+  }
+
+  .orientation-column-right {
+    gap: 4rem;
   }
 
   .bearing {
@@ -425,6 +455,10 @@ const satellites = [
     color: var(--text-secondary);
   }
 
+  .quote-annotation {
+    color: var(--annotation);
+  }
+
   .bearing figcaption {
     display: grid;
     gap: 0.125rem;
@@ -459,20 +493,34 @@ const satellites = [
     text-underline-offset: 3px;
   }
 
-  .sheet-positioning {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 30rem;
-    gap: 4rem;
-    align-items: start;
+  .sheet-statement {
+    max-width: 38rem;
+  }
+
+  .statement-label {
+    margin: 0 0 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.6563rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--annotation);
+  }
+
+  .orrery-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
 
   .sheet-epigraph {
     font-family: var(--font-serif);
-    font-size: clamp(1.875rem, 3.4vw, 2.5rem);
+    font-size: clamp(2.25rem, 3.2vw, 2.75rem);
     font-weight: 400;
-    line-height: 1.3;
+    line-height: 1.25;
     letter-spacing: -0.01em;
-    margin-bottom: 1.25rem;
+    max-width: 22ch;
+    margin: 0 0 1.5rem;
   }
 
   .sheet-epigraph em {
@@ -480,27 +528,51 @@ const satellites = [
     color: var(--accent);
   }
 
+  .orientation-action {
+    display: block;
+    font-size: 0.75em;
+    line-height: 1.3;
+    margin-bottom: 0.3rem;
+    white-space: nowrap;
+  }
+
+  .orientation-territory,
+  .orientation-item {
+    display: block;
+  }
+
+  .orientation-item {
+    line-height: 1.08;
+  }
+
+  .orientation-item em {
+    font-style: normal;
+  }
+
+  .orientation-conjunction {
+    color: var(--text-secondary);
+    font-size: 0.68em;
+  }
+
   .sheet-legend {
     font-family: var(--font-serif);
     font-size: 1.0625rem;
     line-height: 1.7;
     color: var(--text-secondary);
-    max-width: 30rem;
-    margin-bottom: 3rem;
+    max-width: 32rem;
+    margin: 0;
   }
 
   .neurath-note {
-    display: block;
-    margin-top: 0.375rem;
+    font-family: var(--font-serif);
     font-size: 0.9688rem;
     font-style: italic;
     line-height: 1.55;
     color: var(--text-tertiary);
+    margin: 0.75rem 0 0;
   }
 
   .neurath-way {
-    display: block;
-    width: fit-content;
     color: var(--accent);
   }
 
@@ -515,22 +587,73 @@ const satellites = [
   }
 
   /* Stations */
+  .stations {
+    width: 100%;
+    max-width: 68rem;
+    margin: 0 auto;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+
   .stations ul {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+    position: relative;
+  }
+
+  .stations li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    width: calc(100% + 2.5rem);
+    border-top: 1px dashed color-mix(in srgb, var(--annotation) 46%, transparent);
+    z-index: 0;
   }
 
   .stations li {
     display: flex;
-    gap: 1rem;
-    margin: 0 0 1.625rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+    min-width: 0;
+    position: relative;
+  }
+
+  .station-heading {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: fit-content;
+    padding-right: 0.75rem;
+    background: var(--bg);
   }
 
   .station-glyph {
+    display: inline-flex;
     color: var(--annotation);
     opacity: 0.85;
-    padding-top: 0.3rem;
+  }
+
+  .station-leg {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  .station-copy {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
   }
 
   .stations h3 {
@@ -557,6 +680,9 @@ const satellites = [
     color: var(--accent);
     opacity: 0.8;
     text-decoration: none;
+    width: fit-content;
+    margin-top: auto;
+    padding-top: 0.5rem;
   }
 
   .station-aff:hover {
@@ -571,11 +697,11 @@ const satellites = [
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    padding: 3.5rem 1.25rem 0;
+    padding: 1.5rem 1.25rem 0;
   }
 
   .orb-ring {
-    stroke: color-mix(in srgb, var(--text-tertiary) 60%, transparent);
+    stroke: color-mix(in srgb, var(--text-tertiary) 72%, transparent);
     stroke-width: 1;
     stroke-dasharray: 2 5;
   }
@@ -595,8 +721,8 @@ const satellites = [
   }
 
   .orb-tri {
-    stroke: color-mix(in srgb, var(--text-secondary) 78%, transparent);
-    stroke-width: 1;
+    stroke: color-mix(in srgb, var(--text-secondary) 92%, transparent);
+    stroke-width: 1.2;
     fill: none;
   }
 
@@ -637,7 +763,7 @@ const satellites = [
     font-size: 8px;
     font-weight: 500;
     letter-spacing: 0.14em;
-    fill: var(--text-secondary);
+    fill: var(--text-primary);
     paint-order: stroke fill;
     stroke: var(--bg);
     stroke-width: 3px;
@@ -724,7 +850,7 @@ const satellites = [
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    fill: var(--text-tertiary);
+    fill: color-mix(in srgb, var(--text-secondary) 86%, transparent);
     paint-order: stroke fill;
     stroke: var(--bg);
     stroke-width: 3px;
@@ -957,10 +1083,31 @@ const satellites = [
   }
 
   @media (max-width: 1000px) {
-    .bearings {
+    .orientation-columns {
       grid-template-columns: 1fr;
       gap: 2.5rem;
-      margin-bottom: 2.25rem;
+      margin-bottom: 1.75rem;
+      direction: ltr;
+    }
+
+    .orientation-column {
+      display: contents;
+    }
+
+    .bearing-problems {
+      order: 1;
+    }
+
+    .bearing-questions {
+      order: 2;
+    }
+
+    .sheet-statement {
+      order: 3;
+    }
+
+    .orrery-wrap {
+      order: 4;
     }
 
     .bearing + .bearing {
@@ -968,13 +1115,48 @@ const satellites = [
       border-top: 1px solid var(--border);
     }
 
-    .sheet-positioning {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
+    .orientation-column-left,
+    .orientation-column-right {
+      gap: 2rem;
     }
 
-    .sheet-right {
-      padding: 0;
+    .orrery-wrap {
+      transform: none;
+    }
+
+    .sheet-statement {
+      max-width: 42rem;
+    }
+
+    .sheet-epigraph {
+      max-width: 18ch;
+    }
+
+    .orientation-action,
+    .orientation-territory,
+    .orientation-item {
+      display: inline;
+      font-size: inherit;
+      line-height: inherit;
+      margin-bottom: 0;
+      white-space: normal;
+    }
+
+    .orientation-action::after {
+      content: " ";
+    }
+
+    .orientation-item:not(:last-child)::after {
+      content: " ";
+    }
+
+    .stations ul {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .stations li::after {
+      display: none;
     }
 
     .sheet-bottom {
@@ -988,7 +1170,7 @@ const satellites = [
       padding: 1rem 0.5rem;
     }
 
-    .bearings {
+    .orientation-columns {
       gap: 2rem;
     }
 
