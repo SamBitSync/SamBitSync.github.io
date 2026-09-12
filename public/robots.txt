@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sambitmaps.systems/sitemap-index.xml
+Sitemap: https://sambit.com.np/sitemap-index.xml
