@@ -71,6 +71,7 @@ const projectCollection = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
+    datePrecision: z.enum(["day", "month"]).default("day"),
     type: z.enum(['research', 'tool', 'paper', 'application', 'storymap']),
     status: z.enum(['completed', 'published', 'deployed']),
     collaborators: z.array(z.string()).optional(),

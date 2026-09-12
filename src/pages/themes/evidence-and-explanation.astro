@@ -1,0 +1,38 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import EntryList from '../../components/EntryList.astro';
+const bayes = await getEntry('process','bayesian-statistics-formal');
+const programmes = await getEntry('maps','research-programmes');
+const setu = await getEntry('project','digital-setu');
+if (!bayes || !programmes || !setu) throw new Error('Missing curated theme entry');
+const lenses = [
+ {id:'bayesian-epistemology',title:'Bayesian Epistemology',description:'How expectations and evidence bear on the strength of a belief.'},
+ {id:'strevens-depth',title:'Explanatory Depth',description:'Which details make a difference, and which can be left out of an explanation.'},
+ {id:'thick-description',title:'Thick Description',description:'Why an observable action is not yet an account of what it means.'},
+ {id:'hard-to-vary',title:'Hard to Vary Explanation',description:'Whether the details of an account constrain it or can be adjusted to fit anything.'},
+ {id:'residual-reality',title:'Residual Reality',description:'What an explanation leaves outside its frame, and when those omissions matter.'},
+].map(lens=>({href:`/meta/#${lens.id}`,title:lens.title,description:lens.description,label:'Framework'}));
+const readings = [
+ {href:`/process/${bayes.id}/`,title:bayes.data.title,label:'Process',description:'Working through belief revision as a redistribution of plausibility: a concrete account of how evidence changes confidence.'},
+ {href:`/maps/${programmes.id}/`,title:programmes.data.title,label:'Maps',description:'Places competing research programmes together, making it possible to ask why they disagree about what needs explaining.'},
+ {href:`/project/${setu.id}/`,title:setu.data.title,label:'Project',description:'Puts coverage statistics beside household accounts of connectivity. Their differences show why the choice of evidence changes the picture.'},
+];
+---
+<BaseLayout title="Evidence and explanation" description="Questions about what supports a claim, what makes an explanation adequate, and what remains outside its frame.">
+ <div class="editorial-page">
+  <nav class="editorial-subnav"><a href="/#themes">← Themes I return to</a></nav>
+  <PageHeader title="Evidence and explanation" eyebrow="A recurring theme" description="What gives an account its weight? What lets it explain something, and what does it leave out?" />
+  <div class="theme-opening"><p>This theme connects my interest in how beliefs change with my concern for what explanations actually accomplish. Evidence can support a claim without settling how to explain it. An explanation can illuminate one part of a situation while leaving another untouched.</p><p>I return to the relation between the question being asked, the material that can answer it, and the kind of understanding an answer offers.</p></div>
+  <section class="editorial-section theme-questions"><h2>Questions to keep open</h2><ul><li>What would make me revise this account, rather than accommodate another observation?</li><li>Which details make a difference to the explanation, and which matter for understanding the situation in other ways?</li><li>When do different accounts complement one another, and when do they make incompatible claims?</li><li>What must hold for an insight from one case to travel to another?</li></ul></section>
+  <section class="editorial-section"><h2>Lenses for the questions</h2><p>These frameworks place different demands on an account. Their differences are part of what makes them useful to read together.</p><EntryList entries={lenses} /></section>
+  <section class="editorial-section"><h2>Across the notebook</h2><p>Places where these questions take a more concrete form.</p><EntryList entries={readings} /></section>
+ </div>
+</BaseLayout>
+<style>
+.theme-opening { max-width: 730px; font-size: 1rem; line-height: 1.85; color: var(--text-secondary); }
+.theme-questions { max-width: 730px; border-left: 1px solid var(--border); padding-left: 1.5rem; }
+.theme-questions li { margin: 0 0 .8rem; line-height: 1.7; color: var(--text-secondary); }
+.theme-questions ul { padding-left: 1.1rem; }
+</style>

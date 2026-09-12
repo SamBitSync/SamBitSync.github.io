@@ -1,8 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import StationMark from "../components/StationMark.astro";
 import { getCollection } from "astro:content";
-import { accessionIndex, accessionRange, stationFor, SHEET_PREFIX } from "../lib/survey";
+import { accessionIndex, accessionRange, SHEET_PREFIX } from "../lib/survey";
 
 const maps = await getCollection("maps");
 const meta = await getCollection("meta");
@@ -15,1191 +14,275 @@ const processAcc = accessionIndex(process, SHEET_PREFIX.process);
 const projectAcc = accessionIndex(project, SHEET_PREFIX.project);
 
 const catalogue = [
-  { n: "01", name: "Maps", desc: "Charts of the territory", href: "/maps", range: accessionRange(maps.length, SHEET_PREFIX.maps) },
-  { n: "02", name: "Meta", desc: "Instruments and frameworks", href: "/meta", range: accessionRange(meta.length, SHEET_PREFIX.meta) },
-  { n: "03", name: "Process", desc: "The field log", href: "/process", range: accessionRange(process.length, SHEET_PREFIX.process) },
-  { n: "04", name: "Project", desc: "Finished artifacts", href: "/project", range: accessionRange(project.length, SHEET_PREFIX.project) },
+  { n: "01", name: "Maps", desc: "Ideas across domains", href: "/maps", range: accessionRange(maps.length, SHEET_PREFIX.maps) },
+  { n: "02", name: "Frameworks", desc: "What each lens helps me notice", href: "/meta", range: accessionRange(meta.length, SHEET_PREFIX.meta) },
+  { n: "03", name: "Process", desc: "Work in progress", href: "/process", range: accessionRange(process.length, SHEET_PREFIX.process) },
+  { n: "04", name: "Projects", desc: "Finished work", href: "/project", range: accessionRange(project.length, SHEET_PREFIX.project) },
 ];
 
-type Sounding = { acc: string; date: Date; title: string; href: string };
+type Sounding = { acc: string; date: Date; datePrecision?: "day"|"month"; title: string; href: string; collection: string };
 const soundings: Sounding[] = [
-  ...maps.map((e) => ({ acc: mapsAcc.get(e.id)!, date: e.data.date, title: e.data.title, href: `/maps/${e.id}` })),
-  ...meta.map((e) => ({ acc: metaAcc.get(e.id)!, date: e.data.date, title: e.data.framework, href: `/meta/${e.id}` })),
-  ...process.map((e) => ({ acc: processAcc.get(e.id)!, date: e.data.date, title: e.data.title, href: `/process/${e.id}` })),
-  ...project.map((e) => ({ acc: projectAcc.get(e.id)!, date: e.data.date, title: e.data.title, href: `/project/${e.id}` })),
+  ...maps.map((e) => ({ collection: "Maps", acc: mapsAcc.get(e.id)!, date: e.data.date, title: e.data.title, href: `/maps/${e.id}` })),
+  ...meta.map((e) => ({ collection: "Frameworks", acc: metaAcc.get(e.id)!, date: e.data.date, title: e.data.framework, href: `/meta/#${e.id}` })),
+  ...process.map((e) => ({ collection: "Process", acc: processAcc.get(e.id)!, date: e.data.date, title: e.data.title, href: `/process/${e.id}` })),
+  ...project.map((e) => ({ collection: "Projects", datePrecision: e.data.datePrecision, acc: projectAcc.get(e.id)!, date: e.data.date, title: e.data.title, href: `/project/${e.id}` })),
 ]
   .sort((a, b) => b.date.valueOf() - a.date.valueOf())
   .slice(0, 5);
 
-const neurathAcc = metaAcc.get("neuraths-boat");
+
 
 // The build date: every deploy is a revision of the sheet. (The footer's
 // "last plank replaced" stays derived from content dates; different fact.)
 const lastRevision = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
-// Satellites: engagements in slow orbit around the survey network.
-// href: null means "still forming" (drawn as an open node, not linked).
-// period: seconds per revolution. Slow, but visibly in motion.
-// Graduations on the outer ring: the orrery reads as a theodolite's
-// horizontal circle. Minor tick every 10°, major every 90°.
-const graduations = Array.from({ length: 36 }, (_, i) => {
-  const deg = i * 10;
-  const major = deg % 90 === 0;
-  const rad = (deg * Math.PI) / 180;
-  const rOuter = 185;
-  const rInner = rOuter - (major ? 9 : 4.5);
-  return {
-    major,
-    x1: +(220 + rOuter * Math.sin(rad)).toFixed(2),
-    y1: +(220 - rOuter * Math.cos(rad)).toFixed(2),
-    x2: +(220 + rInner * Math.sin(rad)).toFixed(2),
-    y2: +(220 - rInner * Math.cos(rad)).toFixed(2),
-  };
-});
 
-const satellites = [
-  { name: "semiotics", href: null, start: 20, period: 55 },
-  { name: "predictive processing", href: "/meta/predictive-processing", start: 80, period: 75 },
-  { name: "bayesian epistemology", href: "/meta/bayesian-epistemology", start: 145, period: 48 },
-  { name: "embodied cognition", href: "/meta/embodied-cognition", start: 205, period: 68 },
-  { name: "strange loops", href: "/meta/strange-loop", start: 265, period: 60 },
-  { name: "event cognition", href: null, start: 325, period: 88 },
-];
 ---
 
-<BaseLayout title="Sambit">
-  <div class="sheet plate">
-    <!-- Sheet header -->
-    <div class="sheet-head">
-      <span>Survey of language, minds &amp; knowledge</span>
-      <span class="sheet-no">Sheet № 1 · Index</span>
-      <span class="sheet-coords">27.7172° N · 85.3240° E</span>
-    </div>
+<BaseLayout title="Sambit Rimal" description="Sambit Rimal: graduate student in linguistics, working across psycholinguistics and Science and Technology Studies. Research, notes, and questions about language, minds, and meaning.">
+  <div class="journal">
+    <div class="edition"><span>Research &amp; an open notebook</span><span>Kathmandu, Nepal <span class="edition-mark">↗</span></span></div>
+    <header class="introduction">
+      <div class="identity">
+        <h1>Sambit <span class="surname">Rimal<span class="name-period">.</span></span></h1>
+        <p>Graduate student in linguistics, working across psycholinguistics and Science and Technology Studies.</p>
+        <a href="/about" class="text-link">More about me <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="research">
+        <p class="eyebrow">Currently</p>
+        <p class="research-lead">I study how language demands shape cognitive processing as it unfolds over time in multilingual speakers.</p>
+        <p class="research-secondary">My STS work looks at the infrastructures and improvisations through which cognitive science research becomes possible in Nepal.</p>
+        <div class="research-links"><a href="#current-work">What I’m working on <span aria-hidden="true">↓</span></a><a href="#writing">Explore my notes <span aria-hidden="true">↓</span></a></div>
+      </div>
+    </header>
 
-    <!-- Main: legend and instrument -->
-    <div class="sheet-main">
-      <section class="orientation-columns" aria-label="Research bearings and orientation">
-        <div class="orientation-column orientation-column-left">
-        <figure class="bearing bearing-questions">
-          <button class="bearing-label" type="button" aria-expanded="false" aria-controls="bearing-questions-quote bearing-questions-source">
-            <span class="bearing-label-copy"><span>BEARING 02</span> · QUESTIONS</span>
-            <span class="bearing-toggle" aria-hidden="true"></span>
-          </button>
-          <blockquote id="bearing-questions-quote">
-            “… we are endowed with the ability to come to know that there are things about it that we don’t know, that is, with the ability to formulate and to entertain <span class="quote-annotation">questions whose answers we know we do not know</span>.”
-          </blockquote>
-          <figcaption id="bearing-questions-source">
-            <span class="bearing-author">Sylvain Bromberger</span>
-            <cite><a class="bearing-source" href="https://web.stanford.edu/group/cslipublications/cslipublications/bromberger-corpus/On-What-We-Know-We-Dont-Know.pdf" target="_blank" rel="noreferrer">On What We Know We Don’t Know: Explanation, Theory, Linguistics, and How Questions Shape Them</a> (1992)</cite>
-          </figcaption>
-        </figure>
-
-        <div class="sheet-statement">
-          <p class="statement-label">My orientation</p>
-          <h1 class="sheet-epigraph">
-            <span class="orientation-action">I meander through questions about</span>
-            <span class="orientation-territory">
-              <span class="orientation-item"><em>language,</em></span>
-              <span class="orientation-item"><em>minds,</em></span>
-              <span class="orientation-item"><span class="orientation-conjunction">and</span> <em>meaning.</em></span>
-            </span>
-          </h1>
-          <p class="sheet-legend">
-            What accumulates here are maps, notes, projects, and the occasional
-            attempt at synthesis.
-          </p>
-          <p class="neurath-note">
-            Rebuilt at sea, plank by plank.
-            <a class="neurath-way" href="/meta/neuraths-boat">Neurath's way.</a>
-          </p>
+    <section class="orientation" aria-labelledby="orientation-title">
+      <div class="orientation-copy">
+        <p class="orientation-preface">If I had to describe my orientation:</p>
+        <h2 id="orientation-title">I meander through questions about <em>language, minds, and meaning.</em></h2>
+        <p class="orientation-note">This site gathers the maps, notes, projects, and occasional attempts at synthesis that accumulate along the way.</p>
+      </div>
+      <figure class="instrument">
+        <div class="method-diagram">
+          <svg viewBox="0 0 360 235" role="img" aria-labelledby="compass-title compass-desc">
+            <title id="compass-title">Three approaches to language</title>
+            <desc id="compass-desc">Philosophy, experiments, and modeling form a triangle around language. Select an approach below to read how I use it.</desc>
+            <circle cx="180" cy="125" r="95" class="compass-ring" />
+            <path d="M180 30 L70 200 L290 200 Z" class="compass-triangle" />
+            <path d="M180 30 L180 140 M70 200 L180 140 L290 200" class="compass-sights" />
+            <circle cx="180" cy="140" r="4" class="compass-center" />
+            <text x="180" y="164" text-anchor="middle" class="compass-language">LANGUAGE</text>
+          </svg>
+          <button class="method method-philosophy" data-method="philosophy" aria-pressed="true" aria-controls="method-description">Philosophy</button>
+          <button class="method method-experiments" data-method="experiments" aria-pressed="false" aria-controls="method-description">Experiments</button>
+          <button class="method method-modeling" data-method="modeling" aria-pressed="false" aria-controls="method-description">Modeling</button>
         </div>
-        </div>
+        <p id="method-description" class="method-description">Examining the concepts and assumptions I think with.</p>
+        <figcaption><span>Fig. 01</span> Three approaches to my questions</figcaption>
+      </figure>
 
-        <div class="orientation-column orientation-column-right">
-        <figure class="bearing bearing-problems">
-          <button class="bearing-label" type="button" aria-expanded="false" aria-controls="bearing-problems-quote bearing-problems-source">
-            <span class="bearing-label-copy"><span>BEARING 01</span> · PROBLEMS</span>
-            <span class="bearing-toggle" aria-hidden="true"></span>
-          </button>
+    <div class="orientation-passages">
+        <p class="passages-intro">These two passages capture something of that orientation.</p><figure class="orientation-passage">
           <blockquote id="bearing-problems-quote">
             “We are not students of some subject matter but <span class="quote-annotation">students of problems</span>. And problems may cut right across the border of any subject matter or discipline.”
           </blockquote>
-          <figcaption id="bearing-problems-source">
+          <figcaption class="bearing-source-note" id="bearing-problems-source">
             <span class="bearing-author">Karl R. Popper</span>
             <cite><a class="bearing-source" href="https://www.amazon.com/Conjectures-Refutations-Scientific-Knowledge-Routledge/dp/0415285941" target="_blank" rel="noreferrer">Conjectures and Refutations: The Growth of Scientific Knowledge</a></cite>
           </figcaption>
         </figure>
+<figure class="orientation-passage">
+          <blockquote id="bearing-questions-quote">
+            “… we are endowed with the ability to come to know that there are things about it that we don’t know, that is, with the ability to formulate and to entertain <span class="quote-annotation">questions whose answers we know we do not know</span>.”
+          </blockquote>
+          <figcaption class="bearing-source-note" id="bearing-questions-source">
+            <span class="bearing-author">Sylvain Bromberger</span>
+            <cite><a class="bearing-source" href="https://web.stanford.edu/group/cslipublications/cslipublications/bromberger-corpus/On-What-We-Know-We-Dont-Know.pdf" target="_blank" rel="noreferrer">On What We Know We Don’t Know: Explanation, Theory, Linguistics, and How Questions Shape Them</a> (1992)</cite>
+          </figcaption>
+        </figure></div>
+      <div class="interests" id="themes"><span class="eyebrow">Themes I return to</span><ul><li>signs and interpretation</li><li>representation and computation</li><li>feedback and adaptation</li><li><a href="/themes/evidence-and-explanation/">evidence and explanation</a></li></ul></div>
+    </section>
 
-        <div class="orrery-wrap">
-        <svg id="orrery" width="460" height="460" viewBox="0 0 440 440" fill="none" overflow="visible" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="220" cy="220" r="130" class="orb-ring"/>
-          <circle cx="220" cy="220" r="185" class="orb-ring orb-ring-outer"/>
-          {graduations.map((t) => (
-            <line class={t.major ? "orb-tick orb-tick-major" : "orb-tick"} x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2} />
-          ))}
-          <path class="orb-tri" d="M 220 90 L 107.4 285 L 332.6 285 Z"/>
-          <line class="orb-faint" x1="220" y1="90" x2="220" y2="220"/>
-          <line class="orb-faint" x1="107.4" y1="285" x2="220" y2="220"/>
-          <line class="orb-faint" x1="332.6" y1="285" x2="220" y2="220"/>
-          <circle class="orb-centroid" cx="220" cy="220" r="4"/>
-          <text class="orb-centroid-label" x="220" y="240" text-anchor="middle">LANGUAGE</text>
-          <circle class="orb-vertex" cx="220" cy="90" r="4"/>
-          <circle class="orb-vertex" cx="107.4" cy="285" r="4"/>
-          <circle class="orb-vertex" cx="332.6" cy="285" r="4"/>
-          <text class="orb-vlabel" x="220" y="76" text-anchor="middle">PHILOSOPHY</text>
-          <text class="orb-vlabel" x="104" y="306" text-anchor="middle">EXPERIMENTS</text>
-          <text class="orb-vlabel" x="336" y="306" text-anchor="middle">MODELING</text>
-          <!-- Satellites: CSS-animated orbit, counter-rotated labels stay upright -->
-          {satellites.map((sat) => {
-            const inner = (
-              <>
-                <circle class="sat-dot" cx="220" cy="35" r="4.5" />
-                <g
-                  class="sat-counter"
-                  style={`--start:${sat.start}deg; --period:${sat.period}s; transform-origin: 220px 3px;`}
-                >
-                  <text class="sat-label" x="220" y="6" text-anchor="middle">
-                    {sat.name}
-                  </text>
-                </g>
-              </>
-            );
-            return sat.href ? (
-              <a
-                href={sat.href}
-                class="sat-orbit"
-                style={`--start:${sat.start}deg; --period:${sat.period}s;`}
-              >
-                {inner}
-              </a>
-            ) : (
-              <g
-                class="sat-orbit sat-forming"
-                style={`--start:${sat.start}deg; --period:${sat.period}s;`}
-              >
-                {inner}
-              </g>
-            );
-          })}
-        </svg>
-        <p class="tri-caption">
-          <span class="fig-no">fig. 1</span> · A compass for my questions.
-        </p>
-        </div>
-        </div>
-      </section>
 
-      <section class="stations" aria-label="Stations, present work">
-          <h2 class="sheet-overline">Stations · present work</h2>
-          <ul>
-            <li>
-              <div class="station-heading">
-                <span class="station-glyph"><StationMark station="philosophy" /></span>
-                <span class="station-leg">Philosophy</span>
-              </div>
-              <div class="station-copy">
-                <h3>STS research</h3>
-                <p>An ethnography of how scientific knowledge is produced in an emerging cognitive science community.</p>
-                <a class="station-aff" href="https://theopen.institute/" target="_blank" rel="noreferrer">The Open Institute</a>
-              </div>
-            </li>
-            <li>
-              <div class="station-heading">
-                <span class="station-glyph"><StationMark station="experiments" /></span>
-                <span class="station-leg">Experiments</span>
-              </div>
-              <div class="station-copy">
-                <h3>Behavioral experiments</h3>
-                <p>Investigating multilingual cognition through psycholinguistic experiments.</p>
-                <a class="station-aff" href="https://cogpsychling-lab.github.io/" target="_blank" rel="noreferrer">Cognitive Science &amp; Psycholinguistics Lab</a>
-              </div>
-            </li>
-            <li>
-              <div class="station-heading">
-                <span class="station-glyph"><StationMark station="modeling" /></span>
-                <span class="station-leg">Modeling</span>
-              </div>
-              <div class="station-copy">
-                <h3>Mathematical modeling</h3>
-                <p>Learning mathematical and computational tools for explaining cognition.</p>
-                <a class="station-aff" href="https://github.com/SamBitSync/modeling-mechanisms" target="_blank" rel="noreferrer">modeling-mechanisms</a>
-              </div>
-            </li>
-          </ul>
-      </section>
-    </div>
 
-    <div class="scale-rule" role="presentation"></div>
-
-    <!-- Bottom: catalogue, soundings, cartouche -->
-    <div class="sheet-bottom">
-      <div class="sheet-bottom-left">
-        <section class="catalogue">
-          <h2 class="sheet-overline">Sheet catalogue</h2>
-          <ol>
-            {catalogue.map((item) => (
-              <li>
-                <a href={item.href} class="cat-row">
-                  <span class="cat-n">{item.n}</span>
-                  <span class="cat-name">{item.name}</span>
-                  <span class="cat-desc">{item.desc}</span>
-                  <span class="cat-leader" aria-hidden="true"></span>
-                  <span class="accession">{item.range}</span>
-                </a>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section class="soundings">
-          <h2 class="sheet-overline">Recent soundings</h2>
-          <ul>
-            {soundings.map((s) => (
-              <li>
-                <a href={s.href}>
-                  <span class="accession">{s.acc}</span>
-                  <span class="sounding-date">{s.date.toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
-                  <span class="sounding-title">{s.title}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
+    <section class="work" id="current-work" aria-labelledby="work-title">
+      <div class="section-heading"><h2 id="work-title">Present work</h2><span class="eyebrow">Investigating · making · learning</span></div>
+      <div class="work-grid">
+        <article><span class="work-number">01 / Experiments</span><h3>Psycholinguistics</h3><p>Using mouse-tracking and eye-tracking to investigate processing in multilingual speakers.</p><a href="https://cogpsychling-lab.github.io/" target="_blank" rel="noreferrer">Cognitive Science &amp; Psycholinguistics Lab <span aria-hidden="true">↗</span></a></article>
+        <article><span class="work-number">02 / Ethnography</span><h3>Science and Technology Studies</h3><p>An ethnography of everyday research practice in an emerging cognitive science community in Nepal.</p><a href="https://theopen.institute/" target="_blank" rel="noreferrer">The Open Institute <span aria-hidden="true">↗</span></a></article>
+        <article><span class="work-number">03 / Learning</span><h3>Learning to model</h3><p>Learning mathematical and computational tools for explaining cognition.</p><a href="https://github.com/SamBitSync/modeling-mechanisms" target="_blank" rel="noreferrer">Modeling mechanisms <span aria-hidden="true">↗</span></a></article>
       </div>
+    </section>
 
-      <aside class="cartouche">
-        <div class="cartouche-inner">
-          <h2 class="cartouche-title">Survey of language, minds &amp; knowledge</h2>
-          <dl>
-            <div><dt>Surveyor</dt><dd>Sambit Rimal</dd></div>
-            <div><dt>Base</dt><dd>Kathmandu, Nepal</dd></div>
-            <div><dt>Stations</dt><dd>philosophy · experiments · modeling</dd></div>
-            <div><dt>Datum</dt><dd>Neurath, 1932. No dry dock.</dd></div>
-            <div><dt>Load ratings</dt><dd><span class="lr lr-seedling"></span> seedling &nbsp;<span class="lr lr-budding"></span> budding &nbsp;<span class="lr lr-evergreen"></span> evergreen</dd></div>
-            <div><dt>Last revision</dt><dd>{lastRevision}</dd></div>
-            <div><dt>Records</dt><dd><a href="https://github.com/SamBitSync" target="_blank" rel="noreferrer">GitHub</a> · <a href="https://www.linkedin.com/in/sambit-rimal-0876b9116" target="_blank" rel="noreferrer">LinkedIn</a> · <a href="/about">About</a></dd></div>
-          </dl>
-          <p class="cartouche-begin">
-            Begin at <span class="accession">{neurathAcc}</span>
-            <a href="/meta/neuraths-boat">Neurath's Boat</a>
-          </p>
-        </div>
-      </aside>
-    </div>
+    <section class="notebook" id="writing" aria-labelledby="notebook-title">
+      <div class="section-heading"><h2 id="notebook-title">The open notebook</h2><span class="eyebrow">Connections, working notes &amp; finished things</span></div>
+      <div class="notebook-grid">
+        <nav class="collections" aria-label="Writing collections">
+          {catalogue.map((item) => <a href={item.href}><span class="collection-number">{item.n}</span><span><strong>{item.name}</strong><span class="collection-description">{item.desc}</span></span><span class="collection-arrow" aria-hidden="true">↗</span></a>)}
+          <p class="notebook-note">Rebuilt at sea, plank by plank.<br /><a href="/meta/neuraths-boat">Neurath's way.</a></p>
+        </nav>
+        <div class="entries"><h3 class="eyebrow">Latest entries</h3><ol>{soundings.map((entry) => <li><a href={entry.href}><span class="entry-meta"><span>{entry.collection} <span class="entry-accession">/ {entry.acc}</span></span><time datetime={entry.datePrecision === "month" ? entry.date.toISOString().slice(0,7) : entry.date.toISOString()}>{entry.date.toLocaleDateString('en-US', {month:'short',day:entry.datePrecision === 'month' ? undefined : 'numeric',year:'numeric'})}</time></span><span class="entry-title">{entry.title}</span></a></li>)}</ol></div>
+      </div>
+    </section>
+
+
+    <div class="colophon"><span>Research &amp; an open notebook</span><span>Revision / {lastRevision}</span></div>
   </div>
 </BaseLayout>
+<style>
+  .journal { max-width: 1100px; margin: 0 auto; }
+  .edition, .eyebrow, .work-number, .collection-number, .entry-meta, .colophon { font-family: var(--font-mono); font-size: .65rem; font-weight: 400; letter-spacing: .07em; }
+  .edition { display: flex; justify-content: space-between; gap: 1rem; padding: 0 0 1rem; border-bottom: 1px solid var(--text-primary); text-transform: uppercase; color: var(--text-secondary); }
+  .edition-mark { color: var(--annotation); margin-left: .5rem; }
+  .introduction { display: grid; grid-template-columns: 1fr 1.85fr; gap: 5rem; padding: 3.25rem 0 3rem; }
+  .identity h1 { font-family: var(--font-serif); font-size: clamp(3.5rem,5vw,4.75rem); font-weight: 400; line-height: .94; letter-spacing: -.045em; margin: 0 0 1.5rem; }
+  .identity .surname { display: block; }
+  .name-period { color: var(--accent); }
+  .identity p { font-size: .9375rem; line-height: 1.65; color: var(--text-secondary); max-width: 28ch; margin: 0 0 1.25rem; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+  .text-link, .research-links { font-size: .8125rem; }
+  .text-link span { margin-left: .5rem; }
+  .eyebrow { text-transform: uppercase; color: var(--text-secondary); margin: 0; }
+  .research .eyebrow { margin: .1rem 0 1rem; }
+  .research-lead { font-family: var(--font-serif); font-size: clamp(1.65rem,2.4vw,2rem); line-height: 1.28; letter-spacing: -.015em; margin: 0 0 1.2rem; }
+  .research-secondary { font-size: 1rem; line-height: 1.65; color: var(--text-secondary); margin: 0; max-width: 60ch; }
+  .research-links { display: flex; flex-wrap: wrap; gap: .75rem 2rem; margin-top: 1.5rem; }
+  .research-links span { margin-left: .5rem; }
+  .orientation { display: grid; grid-template-columns: 1.6fr 1fr; gap: 2rem; align-items: center; background: var(--bg-elevated); border: 1px solid var(--border); padding: 2rem 2.5rem; position: relative; }
+  .orientation::before { content: ''; position: absolute; top: -1px; left: -1px; width: 22px; height: 22px; border-top: 1px solid var(--annotation); border-left: 1px solid var(--annotation); }
+  .orientation-preface { font-size: .8125rem; line-height: 1.6; color: var(--text-secondary); margin: 0 0 1rem; max-width: 46ch; }
+  .orientation h2 { font-family: var(--font-serif); font-size: clamp(1.9rem,3.2vw,2.75rem); line-height: 1.12; letter-spacing: -.025em; font-weight: 400; margin: 0 0 1.25rem; max-width: 24ch; text-wrap: balance; }
+  .orientation h2 em { color: var(--accent); font-weight: 400; }
+  .orientation-note { font-size: .875rem; line-height: 1.65; color: var(--text-secondary); max-width: 53ch; margin: 0; }
+  .instrument { min-width: 0; margin: 0; }
+  #orrery { width: 100%; height: auto; display: block; }
+  .instrument figcaption { font-family: var(--font-serif); font-size: .75rem; font-style: italic; text-align: center; color: var(--text-secondary); }
+  .instrument figcaption span { font-family: var(--font-mono); font-style: normal; color: var(--annotation); font-size: .6rem; margin-right: .6rem; }
+  .work, .notebook, .bearings { margin-top: 3.5rem; scroll-margin-top: 2rem; }
+  .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+  .section-heading h2 { font-family: var(--font-serif); font-size: 1.65rem; font-weight: 400; letter-spacing: -.02em; margin: 0; }
+  .work-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 2rem; }
+  .work-grid article { display: flex; flex-direction: column; padding-right: 1.5rem; border-right: 1px solid var(--border); }
+  .work-grid article:last-child { padding-right: 0; border-right: 0; }
+  .work-number { color: var(--text-secondary); text-transform: uppercase; }
+  .work-grid h3 { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 500; line-height: 1.2; margin: .75rem 0; }
+  .work-grid p { font-size: .875rem; line-height: 1.65; margin: 0 0 1rem; color: var(--text-secondary); }
+  .work-grid a { font-size: .75rem; line-height: 1.5; margin-top: auto; }
+  .notebook-grid { display: grid; grid-template-columns: 1fr 1.85fr; gap: 5rem; }
+  .collections > a { display: grid; grid-template-columns: 1.25rem 1fr auto; gap: .75rem; align-items: baseline; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+  .collections > a:first-child { padding-top: 0; }
+  .collections strong { display: block; font-family: var(--font-serif); font-size: 1.65rem; font-weight: 400; color: var(--text-primary); }
+  .collection-number { color: var(--annotation); }
+  .collection-description { display: block; font-size: .8125rem; color: var(--text-secondary); margin-top: .15rem; }
+  .collection-arrow { font-size: 1.1rem; }
+  .notebook-note { font-family: var(--font-serif); font-style: italic; font-size: .9375rem; color: var(--text-secondary); line-height: 1.6; margin-top: 1.5rem; }
+  .entries ol { list-style: none; padding: 0; margin: .75rem 0 0; }
+  .entries li { margin: 0; }
+  .entries li a { display: block; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+  .entries li:first-child a { padding-top: .5rem; }
+  .entry-meta { display: flex; justify-content: space-between; gap: 1rem; color: var(--text-secondary); margin-bottom: .45rem; font-size: .625rem; }
+  .entry-accession { color: var(--text-tertiary); }
+  .entry-title { display: block; font-family: var(--font-serif); font-size: 1.4rem; line-height: 1.25; color: var(--text-primary); }
+  .entries a:hover .entry-title, .collections a:hover strong { color: var(--accent); }
+  .bearings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .bearing-label { display: flex; justify-content: space-between; gap: 1rem; cursor: pointer; list-style: none; font-size: .75rem; color: var(--accent); }
+  .bearing-label::-webkit-details-marker { display: none; }
+  .bearing-label-copy > span { font-family: var(--font-mono); font-size: .625rem; }
+  .bearing-toggle::after { content: '+'; }
+  .bearing[open] .bearing-toggle::after { content: '−'; }
+  .bearing blockquote { font-family: var(--font-serif); font-size: 1.1rem; line-height: 1.5; margin: 1rem 0; padding: 0; border: 0; color: var(--text-secondary); }
+  .bearing-source-note { display: grid; gap: .25rem; font-size: .75rem; color: var(--text-secondary); }
+  .bearing-author { font-weight: 600; }
+  .colophon { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 1rem; color: var(--text-secondary); font-size: .6rem; }
+  @media(min-width: 1000px) { :global(.main:has(.journal)) { padding-top: 2.5rem; } }
+  @media(max-width: 850px) {
+    .introduction, .notebook-grid { gap: 2.5rem; grid-template-columns: 1fr 1.65fr; }
+    .orientation { padding: 1.5rem; gap: 1rem; }
+    .work-grid { gap: 1.25rem; }
+    .work-grid article { padding-right: 1rem; }
+    .section-heading > .eyebrow { max-width: 28ch; text-align: right; }
+  }
+  @media(max-width: 600px) {
+    :global(.main:has(.journal)) { padding: 1.5rem 1.25rem 2.5rem; }
+    .edition { font-size: .55rem; letter-spacing: .02em; flex-wrap: wrap; }
+    .introduction { grid-template-columns: 1fr; gap: 2rem; padding: 2rem 0; }
+    .identity h1 { font-size: clamp(2.7rem, 11vw, 3.5rem); margin-bottom: 1rem; }
+    .identity h1 .surname { display: inline; }
 
+    .identity p { max-width: 38ch; }
+    .research-lead { font-size: 1.7rem; }
+    .research-secondary { font-size: .9375rem; }
+    .orientation { grid-template-columns: 1fr; padding: 1.5rem; }
+    .orientation h2 { font-size: 2.05rem; }
+    .instrument { max-width: 270px; margin: 0 auto; }
+    .section-heading { align-items: start; }
+    .section-heading > .eyebrow { display: none; }
+    .work, .notebook, .bearings { margin-top: 2.5rem; }
+    .work-grid, .notebook-grid, .bearings-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .work-grid article { padding: 0 0 1.5rem; border-right: 0; border-bottom: 1px solid var(--border); }
+    .work-grid article:last-child { padding-bottom: 0; border-bottom: 0; }
+    .notebook-grid { gap: 2rem; }
+    .collections > a { padding: .75rem 0; }
+    .entry-title { font-size: 1.25rem; }
+    .colophon { flex-direction: column; gap: .5rem; }
+  }
+  .method-diagram { position: relative; width: 100%; }
+  .method-diagram svg { display: block; width: 100%; height: auto; }
+  .compass-ring { fill: none; stroke: var(--border); stroke-dasharray: 2 5; }
+  .compass-triangle { fill: none; stroke: var(--accent); stroke-width: 1; }
+  .compass-sights { fill: none; stroke: var(--border); }
+  .compass-center { fill: var(--bg-elevated); stroke: var(--annotation); stroke-width: 1.5; }
+  .compass-language { font: 11px var(--font-mono); fill: var(--text-primary); letter-spacing: .1em; }
+  .method { position: absolute; transform: translateX(-50%); font: .75rem var(--font-sans); padding: .3rem .5rem; border: 1px solid var(--border); border-radius: 3px; background: var(--bg-elevated); color: var(--accent); cursor: pointer; }
+  .method[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--bg); }
+  .method-philosophy { left: 50%; top: 4%; }
+  .method-experiments { left: 20%; bottom: 6%; }
+  .method-modeling { left: 80%; bottom: 6%; }
+  .method-description { min-height: 3.6em; font-size: .8125rem; line-height: 1.5; text-align: center; color: var(--text-secondary); margin: .5rem 0; }
+  .interests { grid-column: 1 / -1; border-top: 1px solid var(--border); padding-top: 1rem; display: flex; gap: 1.5rem; align-items: baseline; }
+  .interests > .eyebrow { flex-shrink: 0; }
+  .interests ul { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; list-style: none; padding: 0; margin: 0; }
+  .interests li { margin: 0; font-size: .8125rem; color: var(--text-secondary); }
+  .interests li:not(:last-child)::after { content: "·"; margin-left: 1.25rem; }
+  .interests a { text-decoration: underline; text-underline-offset: 3px; }
+  .forming { color: var(--text-secondary); }
+  .forming small { font-size: .7rem; }
+  .bearing-label-copy { font-family: var(--font-serif); font-size: 1.2rem; }
+  .bearing-label-copy > span { font-family: var(--font-mono); font-size: .65rem; margin-left: .35rem; }
+  @media(max-width:600px) { .interests { flex-direction: column; gap: .75rem; } .instrument { width: 100%; max-width: 310px; } }
+
+  .orientation-passages { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; padding-top: .25rem; }
+  .orientation-passage { margin: 0; min-width: 0; padding-left: 1rem; position: relative; }
+  .orientation-passage::before { content: ""; position: absolute; left: 0; top: .2rem; height: 2.5rem; border-left: 1px solid var(--accent); opacity: .5; }
+  .orientation-passage blockquote { font-family: var(--font-serif); font-size: 1rem; font-weight: 400; line-height: 1.55; color: var(--text-secondary); padding: 0; margin: 0 0 .8rem; border: 0; }
+  .orientation-passage figcaption { display: grid; gap: .2rem; color: var(--text-secondary); font-size: .6875rem; line-height: 1.5; }
+  .orientation-passage .bearing-author { font-weight: 500; }
+  .orientation-passage cite { font-style: italic; }
+  .orientation-passage cite a { color: var(--text-secondary); }
+  @media(max-width:600px) { .orientation-passages { grid-template-columns: 1fr; gap: 1.5rem; } }
+  .passages-intro { grid-column: 1 / -1; margin: 0 0 -.75rem; font-family: var(--font-serif); font-size: .9375rem; font-style: normal; line-height: 1.5; color: var(--accent); }
+</style>
 <script>
-  const mobileBearingMedia = window.matchMedia("(max-width: 640px)");
-  const bearingFigures = Array.from(document.querySelectorAll<HTMLElement>(".bearing"));
-
-  const configureBearingDisclosures = () => {
-    bearingFigures.forEach((bearing) => {
-      const button = bearing.querySelector<HTMLButtonElement>(".bearing-label");
-      if (!button) return;
-
-      if (mobileBearingMedia.matches) {
-        button.tabIndex = 0;
-        button.setAttribute(
-          "aria-expanded",
-          String(bearing.classList.contains("is-expanded")),
-        );
-      } else {
-        bearing.classList.remove("is-expanded");
-        button.tabIndex = -1;
-        button.setAttribute("aria-expanded", "true");
-      }
-    });
+  const descriptions: Record<string, string> = {
+    philosophy: "Examining the concepts and assumptions I think with.",
+    experiments: "Investigating multilingual processing through behavioral experiments.",
+    modeling: "Learning to express explanations in mathematical and computational terms.",
   };
-
-  bearingFigures.forEach((bearing) => {
-    const button = bearing.querySelector<HTMLButtonElement>(".bearing-label");
-    button?.addEventListener("click", () => {
-      if (!mobileBearingMedia.matches) return;
-
-      const expanded = bearing.classList.toggle("is-expanded");
-      button.setAttribute("aria-expanded", String(expanded));
+  const methodButtons = document.querySelectorAll<HTMLButtonElement>(".method");
+  const description = document.getElementById("method-description");
+  function selectMethod(button: HTMLButtonElement) {
+    const method = button.dataset.method;
+    if (!method || !description) return;
+    methodButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+    description.textContent = descriptions[method];
+  }
+  methodButtons.forEach((button) => {
+    button.addEventListener("click", () => selectMethod(button));
+    button.addEventListener("focus", () => selectMethod(button));
+    button.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "mouse") selectMethod(button);
     });
   });
-
-  mobileBearingMedia.addEventListener("change", configureBearingDisclosures);
-  configureBearingDisclosures();
 </script>
-
-<style>
-  .sheet {
-    padding: 1.5rem 1.75rem 2rem;
-  }
-
-  /* Sheet header */
-  .sheet-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 1.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.6563rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 0.875rem;
-    margin-bottom: 3.5rem;
-  }
-
-  .sheet-no {
-    color: var(--annotation);
-  }
-
-  /* Main */
-  .sheet-main {
-    display: block;
-  }
-
-  .orientation-columns {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 4rem;
-    padding-top: 0.875rem;
-    border-top: 1px solid var(--border);
-    margin-bottom: 3.25rem;
-    direction: rtl;
-  }
-
-  .orientation-column {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    direction: ltr;
-  }
-
-  .orientation-column-left {
-    gap: 4rem;
-  }
-
-  .orientation-column-right {
-    gap: 4rem;
-  }
-
-  .bearing {
-    min-width: 0;
-    margin: 0;
-  }
-
-  .bearing-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    width: 100%;
-    margin: 0 0 1.125rem;
-    padding: 0;
-    min-height: 0;
-    border: 0;
-    border-radius: 0;
-    background: none;
-    font-family: var(--font-mono);
-    font-size: 0.6563rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    text-align: left;
-    color: var(--annotation);
-    cursor: default;
-  }
-
-  .bearing-label:hover {
-    color: var(--annotation);
-    background: none;
-  }
-
-  .bearing-label:focus-visible {
-    outline: 1px solid var(--annotation);
-    outline-offset: 4px;
-  }
-
-  .bearing-label span {
-    color: inherit;
-  }
-
-  .bearing-toggle {
-    display: none;
-    flex: 0 0 auto;
-    width: 1rem;
-    height: 1rem;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
-    line-height: 1;
-    letter-spacing: 0;
-  }
-
-  .bearing-toggle::before {
-    content: "+";
-  }
-
-  .bearing.is-expanded .bearing-toggle::before {
-    content: "−";
-  }
-
-  .bearing blockquote {
-    margin: 0;
-    padding-left: 1rem;
-    border-left: 1px solid color-mix(in srgb, var(--annotation) 38%, var(--border));
-    font-family: var(--font-serif);
-    font-size: clamp(1rem, 1.35vw, 1.125rem);
-    font-weight: 400;
-    font-style: normal;
-    line-height: 1.5;
-    color: var(--text-secondary);
-  }
-
-  .quote-annotation {
-    color: var(--annotation);
-  }
-
-  .bearing figcaption {
-    display: grid;
-    gap: 0.125rem;
-    margin-top: 1rem;
-    padding-left: 1.0625rem;
-    color: var(--text-tertiary);
-  }
-
-  .bearing-author {
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .bearing cite {
-    font-family: var(--font-serif);
-    font-size: 0.75rem;
-    font-style: italic;
-    line-height: 1.45;
-  }
-
-  .bearing-source {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .bearing-source:hover {
-    color: var(--accent);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .sheet-statement {
-    max-width: 38rem;
-  }
-
-  .statement-label {
-    margin: 0 0 1rem;
-    font-family: var(--font-mono);
-    font-size: 0.6563rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--annotation);
-  }
-
-  .orrery-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .sheet-epigraph {
-    font-family: var(--font-serif);
-    font-size: clamp(2.25rem, 3.2vw, 2.75rem);
-    font-weight: 400;
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-    max-width: 22ch;
-    margin: 0 0 1.5rem;
-  }
-
-  .sheet-epigraph em {
-    font-style: italic;
-    color: var(--accent);
-  }
-
-  .orientation-action {
-    display: block;
-    font-size: 0.75em;
-    line-height: 1.3;
-    margin-bottom: 0.3rem;
-    white-space: nowrap;
-  }
-
-  .orientation-territory,
-  .orientation-item {
-    display: block;
-  }
-
-  .orientation-item {
-    line-height: 1.08;
-  }
-
-  .orientation-item em {
-    font-style: normal;
-  }
-
-  .orientation-conjunction {
-    color: var(--text-secondary);
-    font-size: 0.68em;
-  }
-
-  .sheet-legend {
-    font-family: var(--font-serif);
-    font-size: 1.0625rem;
-    line-height: 1.7;
-    color: var(--text-secondary);
-    max-width: 32rem;
-    margin: 0;
-  }
-
-  .neurath-note {
-    font-family: var(--font-serif);
-    font-size: 0.9688rem;
-    font-style: italic;
-    line-height: 1.55;
-    color: var(--text-tertiary);
-    margin: 0.75rem 0 0;
-  }
-
-  .neurath-way {
-    color: var(--accent);
-  }
-
-  .sheet-overline {
-    font-family: var(--font-mono);
-    font-size: 0.6563rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-    margin: 0 0 1.375rem;
-  }
-
-  /* Stations */
-  .stations {
-    width: 100%;
-    max-width: 68rem;
-    margin: 0 auto;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .stations ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2.5rem;
-    position: relative;
-  }
-
-  .stations li:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    top: 0.5rem;
-    left: 0.5rem;
-    width: calc(100% + 2.5rem);
-    border-top: 1px dashed color-mix(in srgb, var(--annotation) 46%, transparent);
-    z-index: 0;
-  }
-
-  .stations li {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin: 0;
-    min-width: 0;
-    position: relative;
-  }
-
-  .station-heading {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    width: fit-content;
-    padding-right: 0.75rem;
-    background: var(--bg);
-  }
-
-  .station-glyph {
-    display: inline-flex;
-    color: var(--annotation);
-    opacity: 0.85;
-  }
-
-  .station-leg {
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-  }
-
-  .station-copy {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-
-  .stations h3 {
-    font-family: var(--font-serif);
-    font-size: 1.125rem;
-    font-weight: 500;
-    margin: 0 0 0.25rem;
-  }
-
-  .stations p {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin: 0 0 0.25rem;
-    max-width: 27rem;
-  }
-
-  .station-aff {
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    opacity: 0.8;
-    text-decoration: none;
-    width: fit-content;
-    margin-top: auto;
-    padding-top: 0.5rem;
-  }
-
-  .station-aff:hover {
-    opacity: 1;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  /* Instrument */
-  .sheet-right {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.5rem 1.25rem 0;
-  }
-
-  .orb-ring {
-    stroke: color-mix(in srgb, var(--text-tertiary) 72%, transparent);
-    stroke-width: 1;
-    stroke-dasharray: 2 5;
-  }
-
-  .orb-ring-outer {
-    opacity: 0.85;
-  }
-
-  .orb-tick {
-    stroke: color-mix(in srgb, var(--text-tertiary) 65%, transparent);
-    stroke-width: 0.7;
-  }
-
-  .orb-tick-major {
-    stroke: color-mix(in srgb, var(--text-tertiary) 90%, transparent);
-    stroke-width: 1;
-  }
-
-  .orb-tri {
-    stroke: color-mix(in srgb, var(--text-secondary) 92%, transparent);
-    stroke-width: 1.2;
-    fill: none;
-  }
-
-  /* Cyanotype linework needs more ink: --text-tertiary sits too close to
-     the blue-black ground, so step the figure up one level in dark mode. */
-  :global([data-theme="dark"]) .orb-ring {
-    stroke: color-mix(in srgb, var(--text-secondary) 60%, transparent);
-  }
-
-  :global([data-theme="dark"]) .orb-tick {
-    stroke: color-mix(in srgb, var(--text-secondary) 65%, transparent);
-  }
-
-  :global([data-theme="dark"]) .orb-tick-major {
-    stroke: color-mix(in srgb, var(--text-secondary) 95%, transparent);
-  }
-
-  :global([data-theme="dark"]) .orb-tri {
-    stroke: color-mix(in srgb, var(--text-secondary) 85%, transparent);
-  }
-
-  .orb-faint {
-    stroke: var(--border);
-    stroke-width: 0.4;
-    opacity: 0.65;
-  }
-
-  .orb-centroid {
-    stroke: var(--annotation);
-    stroke-width: 1.2;
-    fill: none;
-    opacity: 0.8;
-  }
-
-  .orb-centroid-label,
-  .orb-vlabel {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    fill: var(--text-primary);
-    paint-order: stroke fill;
-    stroke: var(--bg);
-    stroke-width: 3px;
-    stroke-linejoin: round;
-  }
-
-  .orb-centroid-label {
-    fill: var(--annotation);
-  }
-
-  .orb-vertex {
-    fill: var(--accent);
-    opacity: 0.9;
-  }
-
-  /* Satellites: pure CSS orbit. The orbit group rotates around the center;
-     the label counter-rotates around its own anchor so it stays upright. */
-  .sat-orbit {
-    transform-origin: 220px 220px;
-    transform-box: view-box;
-    transform: rotate(var(--start));
-    animation-name: orbit;
-    animation-duration: var(--period);
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-  }
-
-  .sat-counter {
-    transform-box: view-box;
-    transform: rotate(calc(-1 * var(--start)));
-    animation-name: counter-orbit;
-    animation-duration: var(--period);
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-  }
-
-  @keyframes orbit {
-    from {
-      transform: rotate(var(--start));
-    }
-    to {
-      transform: rotate(calc(var(--start) + 360deg));
-    }
-  }
-
-  @keyframes counter-orbit {
-    from {
-      transform: rotate(calc(-1 * var(--start)));
-    }
-    to {
-      transform: rotate(calc(-1 * var(--start) - 360deg));
-    }
-  }
-
-  /* Hovering the figure holds the sky still */
-  #orrery:hover .sat-orbit,
-  #orrery:hover .sat-counter {
-    animation-play-state: paused;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .sat-orbit,
-    .sat-counter {
-      animation: none;
-    }
-  }
-
-  .sat-dot {
-    fill: var(--accent);
-    opacity: 0.85;
-    transition: opacity 0.2s ease;
-  }
-
-  .sat-forming .sat-dot {
-    fill: none;
-    stroke: var(--accent);
-    stroke-width: 1.2;
-    stroke-dasharray: 2 2;
-  }
-
-  .sat-label {
-    font-family: var(--font-mono);
-    font-size: 8.5px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    fill: color-mix(in srgb, var(--text-secondary) 86%, transparent);
-    paint-order: stroke fill;
-    stroke: var(--bg);
-    stroke-width: 3px;
-    stroke-linejoin: round;
-    transition: fill 0.2s ease;
-  }
-
-  .sat-orbit:hover .sat-label {
-    fill: var(--accent);
-  }
-
-  .sat-orbit:hover .sat-dot {
-    opacity: 1;
-  }
-
-  a.sat-orbit {
-    cursor: pointer;
-  }
-
-  .tri-caption {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: 0.8125rem;
-    line-height: 1.55;
-    color: var(--text-tertiary);
-    text-align: center;
-    max-width: 290px;
-    margin: 0;
-  }
-
-  .fig-no {
-    font-family: var(--font-mono);
-    font-style: normal;
-    font-size: 0.625rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--annotation);
-  }
-
-  /* Bottom */
-  .sheet-bottom {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 20rem;
-    gap: 4rem;
-    align-items: start;
-  }
-
-  /* Catalogue */
-  .catalogue {
-    margin-bottom: 3rem;
-  }
-
-  .catalogue ol {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .catalogue li {
-    margin: 0;
-  }
-
-  .cat-row {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    padding: 0.8125rem 0;
-    text-decoration: none;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .cat-n {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    color: var(--text-tertiary);
-    min-width: 1.5rem;
-  }
-
-  .cat-name {
-    font-family: var(--font-serif);
-    font-size: 1.3125rem;
-    font-weight: 500;
-    color: var(--text-primary);
-    transition: color 0.15s ease;
-  }
-
-  .cat-row:hover .cat-name {
-    color: var(--accent);
-  }
-
-  .cat-desc {
-    font-size: 0.8438rem;
-    color: var(--text-tertiary);
-  }
-
-  .cat-leader {
-    flex: 1;
-    border-bottom: 1px dotted var(--border);
-    transform: translateY(-0.3em);
-  }
-
-  /* Soundings */
-  .soundings ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .soundings li {
-    margin: 0;
-  }
-
-  .soundings a {
-    display: flex;
-    align-items: baseline;
-    gap: 1.125rem;
-    padding: 0.5625rem 0;
-    text-decoration: none;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .sounding-date {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    color: var(--text-tertiary);
-    min-width: 3.25rem;
-  }
-
-  .sounding-title {
-    font-family: var(--font-serif);
-    font-size: 1.0313rem;
-    color: var(--text-primary);
-    transition: color 0.15s ease;
-  }
-
-  .soundings a:hover .sounding-title {
-    color: var(--accent);
-  }
-
-  /* Cartouche */
-  .cartouche {
-    border: 1px solid color-mix(in srgb, var(--text-tertiary) 65%, transparent);
-    padding: 4px;
-  }
-
-  .cartouche-inner {
-    border: 1px solid var(--border);
-    padding: 1.375rem 1.5rem 1.25rem;
-  }
-
-  .cartouche-title {
-    font-family: var(--font-serif);
-    font-size: 1.0625rem;
-    font-weight: 600;
-    line-height: 1.4;
-    margin: 0 0 1.25rem;
-    padding-bottom: 0.875rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .cartouche dl {
-    margin: 0 0 1.25rem;
-  }
-
-  .cartouche dl > div {
-    display: flex;
-    gap: 0.875rem;
-    padding: 0.3438rem 0;
-    align-items: baseline;
-  }
-
-  .cartouche dt {
-    font-family: var(--font-mono);
-    font-size: 0.5938rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-    min-width: 5.5rem;
-    flex-shrink: 0;
-  }
-
-  .cartouche dd {
-    font-size: 0.8125rem;
-    color: var(--text-secondary);
-    margin: 0;
-    line-height: 1.5;
-  }
-
-  .cartouche dd a {
-    color: var(--accent);
-  }
-
-  /* Load-rating glyphs */
-  .lr {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    vertical-align: baseline;
-  }
-
-  .lr-seedling {
-    border: 1.5px solid #97742f;
-  }
-
-  .lr-budding {
-    border: 1.5px solid #6a7f5f;
-    background: linear-gradient(to top, #6a7f5f 0 50%, transparent 50%);
-  }
-
-  .lr-evergreen {
-    border: 1.5px solid #46703f;
-    background: #46703f;
-  }
-
-  .cartouche-begin {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: 0.9063rem;
-    color: var(--text-secondary);
-    margin: 0;
-    padding-top: 0.875rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .cartouche-begin .accession {
-    margin-right: 0.25rem;
-  }
-
-  @media (max-width: 1000px) {
-    .orientation-columns {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
-      margin-bottom: 1.75rem;
-      direction: ltr;
-    }
-
-    .orientation-column {
-      display: contents;
-    }
-
-    .bearing-problems {
-      order: 1;
-    }
-
-    .bearing-questions {
-      order: 2;
-    }
-
-    .sheet-statement {
-      order: 3;
-    }
-
-    .orrery-wrap {
-      order: 4;
-    }
-
-    .bearing + .bearing {
-      padding-top: 2.5rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .orientation-column-left,
-    .orientation-column-right {
-      gap: 2rem;
-    }
-
-    .orrery-wrap {
-      transform: none;
-    }
-
-    .sheet-statement {
-      max-width: 42rem;
-    }
-
-    .sheet-epigraph {
-      max-width: 18ch;
-    }
-
-    .orientation-action,
-    .orientation-territory,
-    .orientation-item {
-      display: inline;
-      font-size: inherit;
-      line-height: inherit;
-      margin-bottom: 0;
-      white-space: normal;
-    }
-
-    .orientation-action::after {
-      content: " ";
-    }
-
-    .orientation-item:not(:last-child)::after {
-      content: " ";
-    }
-
-    .stations ul {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
-    .stations li::after {
-      display: none;
-    }
-
-    .sheet-bottom {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .sheet {
-      padding: 1rem 0.5rem;
-    }
-
-    .orientation-columns {
-      gap: 2rem;
-    }
-
-    .bearing-label {
-      margin-bottom: 0;
-      cursor: pointer;
-    }
-
-    .bearing-toggle {
-      display: inline-flex;
-    }
-
-    .bearing:not(.is-expanded) blockquote,
-    .bearing:not(.is-expanded) figcaption {
-      display: none;
-    }
-
-    .bearing.is-expanded blockquote {
-      margin-top: 1.125rem;
-    }
-
-    .sheet-head {
-      flex-wrap: wrap;
-      gap: 0.375rem 1.25rem;
-    }
-
-    #orrery {
-      width: 100%;
-      height: auto;
-    }
-  }
-</style>

@@ -1,0 +1,15 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+interface Props { title:string; description:string; collection:string; backHref:string; date:Date; datePrecision?:"day"|"month"; label?:string; wide?:boolean; }
+const {title,description,collection,backHref,date,datePrecision="day",label,wide=false}=Astro.props;
+---
+<BaseLayout title={title} description={description}>
+ <article class:list={["editorial-reading",{wide}]}>
+  <nav class="editorial-subnav" aria-label="Return to collection"><a href={backHref}>← {collection}</a></nav>
+  <PageHeader title={title} eyebrow={collection} description={description}><div class="editorial-reading-meta"><time datetime={datePrecision === "month" ? date.toISOString().slice(0,7) : date.toISOString()}>{date.toLocaleDateString('en-US',{month:'long',day:datePrecision === 'month' ? undefined : 'numeric',year:'numeric'})}</time>{label && <span>{label}</span>}</div><slot name="context"/></PageHeader>
+  <div class="editorial-reading-content"><slot /></div>
+  <slot name="related"/>
+  <footer><a href={backHref}>← Browse {collection.toLowerCase()}</a></footer>
+ </article>
+</BaseLayout>

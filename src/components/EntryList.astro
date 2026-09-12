@@ -1,0 +1,11 @@
+---
+export interface Entry { href: string; title: string; description: string; label?: string; date?: Date; datePrecision?: "day" | "month"; datePrecision?: "day" | "month"; }
+interface Props { entries: Entry[]; }
+const { entries } = Astro.props;
+---
+<div class="editorial-entries">
+  {entries.map(entry => <article class="editorial-entry">
+    <div class="editorial-entry-meta">{entry.label && <span>{entry.label}</span>}{entry.date && <time datetime={entry.datePrecision === "month" ? entry.date.toISOString().slice(0,7) : entry.date.toISOString()}>{entry.date.toLocaleDateString('en-US',{month:'short',day:entry.datePrecision === 'month' ? undefined : 'numeric',year:'numeric'})}</time>}</div>
+    <div><h2><a href={entry.href}>{entry.title}<span aria-hidden="true" class="editorial-arrow">↗</span></a></h2><p>{entry.description}</p></div>
+  </article>)}
+</div>
