@@ -59,8 +59,14 @@ const lastRevision = new Date().toLocaleDateString("en-US", { month: "long", yea
     <section class="orientation" aria-labelledby="orientation-title">
       <div class="orientation-copy">
         <p class="orientation-preface">If I had to describe my orientation:</p>
-        <h2 id="orientation-title">I meander through questions about <em>language, minds, and meaning.</em></h2>
-        <p class="orientation-note">This site gathers the maps, notes, projects, and occasional attempts at synthesis that accumulate along the way.</p>
+        <h2 id="orientation-title">I meander through questions about language, minds, and meaning.</h2>
+        <div class="orientation-body">
+          <p>What keeps drawing me back are problems where the traces we can observe do not transparently reveal the processes that produced them. I am drawn to explanations that keep that movement from trace to process visible, and suspicious when the trace becomes the process, resemblance becomes mechanism, or a useful description hardens into ontology.</p>
+          <p>I want to follow those traces backward, to ask what kinds of processes could have produced them and what becomes visible once we start comparing the possibilities.</p>
+          <p>I keep finding versions of this problem in places that are usually kept apart: in experiments on language and cognition, in signs and interpretation, in making sense of artificial systems, and in the infrastructures through which science itself gets made.</p>
+          <p>Most of the work I do has to stay with one of those paths at a time. Here I can follow the recurrences across them, make the longer jumps, and ask whether they really share a structure or only happen to look alike.</p>
+        </div>
+        <p class="orientation-note">The maps, notes, projects, and occasional attempts at synthesis here are what accumulate along the way.</p>
       </div>
       <figure class="instrument">
         <div class="method-diagram">
@@ -82,7 +88,7 @@ const lastRevision = new Date().toLocaleDateString("en-US", { month: "long", yea
       </figure>
 
     <div class="orientation-passages">
-        <p class="passages-intro">These two passages capture something of that orientation.</p><figure class="orientation-passage">
+        <p class="passages-intro">Two passages I keep returning to</p><figure class="orientation-passage">
           <blockquote id="bearing-problems-quote">
             “We are not students of some subject matter but <span class="quote-annotation">students of problems</span>. And problems may cut right across the border of any subject matter or discipline.”
           </blockquote>
@@ -153,8 +159,11 @@ const lastRevision = new Date().toLocaleDateString("en-US", { month: "long", yea
   .orientation { display: grid; grid-template-columns: 1.6fr 1fr; gap: 2rem; align-items: center; background: var(--bg-elevated); border: 1px solid var(--border); padding: 2rem 2.5rem; position: relative; }
   .orientation::before { content: ''; position: absolute; top: -1px; left: -1px; width: 22px; height: 22px; border-top: 1px solid var(--annotation); border-left: 1px solid var(--annotation); }
   .orientation-preface { font-size: .8125rem; line-height: 1.6; color: var(--text-secondary); margin: 0 0 1rem; max-width: 46ch; }
-  .orientation h2 { font-family: var(--font-serif); font-size: clamp(1.9rem,3.2vw,2.75rem); line-height: 1.12; letter-spacing: -.025em; font-weight: 400; margin: 0 0 1.25rem; max-width: 24ch; text-wrap: balance; }
+  .orientation h2 { font-family: var(--font-serif); font-size: clamp(1.65rem,2.5vw,2.2rem); line-height: 1.2; letter-spacing: -.02em; font-weight: 400; margin: 0 0 1.1rem; max-width: 31ch; text-wrap: balance; }
   .orientation h2 em { color: var(--accent); font-weight: 400; }
+  .orientation-body { max-width: 60ch; margin-bottom: 1.25rem; }
+  .orientation-body p { font-size: .9375rem; line-height: 1.65; color: var(--text-primary); margin: 0; }
+  .orientation-body p + p { margin-top: .8rem; }
   .orientation-note { font-size: .875rem; line-height: 1.65; color: var(--text-secondary); max-width: 53ch; margin: 0; }
   .instrument { min-width: 0; margin: 0; }
   #orrery { width: 100%; height: auto; display: block; }
@@ -215,7 +224,7 @@ const lastRevision = new Date().toLocaleDateString("en-US", { month: "long", yea
     .research-lead { font-size: 1.7rem; }
     .research-secondary { font-size: .9375rem; }
     .orientation { grid-template-columns: 1fr; padding: 1.5rem; }
-    .orientation h2 { font-size: 2.05rem; }
+    .orientation h2 { font-size: 1.8rem; }
     .instrument { max-width: 270px; margin: 0 auto; }
     .section-heading { align-items: start; }
     .section-heading > .eyebrow { display: none; }
