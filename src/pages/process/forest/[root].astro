@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import SurveyRoute from '../../../components/process/SurveyRoute.astro';
+export async function getStaticPaths() {
+ const bundles=await getCollection('forest');
+ return bundles.flatMap(({data:registry})=>[...new Set(registry.attempts.map(a => a.root))].map(root => ({ params: { root }, props: { registry, root } })));
+}
+const { registry, root } = Astro.props;
+const node = registry.nodes.find(n => n.id === root)!;
+const records=(await getCollection('inquiries')).flatMap(bundle=>bundle.data.records).filter(r=>r.movement==='forest'&&registry.attempts.some(a=>a.root===root&&a.id===r.forest_attempt));
+---
+<BaseLayout title={`${node.label} | Forest of Ignorance`} description={node.question}>
+ <article class="editorial-page">
+  <nav class="editorial-subnav"><a href="/process/forest/">← Forest of Ignorance</a></nav>
+  <PageHeader title={node.label} eyebrow="A starting question" description={node.question} />
+  {node.process_note && <p class="note-link"><a href={`/process/${node.process_note}/`}>{node.label} note ↗</a></p>}
+  {!!records.length&&<>{records.some(r=>r.reconstruction)&&<p class="note-link">Some encounters are reconstructed; dates and event order are approximate.</p>}<ul>{records.map(r=><li><a href={`/process/entries/${r.id}/`}>{r.date}: {r.title} ↗</a></li>)}</ul></>}
+  <SurveyRoute registry={registry} root={root} />
+ </article>
+</BaseLayout>
+<style>.note-link { margin-top:-1.5rem;margin-bottom:2rem;font-size:.85rem; }</style>

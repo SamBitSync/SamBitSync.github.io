@@ -1,0 +1,17 @@
+{
+ "records": [
+  {
+   "id": "sparse-autopsy", "encounter": "sparse-autopsy", "date": "2026-09-30",
+   "title": "An observation awaiting explanation", "subject": "Schema check",
+   "summary": "A fixture with only the Autopsy core.", "example": true,
+   "movement": "autopsy", "observation": "The output changed between otherwise matching runs."
+  },
+  {
+   "id": "sparse-ship", "encounter": "sparse-ship", "date": "2026-09-30",
+   "title": "A belief under reconsideration", "subject": "Schema check",
+   "summary": "A fixture with only the Ship core.", "example": true,
+   "movement": "ship", "belief": "The default setting was harmless.",
+   "challenge": "A controlled comparison changed the output when only that setting changed."
+  }
+ ]
+}

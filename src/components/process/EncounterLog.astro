@@ -1,0 +1,60 @@
+---
+import type { Registry } from '../../lib/forest';
+const { registry, attempt,title='Stack history' } = Astro.props as { registry: Registry; attempt: Registry['attempts'][number];title?:string };
+const label = (id: string) => registry.nodes.find(node => node.id === id)!.label;
+const stack: string[] = [];
+const entries = attempt.events.map(event => {
+  if (event.type === 'push') stack.push(event.node);
+  if (event.type === 'pop') stack.pop();
+  const heading = event.type === 'stop' ? 'Stop' : `${event.type[0].toUpperCase()+event.type.slice(1)} · ${label(event.node)}`;
+  const context = event.type === 'expose' ? `From ${label(event.from)} · stack unchanged`
+    : event.type === 'reflect' ? 'Stack unchanged'
+    : event.type === 'stop' ? {time_budget:'Time budget',deferred:'Deferred',popped_to_root:'Popped to root'}[event.reason]
+    : '';
+  return {event, heading, context, snapshot:[...stack].reverse()};
+});
+const date = new Date(attempt.date+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+const day = new Date(attempt.date+'T00:00:00Z');
+const shortDate = `${day.getUTCDate()} ${day.toLocaleDateString('en-US',{month:'short',timeZone:'UTC'})}`;
+---
+<details class="encounter-log">
+  <summary>{title} <span>{date} · {entries.length} events</span></summary>
+  <p class="log-hint">The full stack after each event, top first. Select a number to read that event above.</p>
+  <ol class="event-list">
+    {entries.map(({event,heading,context,snapshot},index) => <li>
+      <a class="event-number" href={`#replay-${attempt.id}`} data-replay-step={index} aria-label={`Replay event ${index+1}: ${heading}, ${date}`}><span>{String(index+1).padStart(2,'0')}</span><time datetime={attempt.date} title={date}>{shortDate}</time></a>
+      <div class="event-body">
+        <p class="event-heading">{heading}</p>
+        {context && <p class="event-context">{context}</p>}
+        {'note' in event && event.note && <a class="note-link" href={`#replay-${attempt.id}`} data-replay-step={index} aria-label={`Read note for event ${index+1}`}>Read note ↑</a>}
+      </div>
+      <div class="stack-snapshot" role="group" aria-label={`Stack after event ${index+1}, top first`}>
+        {event.type === 'pop' && <div class="removed">− {label(event.node)}</div>}
+        {snapshot.map((id,depth) => <div class:list={['stack-cell',{added:event.type === 'push' && id === event.node}]}><span>{event.type === 'push' && id === event.node && '+ '}{label(id)}</span>{depth === 0 && <small>top</small>}</div>)}
+        {!snapshot.length && <span class="event-context">Empty stack</span>}
+      </div>
+    </li>)}
+  </ol>
+</details>
+<style>
+ .encounter-log { border-top:1px solid var(--border);margin:1rem 0 2rem;padding-top:.5rem; }
+ summary { cursor:pointer;font-size:.9rem;padding:1rem 0;color:var(--accent); }
+ summary span { display:inline-block;font-size:.75rem;color:var(--text-secondary);margin-left:.75rem; }
+ .log-hint { font-size:.8rem;color:var(--text-secondary);margin:.5rem 0 1.5rem; }
+ .event-list { list-style:none;margin:0;padding:0; }
+ .event-list li { position:relative;display:grid;grid-template-columns:4rem minmax(0,1fr) minmax(150px,.8fr);gap:1rem;padding:0 0 1.75rem; }
+ .event-list li:not(:last-child)::before { content:'';position:absolute;left:2rem;top:3.25rem;bottom:0;border-left:1px solid var(--border); }
+ .event-number { align-self:start;display:flex;flex-direction:column;gap:.35rem;align-items:center;justify-content:center;min-height:3rem;font:.75rem var(--font-mono);color:var(--accent);text-decoration:none;border-radius:2px; }
+ .event-number time { font-size:.6875rem;color:var(--text-secondary);white-space:nowrap; }
+ .event-number:hover,.event-number[aria-current="step"] { background:var(--surface);text-decoration:underline;text-underline-offset:.2em; }
+ .event-number:focus-visible,.note-link:focus-visible,summary:focus-visible { outline:2px solid var(--accent);outline-offset:3px; }
+ .event-heading { margin:.3rem 0;font-size:.9rem;line-height:1.5; }
+ .event-context { margin:.25rem 0;font-size:.75rem;color:var(--text-secondary);line-height:1.6; }
+ .note-link { display:inline-block;font-size:.75rem;margin-top:.5rem;color:var(--accent);text-underline-offset:.2em; }
+ .stack-snapshot { display:grid;align-content:start;gap:3px; }
+ .stack-cell { display:flex;justify-content:space-between;gap:.5rem;border:1px solid var(--border);padding:.4rem .6rem;font-size:.75rem;border-radius:2px; }
+ .stack-cell small { color:var(--text-secondary);font: .65rem var(--font-mono); }
+ .stack-cell.added { border-left:2px solid var(--accent);background:var(--surface); }
+ .removed { border:1px dashed var(--border);padding:.4rem .6rem;font-size:.75rem;color:var(--text-secondary);margin-bottom:.25rem; }
+ @media(max-width:600px) { summary span { display:block;margin:.5rem 0 0; } .event-list li { grid-template-columns:4rem minmax(0,1fr);gap:.65rem; } .stack-snapshot { grid-column:2;max-width:280px; } .note-link { padding:.5rem 0; } }
+</style>

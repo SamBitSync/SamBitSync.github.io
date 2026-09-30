@@ -1,0 +1,22 @@
+---
+import {getCollection} from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import ProcessRegister from '../../../components/process/ProcessRegister.astro';
+import {subjectSlug,recordTags} from '../../../lib/process-subjects';
+import {movementNames} from '../../../lib/process-records';
+export async function getStaticPaths(){
+ const records=(await getCollection('inquiries')).flatMap(b=>b.data.records);
+ const subjects=[...new Set(records.flatMap(recordTags))];
+ return subjects.map(subject=>({params:{subject:subjectSlug(subject)},props:{subject,records:records.filter(r=>recordTags(r).includes(subject))}}));
+}
+const {subject,records}=Astro.props;
+const entries=records.map(r=>({id:r.id,title:r.title,question:r.summary,subject:r.subject,tags:r.tags,movement:movementNames[r.movement],href:`/process/entries/${r.id}/`,dates:[r.date],example:r.example})).sort((a,b)=>b.dates[0].localeCompare(a.dates[0]));
+---
+<BaseLayout title={`${subject} | Process`} description={`Process entries tagged ${subject}.`}>
+ <article class="editorial-page">
+  <nav class="editorial-subnav"><a href="/process/">← Process</a></nav>
+  <PageHeader title={subject} eyebrow="Process · Subject" description={`${records.length} ${records.length===1?'entry':'entries'} across the notebook.`}/>
+  <ProcessRegister entries={entries} encounters={[]} showActivity={false} previewNote={records.some(r=>r.reconstruction)?'Reconstructed preview based on the supplied work account.':undefined}/>
+ </article>
+</BaseLayout>

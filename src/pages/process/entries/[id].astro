@@ -1,0 +1,119 @@
+---
+import {getCollection} from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import SurveyRoute from '../../../components/process/SurveyRoute.astro';
+import {subjectHref,recordTags} from '../../../lib/process-subjects';
+import {validateForest,type Registry} from '../../../lib/forest';
+import {movementNames,type ProcessRecord} from '../../../lib/process-records';
+export async function getStaticPaths(){
+ const records=(await getCollection('inquiries')).flatMap(bundle=>bundle.data.records);
+ return records.map(record=>({params:{id:record.id},props:{record,records}}));
+}
+const {record:r,records}=Astro.props as {record:ProcessRecord;records:ProcessRecord[]};
+const pretty=(date:string)=>new Date(date+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+const origin=records.find(record=>record.id===r.arose_from);
+const related=records.filter(record=>record.encounter===r.encounter&&record.id!==r.id);
+const responses=records.filter(record=>record.arose_from===r.id);
+const readingOrder=[...records].sort((a,b)=>a.date.localeCompare(b.date)||records.indexOf(a)-records.indexOf(b));
+const readingIndex=readingOrder.findIndex(record=>record.id===r.id);
+const previous=readingOrder[readingIndex-1];
+const following=readingOrder[readingIndex+1];
+const forestBundles=await getCollection('forest');
+const registry=forestBundles.find(bundle=>bundle.data.attempts.some(a=>a.id===(r.movement==='forest'?r.forest_attempt:undefined)))?.data as Registry|undefined;
+const attempt=registry?.attempts.find(a=>a.id===(r.movement==='forest'?r.forest_attempt:undefined));
+const questionNotes=attempt&&registry?[...new Set(attempt.events.flatMap(e=>'node'in e?[e.node]:[]))].map(id=>registry.nodes.find(n=>n.id===id)!).filter(n=>n.note&&n.id!==attempt.root):[];
+if(r.movement==='forest'&&r.forest_attempt){
+ if(!registry||!attempt)throw new Error(`Process record ${r.id}: unknown Forest attempt ${r.forest_attempt}`);
+ if(attempt.date!==r.date)throw new Error(`Process record ${r.id}: Forest date differs from encounter date`);
+ const errors=validateForest(registry);if(errors.length)throw new Error(errors.join('\n'));
+}
+const comparisons={supports:'Supports',against:'Counts against',inconclusive:'Inconclusive',not_tested:'Not tested'};
+const statusNames={holds:'Holds',needs_repair:'Needs repair',repaired:'Repaired',abandoned:'Abandoned'};
+---
+<BaseLayout title={`${r.title} | Process`} description={r.summary}>
+ <article class="editorial-page encounter-page">
+  <nav class="editorial-subnav"><a href="/process/">← Process</a>{r.movement!=='note'&&<a href={`/process/${r.movement}/`}>{movementNames[r.movement]} ↗</a>}</nav>
+  <PageHeader title={r.title} eyebrow={movementNames[r.movement]}/>
+  {recordTags(r).map(tag=><a class="subject-tag" href={subjectHref(tag)}>{tag}</a>)}
+  <p class="record-date"><time datetime={r.date}>{pretty(r.date)}</time></p>
+  {r.reconstruction?<p class="sample-notice">Reconstructed preview · {r.reconstruction}</p>:r.example&&<p class="sample-notice">Fictional example, not a record of work completed.</p>}
+  {origin&&<p class="origin">Arose from <a href={`/process/entries/${origin.id}/`}>{origin.title} ↗</a></p>}
+  {!!r.writing?.length&&<div class="written-account" id="written-account">{r.writing.map(section=><section><h2>{section.heading}</h2>{section.paragraphs.map(paragraph=><p>{paragraph}</p>)}</section>)}</div>}
+  {!!questionNotes.length&&<details class="encounter-record"><summary>Question notes · {questionNotes.length}</summary><ul>{questionNotes.map(node=><li><a href={`/process/forest/questions/${node.id}/`}>{node.question} ↗</a></li>)}</ul></details>}
+  {registry&&attempt&&<SurveyRoute registry={registry} root={attempt.root} initialAttempt={attempt.id} accountHref={r.writing?.length?'#written-account':undefined}/>}
+  <details class="encounter-record" open={!r.writing?.length}><summary>Encounter record</summary>
+  {r.movement==='forest'&&<>
+   <section><h2>Question pursued</h2><p class="question">{r.question}</p></section>
+   {r.account&&<section><h2>The attempt</h2><p>{r.account}</p></section>}
+   {r.reflection&&<section><h2>What changed</h2><p>{r.reflection}</p></section>}
+  </>}
+  {r.movement==='note'&&<section><h2>Practice note</h2><p>{r.account}</p></section>}
+  {r.movement==='autopsy'&&<>
+   <section><h2>Observation</h2><p>{r.observation}</p></section>
+   {r.expected&&<section><h2>What I expected</h2><p>{r.expected}</p></section>}
+   {!!r.rivals?.length&&<section><h2>Competing explanations</h2><ol class="rivals">{r.rivals.map((rival,index)=><li id={`rival-${rival.id}`}><span class="micro">H-{String(index+1).padStart(2,'0')} · introduced {pretty(rival.introduced)}</span><p>{rival.explanation}</p></li>)}</ol></section>}
+   {!!r.checks?.length&&<section><h2>Checks</h2>{r.checks.map(check=><article class="check" id={`check-${check.id}`}><p class="micro">{pretty(check.date)}</p><h3>{check.description}</h3><p>{check.produced}</p>{check.assessment&&<p>{check.assessment}</p>}{check.discriminates==='no'&&<p class="quiet">Did not discriminate between the recorded explanations.</p>}
+    {!!check.comparisons.length&&<ul class="comparisons">{check.comparisons.map(comparison=><li><a href={`#rival-${comparison.rival}`}>H-{String((r.rivals??[]).findIndex(h=>h.id===comparison.rival)+1).padStart(2,'0')}</a><span>{comparisons[comparison.result]}</span></li>)}</ul>}
+   </article>)}</section>}
+   {r.assessment&&<section><h2>Current assessment{r.status&&<span class="status">{r.status}</span>}</h2><p>{r.assessment}</p></section>}
+   {r.residue&&<section><h2>What remains unexplained</h2><p>{r.residue}</p></section>}
+  </>}
+  {r.movement==='ship'&&<>
+   <section><h2>The belief I held</h2><p class="question">{r.belief}</p>{r.provenance&&<p class="quiet">{r.provenance==='reconstructed'?'Later reconstruction':'Contemporary record'}{r.belief_date&&` · ${pretty(r.belief_date)}`}</p>}{r.source&&<p class="quiet">{r.source}</p>}</section>
+   <section><h2>What prompted reconsideration{r.revision&&<span class="status">{r.revision}</span>}</h2><p>{r.challenge}</p></section>
+   {(r.replacement||r.replacement_status)&&<section><h2>Where I stand now{r.replacement_status&&<span class="status">{r.replacement_status}</span>}</h2>{r.replacement&&<p>{r.replacement}</p>}</section>}
+   {!!r.consequences?.length&&<section><h2>Consequences</h2>{r.consequences.some(c=>c.status)&&<p class="quiet">{r.consequences.filter(c=>c.status==='needs_repair').length} repairs outstanding{r.consequences.some(c=>!c.status)&&' · some consequences not yet assessed'}.</p>}
+    <div class="consequences">{r.consequences.map(c=><article id={`consequence-${c.id}`}><div class="consequence-label">{c.kind&&<span>{c.kind}</span>}{c.status&&<span>{statusNames[c.status]}</span>}</div><h3>{c.description}</h3><p><span class="dependency-label">How it depended</span>{c.depends}</p>{c.reason&&<p class="quiet">{c.reason}</p>}{c.href&&<a class="quiet-link" href={c.href}>Related note ↗</a>}</article>)}</div>
+   </section>}
+   {!!r.repairs?.length&&<section><h2>Repair log</h2><ol class="repair-log">{r.repairs.map(repair=><li><time datetime={repair.date}>{pretty(repair.date)}</time><p>{repair.note}</p><a href={`#consequence-${repair.consequence}`}>Consequence ↑</a></li>)}</ol></section>}
+  </>}
+  {r.next&&<section><h2>Next question or action</h2><p>{r.next}</p></section>}
+  </details>
+  {!!related.length&&<section><h2>Also in this encounter</h2><ul>{related.map(entry=><li><a href={`/process/entries/${entry.id}/`}>{entry.title} ↗</a> <span class="quiet">{movementNames[entry.movement]}</span></li>)}</ul></section>}
+  {!!responses.length&&<section><h2>Later records prompted by this</h2><ul>{responses.map(entry=><li><a href={`/process/entries/${entry.id}/`}>{entry.title} ↗</a> <span class="quiet">{pretty(entry.date)}</span></li>)}</ul></section>}
+  <nav class="reading-order" aria-label="Read entries in date order"><p class="quiet">Entry {readingIndex+1} of {readingOrder.length} · date order</p><div>{previous&&<a href={`/process/entries/${previous.id}/`}><span>← Previous entry</span>{previous.title}</a>}{following&&<a href={`/process/entries/${following.id}/`}><span>Next entry →</span>{following.title}</a>}</div></nav>
+ </article>
+</BaseLayout>
+<style>
+ .encounter-page { max-width:820px; }
+ .editorial-subnav { display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem; }
+ .record-date { font:.75rem var(--font-mono);color:var(--text-secondary);margin-top:.75rem; }
+ .subject-tag { display:inline-block;padding:.2rem .55rem;border:1px solid var(--border);border-radius:3px;color:var(--accent);font-size:.75rem;text-decoration:none; }
+ .subject-tag:hover { border-color:var(--accent); }
+ .subject-tag+.subject-tag { margin-left:.4rem; }
+ .sample-notice,.origin { font-size:.8rem;line-height:1.7;color:var(--text-secondary);max-width:75ch; }
+ section { margin:2.5rem 0;max-width:72ch; }
+ h2 { font:400 1.55rem/1.4 var(--font-serif);margin:0 0 1rem; }
+ h3 { font:400 1.25rem/1.45 var(--font-serif);margin:.5rem 0; }
+ section p { font-size:1rem;line-height:1.85; }
+ .written-account p { font:400 1.15rem/1.8 var(--font-serif); }
+ .written-account { margin-top:2.5rem; }
+ .encounter-record { margin:2.5rem 0;border-top:1px solid var(--border);padding-top:1rem; }
+ .encounter-record>summary { cursor:pointer;color:var(--accent);font:.8rem/1.8 var(--font-sans); }
+ .reading-order { border-top:1px solid var(--border);padding-top:1rem;margin-top:3rem; }
+ .reading-order>div { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2rem; }
+ .reading-order a { font:400 1.05rem/1.5 var(--font-serif);text-decoration:none; }
+ .reading-order a span { display:block;font:.75rem/1.8 var(--font-sans);margin-bottom:.4rem; }
+ @media(max-width:540px){.reading-order>div { grid-template-columns:1fr;gap:1.25rem; }}
+ .question { font:400 1.3rem/1.6 var(--font-serif); }
+ .micro { font:.68rem/1.7 var(--font-mono);color:var(--text-secondary); }
+ .quiet { font-size:.8rem;line-height:1.75;color:var(--text-secondary); }
+ .rivals { list-style:none;padding:0;display:grid;gap:1.5rem; }
+ .rivals li { border-left:1px solid var(--border);padding-left:1rem; }
+ .rivals p { margin:.5rem 0; }
+ .check { border-top:1px solid var(--border);padding:1rem 0; }
+ .comparisons { list-style:none;display:flex;flex-wrap:wrap;gap:.75rem 2rem;padding:0;font-size:.8rem; }
+ .comparisons li { display:flex;gap:.65rem; }
+ .status { font:.7rem var(--font-mono);color:var(--text-secondary);margin-left:1rem; }
+ .consequences { display:grid;gap:1.5rem; }
+ .consequences article { border-top:1px solid var(--border);padding-top:1rem; }
+ .consequence-label { display:flex;justify-content:space-between;gap:1rem;color:var(--text-secondary);font-size:.75rem; }
+ .dependency-label { display:block;color:var(--text-secondary);font-size:.75rem; }
+ .quiet-link { font-size:.8rem; }
+ .repair-log { list-style:none;padding:0; }
+ .repair-log li { border-left:1px solid var(--border);padding-left:1rem;margin:1.5rem 0; }
+ .repair-log time,.repair-log a { font-size:.75rem;color:var(--text-secondary); }
+ a:focus-visible { outline:2px solid var(--accent);outline-offset:3px; }
+ [id] { scroll-margin-top:5rem; }
+</style>

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import WorkPreview from "../components/WorkPreview.astro";
 import { getCollection } from "astro:content";
 import { accessionIndex, accessionRange, SHEET_PREFIX } from "../lib/survey";
 
@@ -112,23 +113,54 @@ const lastRevision = new Date().toLocaleDateString("en-US", { month: "long", yea
 
 
     <section class="work" id="current-work" aria-labelledby="work-title">
-      <div class="section-heading"><h2 id="work-title">Present work</h2><span class="eyebrow">Investigating · making · learning</span></div>
+      <div class="section-heading"><h2 id="work-title">Currently Doing</h2><span class="eyebrow">Investigating · making · learning</span></div>
       <div class="work-grid">
-        <article><span class="work-number">01 / Experiments</span><h3>Psycholinguistics</h3><p>Using mouse-tracking and eye-tracking to investigate processing in multilingual speakers.</p><a href="https://cogpsychling-lab.github.io/" target="_blank" rel="noreferrer">Cognitive Science &amp; Psycholinguistics Lab <span aria-hidden="true">↗</span></a></article>
-        <article><span class="work-number">02 / Ethnography</span><h3>Science and Technology Studies</h3><p>An ethnography of everyday research practice in an emerging cognitive science community in Nepal.</p><a href="https://theopen.institute/" target="_blank" rel="noreferrer">The Open Institute <span aria-hidden="true">↗</span></a></article>
-        <article><span class="work-number">03 / Learning</span><h3>Learning to model</h3><p>Learning mathematical and computational tools for explaining cognition.</p><a href="https://github.com/SamBitSync/modeling-mechanisms" target="_blank" rel="noreferrer">Modeling mechanisms <span aria-hidden="true">↗</span></a></article>
+        <article>
+          <span class="work-number"><span>01</span> / Experiments</span>
+          <div class="work-preview"><WorkPreview kind="experiments" /></div>
+          <h3>Psycholinguistics</h3>
+          <p>Using mouse-tracking and eye-tracking to investigate processing in multilingual speakers.</p>
+          <a href="https://cogpsychling-lab.github.io/" target="_blank" rel="noreferrer">Cognitive Science &amp; Psycholinguistics Lab <span aria-hidden="true">↗</span></a>
+        </article>
+        <article>
+          <span class="work-number"><span>02</span> / Ethnography</span>
+          <div class="work-preview"><WorkPreview kind="ethnography" /></div>
+          <h3>Science and Technology Studies</h3>
+          <p>An ethnography of everyday research practice in an emerging cognitive science community in Nepal.</p>
+          <a href="https://theopen.institute/" target="_blank" rel="noreferrer">The Open Institute <span aria-hidden="true">↗</span></a>
+        </article>
+        <article>
+          <span class="work-number"><span>03</span> / Learning</span>
+          <div class="work-preview"><WorkPreview kind="modeling" /></div>
+          <h3>Learning to model</h3>
+          <p>Learning mathematical and computational tools for explaining cognition.</p>
+          <a href="https://github.com/SamBitSync/modeling-mechanisms" target="_blank" rel="noreferrer">Modeling mechanisms <span aria-hidden="true">↗</span></a>
+        </article>
       </div>
     </section>
 
     <section class="notebook" id="writing" aria-labelledby="notebook-title">
-      <div class="section-heading"><h2 id="notebook-title">The open notebook</h2><span class="eyebrow">Connections, working notes &amp; finished things</span></div>
+      <div class="section-heading notebook-heading"><div><p class="eyebrow">Browse the notebook</p><h2 id="notebook-title">The open notebook</h2></div><p class="notebook-caption">Connections, working notes<br />&amp; finished things.</p></div>
       <div class="notebook-grid">
         <nav class="collections" aria-label="Writing collections">
-          {catalogue.map((item) => <a href={item.href}><span class="collection-number">{item.n}</span><span><strong>{item.name}</strong><span class="collection-description">{item.desc}</span></span><span class="collection-arrow" aria-hidden="true">↗</span></a>)}
-          <p class="notebook-note">Rebuilt at sea, plank by plank.<br /><a href="/meta/neuraths-boat">Neurath's way.</a></p>
+          {catalogue.map((item) => <a href={item.href} class="collection-card">
+            <span class="collection-topline"><span class="collection-number">{item.n}</span><span class="collection-arrow" aria-hidden="true">↗</span></span>
+            <svg class="collection-figure" viewBox="0 0 120 52" aria-hidden="true" fill="none">
+              {item.n==='01'&&<><path class="figure-faint" d="M8 38C25 9 45 48 62 20S95 9 112 28M8 46C27 17 42 52 66 30S91 18 112 36"/><path d="M15 29C34 0 44 34 62 12S93 2 108 19"/><path class="figure-faint" d="M27 8L92 43M32 40L90 9"/><circle cx="62" cy="12" r="3" class="figure-station"/></>}
+              {item.n==='02'&&<><rect class="figure-faint" x="12" y="12" width="58" height="34" rx="1"/><rect x="32" y="5" width="58" height="34" rx="1"/><path class="figure-faint" d="M7 41L111 12"/><circle cx="77" cy="22" r="3" class="figure-station"/></>}
+              {item.n==='03'&&<><path class="figure-faint" d="M10 40H110M10 48H110M10 32H110"/><path d="M18 40L39 19L63 32L88 10L106 20"/><circle cx="18" cy="40" r="3"/><circle cx="39" cy="19" r="3"/><circle cx="63" cy="32" r="3"/><circle cx="88" cy="10" r="3" class="figure-station"/><circle cx="106" cy="20" r="3"/></>}
+              {item.n==='04'&&<><path class="figure-faint" d="M25 9H82V45H25ZM34 4H91V40"/><path d="M16 14H73V50H16ZM28 24H60M28 32H53M28 40H46"/><path d="M82 16H108M95 3V29"/><circle cx="95" cy="16" r="3" class="figure-station"/></>}
+            </svg>
+            <strong>{item.name}</strong><span class="collection-description">{item.desc}</span>
+            <span class="collection-range">{item.range}</span>
+          </a>)}
         </nav>
-        <div class="entries"><h3 class="eyebrow">Latest entries</h3><ol>{soundings.map((entry) => <li><a href={entry.href}><span class="entry-meta"><span>{entry.collection} <span class="entry-accession">/ {entry.acc}</span></span><time datetime={entry.datePrecision === "month" ? entry.date.toISOString().slice(0,7) : entry.date.toISOString()}>{entry.date.toLocaleDateString('en-US', {month:'short',day:entry.datePrecision === 'month' ? undefined : 'numeric',year:'numeric'})}</time></span><span class="entry-title">{entry.title}</span></a></li>)}</ol></div>
+        <div class="entries"><div class="entries-heading"><h3 class="eyebrow">Latest entries</h3><span class="eyebrow">Date order</span></div><ol>{soundings.map((entry) => <li><a href={entry.href}>
+          <time class="entry-date" datetime={entry.datePrecision === "month" ? entry.date.toISOString().slice(0,7) : entry.date.toISOString()}>{entry.date.toLocaleDateString('en-GB', {month:'short',day:entry.datePrecision === 'month' ? undefined : 'numeric',year:'numeric',timeZone:'UTC'})}</time>
+          <span class="entry-title">{entry.title}</span><span class="entry-meta">{entry.collection}<span class="entry-accession">{entry.acc}</span></span><span class="entry-arrow" aria-hidden="true">↗</span>
+        </a></li>)}</ol></div>
       </div>
+      <p class="notebook-note">Rebuilt at sea, plank by plank. <a href="/meta/neuraths-boat">Neurath's way ↗</a></p>
     </section>
 
 
@@ -172,28 +204,43 @@ const lastRevision = new Date().toLocaleDateString("en-US", { month: "long", yea
   .work, .notebook, .bearings { margin-top: 3.5rem; scroll-margin-top: 2rem; }
   .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
   .section-heading h2 { font-family: var(--font-serif); font-size: 1.65rem; font-weight: 400; letter-spacing: -.02em; margin: 0; }
-  .work-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 2rem; }
-  .work-grid article { display: flex; flex-direction: column; padding-right: 1.5rem; border-right: 1px solid var(--border); }
-  .work-grid article:last-child { padding-right: 0; border-right: 0; }
+  .work-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.25rem; }
+  .work-grid article { display:flex; flex-direction:column; min-width:0; padding:1.2rem; border:1px solid var(--border); border-top:2px solid var(--accent); border-radius:3px; background:var(--bg-elevated); }
   .work-number { color: var(--text-secondary); text-transform: uppercase; }
-  .work-grid h3 { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 500; line-height: 1.2; margin: .75rem 0; }
+  .work-number > span { color:var(--annotation); }
+  .work-preview { margin:1rem 0 1.25rem; padding-bottom:1rem; border-bottom:1px solid var(--border); }
+  .work-grid h3 { font-family:var(--font-serif); font-size:1.4rem; font-weight:400; line-height:1.25; min-height:2.5em; margin:0 0 .75rem; }
   .work-grid p { font-size: .875rem; line-height: 1.65; margin: 0 0 1rem; color: var(--text-secondary); }
-  .work-grid a { font-size: .75rem; line-height: 1.5; margin-top: auto; }
-  .notebook-grid { display: grid; grid-template-columns: 1fr 1.85fr; gap: 5rem; }
-  .collections > a { display: grid; grid-template-columns: 1.25rem 1fr auto; gap: .75rem; align-items: baseline; padding: 1rem 0; border-bottom: 1px solid var(--border); }
-  .collections > a:first-child { padding-top: 0; }
-  .collections strong { display: block; font-family: var(--font-serif); font-size: 1.65rem; font-weight: 400; color: var(--text-primary); }
-  .collection-number { color: var(--annotation); }
-  .collection-description { display: block; font-size: .8125rem; color: var(--text-secondary); margin-top: .15rem; }
-  .collection-arrow { font-size: 1.1rem; }
-  .notebook-note { font-family: var(--font-serif); font-style: italic; font-size: .9375rem; color: var(--text-secondary); line-height: 1.6; margin-top: 1.5rem; }
-  .entries ol { list-style: none; padding: 0; margin: .75rem 0 0; }
+  .work-grid a { font-size:.75rem; line-height:1.6; margin-top:auto; padding-top:.4rem; }
+  .notebook-heading { align-items:center;margin-bottom:1.25rem;padding-bottom:1.25rem; }
+  .notebook-heading .eyebrow { margin-bottom:.65rem; }
+  .notebook-heading h2 { font-size:2.2rem; }
+  .notebook-caption { font:italic .95rem/1.5 var(--font-serif);color:var(--text-secondary);margin:0;text-align:right; }
+  .notebook-grid { display:grid;gap:2.25rem; }
+  .collections { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem; }
+  .collection-card { display:flex;flex-direction:column;min-width:0;padding:1.1rem 1.2rem;border:1px solid var(--border);border-top:2px solid var(--accent);border-radius:3px;background:var(--bg-elevated);transition:border-color .15s ease,background .15s ease; }
+  .collection-card:hover { border-color:var(--accent);background:var(--surface);text-decoration:none; }
+  .collection-topline { display:flex;justify-content:space-between;align-items:center; }
+  .collections strong { display:block;font:400 1.5rem/1.25 var(--font-serif);color:var(--text-primary); }
+  .collection-number { color:var(--annotation); }
+  .collection-description { display:block;font-size:.8rem;line-height:1.55;color:var(--text-secondary);margin-top:.4rem; }
+  .collection-arrow { font-size:1rem; }
+  .collection-figure { width:120px;height:52px;max-width:100%;margin:.75rem 0 1rem;stroke:var(--accent);stroke-width:1.2; }
+  .figure-faint { stroke:var(--text-tertiary);opacity:.55; }
+  .figure-station { fill:var(--bg-elevated);stroke:var(--annotation); }
+  .collection-range { margin-top:auto;padding-top:1.2rem;font:.6rem/1.5 var(--font-mono);letter-spacing:.04em;color:var(--text-tertiary); }
+  .notebook-note { font:italic .875rem/1.6 var(--font-serif);color:var(--text-secondary);margin:1.1rem 0 0; }
+  .notebook-note a { white-space:nowrap; }
+  .entries-heading { display:flex;justify-content:space-between;gap:1rem; }
+  .entries ol { list-style:none;padding:0;margin:.85rem 0 0;border-top:1px solid var(--border); }
   .entries li { margin: 0; }
-  .entries li a { display: block; padding: 1rem 0; border-bottom: 1px solid var(--border); }
-  .entries li:first-child a { padding-top: .5rem; }
-  .entry-meta { display: flex; justify-content: space-between; gap: 1rem; color: var(--text-secondary); margin-bottom: .45rem; font-size: .625rem; }
+  .entries li a { display:grid;grid-template-columns:110px minmax(0,1fr) 100px 1rem;gap:1.5rem;align-items:baseline;padding:1.2rem .4rem;border-bottom:1px solid var(--border); }
+  .entries li a:hover { text-decoration:none;background:var(--bg-elevated); }
+  .entry-date { font:.65rem/1.6 var(--font-mono);color:var(--text-secondary);white-space:nowrap; }
+  .entry-meta { display:flex;flex-direction:column;gap:.3rem;color:var(--text-secondary);font-size:.6rem;line-height:1.6; }
   .entry-accession { color: var(--text-tertiary); }
-  .entry-title { display: block; font-family: var(--font-serif); font-size: 1.4rem; line-height: 1.25; color: var(--text-primary); }
+  .entry-title { display:block;font:400 1.4rem/1.35 var(--font-serif);color:var(--text-primary); }
+  .entry-arrow { font-size:.9rem; }
   .entries a:hover .entry-title, .collections a:hover strong { color: var(--accent); }
   .bearings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
   .bearing-label { display: flex; justify-content: space-between; gap: 1rem; cursor: pointer; list-style: none; font-size: .75rem; color: var(--accent); }
@@ -207,10 +254,12 @@ const lastRevision = new Date().toLocaleDateString("en-US", { month: "long", yea
   .colophon { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 1rem; color: var(--text-secondary); font-size: .6rem; }
   @media(min-width: 1000px) { :global(.main:has(.journal)) { padding-top: 2.5rem; } }
   @media(max-width: 850px) {
-    .introduction, .notebook-grid { gap: 2.5rem; grid-template-columns: 1fr 1.65fr; }
+    .introduction { gap: 2.5rem; grid-template-columns: 1fr 1.65fr; }
+    .collections { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .entries li a { grid-template-columns:90px minmax(0,1fr) 85px 1rem;gap:1rem; }
     .orientation { padding: 1.5rem; gap: 1rem; }
     .work-grid { gap: 1.25rem; }
-    .work-grid article { padding-right: 1rem; }
+    .work-grid article { padding:1rem; }
     .section-heading > .eyebrow { max-width: 28ch; text-align: right; }
   }
   @media(max-width: 600px) {
@@ -229,11 +278,21 @@ const lastRevision = new Date().toLocaleDateString("en-US", { month: "long", yea
     .section-heading { align-items: start; }
     .section-heading > .eyebrow { display: none; }
     .work, .notebook, .bearings { margin-top: 2.5rem; }
-    .work-grid, .notebook-grid, .bearings-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-    .work-grid article { padding: 0 0 1.5rem; border-right: 0; border-bottom: 1px solid var(--border); }
-    .work-grid article:last-child { padding-bottom: 0; border-bottom: 0; }
+    .work-grid, .bearings-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .work-grid article { padding:1.2rem; }
+    .work-preview { width:100%; }
+    .work-grid h3 { min-height:0; font-size:1.5rem; }
     .notebook-grid { gap: 2rem; }
-    .collections > a { padding: .75rem 0; }
+    .collection-card { padding:1rem; }
+    .collections strong { font-size:1.35rem; }
+    .collection-figure { width:100px;margin:.5rem 0 .75rem; }
+    .notebook-heading h2 { font-size:1.9rem; }
+    .notebook-caption { display:none; }
+    .entries li a { grid-template-columns:minmax(0,1fr) auto;gap:.4rem .8rem;padding:1rem .25rem; }
+    .entry-date { grid-column:1;grid-row:1; }
+    .entry-title { grid-column:1/-1;grid-row:2; }
+    .entry-meta { grid-column:2;grid-row:1;flex-direction:row;gap:.5rem; }
+    .entry-arrow { display:none; }
     .entry-title { font-size: 1.25rem; }
     .colophon { flex-direction: column; gap: .5rem; }
   }

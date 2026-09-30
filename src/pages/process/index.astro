@@ -1,12 +1,124 @@
 ---
-import { getCollection } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import PageHeader from "../../components/PageHeader.astro";
-import EntryList from "../../components/EntryList.astro";
-import { getTopicInfo } from "../../lib/taxonomy";
-const items = (await getCollection("process")).sort((a,b)=>b.data.date.valueOf()-a.data.date.valueOf());
-
-const topics = [...new Set(items.map(entry=>entry.data.project).filter((topic): topic is string => Boolean(topic)))];
-const entries = items.map(entry=>({href:`/process/${entry.id}/`,title:entry.data.title,description:entry.data.description,date:entry.data.date,label:entry.data.dimension}));
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ProcessRegister, { type Entry } from '../../components/process/ProcessRegister.astro';
+import { getCollection } from 'astro:content';
+import { movementNames } from '../../lib/process-records';
+const entries:Entry[]=[];
+const encounters:{id:string;date:string;example:boolean}[]=[];
+const monthRecords=(await getCollection('inquiries')).flatMap(bundle=>bundle.data.records);
+for(const record of monthRecords){
+ entries.push({id:record.id,title:record.title,subject:record.subject,tags:record.tags,question:record.summary,movement:movementNames[record.movement],href:`/process/entries/${record.id}/`,dates:[record.date],example:record.example});
+ encounters.push({id:record.encounter,date:record.date,example:record.example});
+}
+entries.sort((a,b)=>b.dates.at(-1)!.localeCompare(a.dates.at(-1)!));
 ---
-<BaseLayout title="Process" description="Working notes, derivations, and experiments. A record of understanding as it develops."><div class="editorial-page"><PageHeader title="Process" eyebrow="Learning in progress" description="Working notes, derivations, and experiments. A record of understanding as it develops." /><nav class="editorial-subnav" aria-label="Process topics">{topics.map(topic => <a href={`/process/topics/${topic}/`}>{getTopicInfo(topic).title}</a>)}</nav><EntryList entries={entries} />{!entries.length && <p>No entries yet.</p>}</div></BaseLayout>
+<BaseLayout title="Process" description="Three movements of inquiry: pursuing questions, opening mechanisms, and tracing the consequences of changed beliefs.">
+  <div class="editorial-page process-page">
+    <PageHeader title="Process" eyebrow="Learning in progress" description="A record of how understanding changes." />
+    <p class="process-intro">Sometimes an explanation exposes a question. Sometimes an observation calls for a mechanism. Sometimes a belief gives way, and other things must change with it.</p>
+
+    <div class="movements" aria-label="Three movements of inquiry">
+      <article class="movement" aria-labelledby="forest-title">
+        <figure>
+          <svg viewBox="0 0 300 190" role="img" aria-labelledby="forest-figure-title forest-figure-desc">
+            <title id="forest-figure-title">A forest of branching questions</title>
+            <desc id="forest-figure-desc">Three branching structures, with one route traced from a root through successive questions.</desc>
+            <g class="faint" fill="none">
+              <path d="M48 159V108M48 125L24 99V76M48 108L76 80V52M76 66L58 48M76 80L97 62M24 88L11 74M238 159V107L215 84V61M238 124L269 93V65M269 80L288 61M215 73L197 55" />
+              <path d="M15 160H285" stroke-dasharray="2 5" />
+            </g>
+            <g class="ink" fill="none">
+              <path d="M146 160V117L116 87V59M146 117L180 83V48M116 75L94 53M180 67L203 44" />
+              <circle cx="146" cy="160" r="4"/><circle cx="116" cy="59" r="4"/><circle cx="94" cy="53" r="4"/><circle cx="180" cy="48" r="4"/><circle cx="203" cy="44" r="4"/>
+            </g>
+            <path class="route" d="M146 157V117L180 83V70L203 47" fill="none" />
+            <circle class="station" cx="146" cy="117" r="3" />
+          </svg>
+          <figcaption><span>Fig. 01</span> Following a question</figcaption>
+        </figure>
+        <h2 id="forest-title"><a href="/process/forest/">Forest of Ignorance <span aria-hidden="true">↗</span></a></h2>
+        <p class="question">What must I clarify to continue?</p>
+        <p class="description">Try to explain something. Notice where the explanation fails. Follow the questions it exposes, then return with what you can now say.</p>
+        <p class="trace">Questions, detours, and the understanding that survives.</p>
+      </article>
+
+      <article class="movement" aria-labelledby="autopsy-title">
+        <figure>
+          <svg viewBox="0 0 300 190" role="img" aria-labelledby="box-figure-title box-figure-desc">
+            <title id="box-figure-title">An opened black box</title>
+            <desc id="box-figure-desc">An input and an output surround an opened box, revealing a sequence of internal mechanisms beneath its lifted lid.</desc>
+            <g class="faint" fill="none">
+              <path d="M82 75L111 51H228L199 75ZM82 75V142L199 142L228 119V51M199 75V142" />
+              <path d="M82 57V75M111 33V51M199 57V75M228 33V51" stroke-dasharray="3 4" />
+            </g>
+            <path class="ink" fill="none" d="M82 57L111 33H228L199 57Z" />
+            <g class="ink" fill="none">
+              <path d="M20 110H103M185 110H279M270 105L279 110L270 115" />
+              <rect x="103" y="98" width="24" height="24" rx="2"/><circle cx="153" cy="110" r="12"/><path d="M127 110H141M165 110H185M185 98V122" />
+            </g>
+            <path class="route" d="M115 98V86H172V98" fill="none" />
+            <circle class="station" cx="115" cy="110" r="3" />
+          </svg>
+          <figcaption><span>Fig. 02</span> Opening the mechanism</figcaption>
+        </figure>
+        <h2 id="autopsy-title"><a href="/process/autopsy/">Black-Box Autopsy <span aria-hidden="true">↗</span></a></h2>
+        <p class="question">What process produced this?</p>
+        <p class="description">Start with a behaviour or result you cannot account for. Look inside, propose a mechanism, and test what it explains.</p>
+        <p class="trace">Observations, competing explanations, and the checks between them.</p>
+      </article>
+
+      <article class="movement" aria-labelledby="ship-title">
+        <figure>
+          <svg viewBox="0 0 300 190" role="img" aria-labelledby="ship-figure-title ship-figure-desc">
+            <title id="ship-figure-title">A ship repaired while afloat</title>
+            <desc id="ship-figure-desc">A plank is lifted from a boat whose remaining structure holds together on the water.</desc>
+            <g class="faint" fill="none">
+              <path d="M15 155Q35 147 55 155T95 155T135 155T175 155T215 155T255 155T295 155M29 170Q49 162 69 170T109 170T149 170T189 170T229 170T269 170" />
+              <path d="M80 104L96 141M110 104L118 145M176 104L169 145M207 104L192 141M126 78V110M165 78V110" stroke-dasharray="3 4" />
+            </g>
+            <g class="ink" fill="none">
+              <path d="M45 103H250L220 137Q150 160 80 137ZM62 120H123M169 120H235M83 137H211M150 101V35M150 39L199 89H150M143 48L111 89H143" />
+            </g>
+            <path class="route" d="M124 68H168V79H124ZM123 115H170V126H123" fill="none" />
+            <circle class="station" cx="150" cy="103" r="3" />
+          </svg>
+          <figcaption><span>Fig. 03</span> Repairing while afloat</figcaption>
+        </figure>
+        <h2 id="ship-title"><a href="/process/ship/">Neurath’s Ship <span aria-hidden="true">↗</span></a></h2>
+        <p class="question">What else does this change?</p>
+        <p class="description">When a belief gives way, trace what it was holding up. Revisit the explanations and decisions that depended on it, and record what needs repair.</p>
+        <p class="trace">Changed commitments and their consequences.</p>
+        <a class="framework-link" href="/meta/neuraths-boat/">The framework behind this practice ↗</a>
+      </article>
+    </div>
+
+    <p class="process-coda">These are movements through an inquiry. Philosophy, experiments, and modeling are approaches to it. One encounter can move through all three.</p>
+    <ProcessRegister entries={entries} encounters={encounters} previewNote={monthRecords.some(r=>r.reconstruction)?'Reconstructed encounters. Their provenance and date uncertainty are noted on each entry.':undefined}/>
+  </div>
+</BaseLayout>
+<style>
+  .process-page .editorial-header { margin-bottom: 1.5rem; }
+  .process-intro { max-width: 65ch; margin: 0 0 2.5rem; color: var(--text-secondary); font-size: 1rem; line-height: 1.8; }
+  .movements { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.25rem; }
+  .movement { min-width: 0; padding: 1.4rem; border: 1px solid var(--border); border-top: 2px solid var(--accent); border-radius: 3px; background: var(--surface); box-shadow: var(--shadow-sm); }
+  .movement figure { margin: 0 0 1.8rem; }
+  .movement svg { display: block; width: 100%; height: auto; overflow: visible; stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
+  .ink { stroke: var(--text-secondary); }
+  .faint { stroke: var(--text-tertiary); opacity: .6; }
+  .route { stroke: var(--accent); stroke-width: 2; }
+  .station { fill: var(--annotation); }
+  .movement figcaption { font: .65rem/1.5 var(--font-mono); color: var(--text-secondary); }
+  .movement figcaption span { color: var(--annotation); margin-right: .4rem; }
+  .movement h2 { font: 400 1.65rem/1.2 var(--font-serif); letter-spacing: -.02em; margin: 0 0 .9rem; }
+  .movement h2 a { color: inherit; text-decoration: none; }
+  .movement h2 a:hover { color: var(--accent); }
+  .movement h2 a span { color: var(--accent); font: 1rem var(--font-sans); }
+  .question { font: italic 1.1rem/1.5 var(--font-serif); margin: 0 0 1rem; }
+  .description { font-size: .9rem; line-height: 1.8; color: var(--text-secondary); margin: 0; }
+  .trace { color: var(--text-tertiary); font-size: .8rem; line-height: 1.65; margin: 1.2rem 0 0; }
+  .framework-link { display: inline-block; font-size: .75rem; line-height: 1.6; margin-top: 1rem; color: var(--accent); }
+  .process-coda { max-width: 70ch; margin: 2rem 0 0; font-size: .85rem; line-height: 1.8; color: var(--text-secondary); }
+  @media(max-width:900px) { .movements { grid-template-columns: 1fr; } .movement { display: grid; grid-template-columns: minmax(180px, .8fr) minmax(0,1.2fr); column-gap: 2rem; } .movement figure { grid-row: 1 / 6; margin: 0; } .movement h2 { margin-top: .6rem; } }
+  @media(max-width:540px) { .movement { display: block; padding: 1.3rem; } .movement figure { margin-bottom: 1.7rem; } .movement svg { max-width: 300px; margin-inline: auto; } .movement h2 { font-size: 1.8rem; } }
+</style>

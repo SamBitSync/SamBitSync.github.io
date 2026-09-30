@@ -1,0 +1,928 @@
+{
+  "records": [
+    {
+      "id": "mouse-flips",
+      "encounter": "mouse-flips",
+      "date": "2026-09-10",
+      "movement": "forest",
+      "title": "What does an x/y flip actually measure?",
+      "subject": "Mouse tracking",
+      "summary": "What does an x/y flip actually measure?",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "question": "What does an x/y flip actually measure?",
+      "forest_attempt": "mouse-flips",
+      "reflection": "A measure of trajectory complexity is not automatically a measure of cognitive competition.",
+      "tags": [
+        "Mouse tracking",
+        "Gorilla"
+      ],
+      "writing": [
+        {
+          "heading": "A small term that stopped the explanation",
+          "paragraphs": [
+            "I could repeat that x-flips and y-flips describe something about a mouse trajectory. I could not say what was literally being counted. That gap became visible when I tried to explain the measure without leaning on the name.",
+            "The distinction I needed was between position and direction. Crossing a line on the screen is a statement about where the cursor is. Reversing along an axis is a statement about how its movement changes. A path can reverse while remaining on the same side of the screen. It can also cross the centre without reversing."
+          ]
+        },
+        {
+          "heading": "The count depends on the trajectory I give it",
+          "paragraphs": [
+            "Once the definition was clearer, the difficulty moved to acquisition. A sequence of recorded positions is the input to a calculation. It is not yet a warrant for treating every tiny reversal as meaningful. Before interpreting a large count, I need to know what the recorded sequence preserves and how preprocessing changes it.",
+            "That makes smoothing a substantive choice. If I suppress small fluctuations, I may reduce noise, but I may also erase movement I wanted to describe. The question is no longer simply which function produces a number. It is which version of the trajectory that number describes."
+          ]
+        },
+        {
+          "heading": "Enough to continue, with another question exposed",
+          "paragraphs": [
+            "For now, I can explain the measure separately from the recording system and the proposed cognitive interpretation. That is enough to return to the original conversation. It does not establish that more reversals mean more competition in this experiment.",
+            "A further question remains: could a smooth average conceal distinct kinds of individual trajectories? I have recorded it without treating it as answered. The route below reconstructs that movement from definition to acquisition to interpretation."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "labhood",
+      "encounter": "labhood",
+      "date": "2026-09-14",
+      "movement": "ship",
+      "title": "Legitimacy is doing too much explanatory work",
+      "subject": "STS / CSPL",
+      "summary": "Functioning research and infrastructural incompleteness coexist.",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "belief": "An under-resourced cognitive-science lab in Nepal builds legitimacy under conditions of infrastructural absence.",
+      "challenge": "The supplied account describes experiments, publications, collaborations, equipment, workshops and institutional recognition alongside improvised infrastructure and unfinished systems. Legitimacy alone compresses these differences too much.",
+      "replacement": "How is labhood assembled across capacity, infrastructure, recognition, visibility, circulation and institutional inscription? Legitimacy remains one phenomenon.",
+      "provenance": "reconstructed",
+      "consequences": [
+        {
+          "id": "website",
+          "description": "Interpretation of the website",
+          "depends": "The old framing treated the website mainly as a performance of legitimacy.",
+          "kind": "explanation",
+          "status": "repaired",
+          "reason": "The working interpretation now includes institutional memory, coordination, legibility and insertion into TU infrastructure."
+        },
+        {
+          "id": "equipment",
+          "description": "Interpretation of equipment",
+          "depends": "Equipment could be read principally as proof of being a real lab.",
+          "kind": "explanation",
+          "status": "repaired",
+          "reason": "Equipment creates experimental capacity as well as carrying institutional meanings."
+        },
+        {
+          "id": "absence",
+          "description": "Scarcity as the defining characteristic",
+          "depends": "The absence framing organized what counted as an important observation.",
+          "kind": "belief",
+          "status": "needs_repair",
+          "reason": "Study incompleteness alongside functioning systems."
+        },
+        {
+          "id": "frontstage",
+          "description": "Frontstage and backstage distinction",
+          "depends": "Polished representation could be separated too easily from improvisation as the underlying reality.",
+          "kind": "explanation",
+          "status": "needs_repair",
+          "reason": "Both spaces can contain science, maintenance, presentation and constraint."
+        },
+        {
+          "id": "question",
+          "description": "The research question",
+          "depends": "The initial question made legitimacy the main thing to explain.",
+          "kind": "work",
+          "status": "repaired",
+          "reason": "The revised question asks how research becomes possible and labhood is assembled and maintained."
+        }
+      ],
+      "next": "Revisit the earlier framing against specific scenes. The supplied account places continuing repairs through 24 September; their exact individual dates are unknown.",
+      "tags": [
+        "STS",
+        "CSPL",
+        "Research infrastructure"
+      ],
+      "writing": [
+        {
+          "heading": "When one explanation becomes too convenient",
+          "paragraphs": [
+            "Legitimacy gave me an initially useful way to read the lab. A website, a room, equipment and institutional recognition could all be understood as ways of becoming recognizable as a laboratory. The problem appeared when that explanation became ready before I had looked closely at what each arrangement was doing.",
+            "The account of this month includes functioning experiments and research activity alongside unfinished infrastructure. Treating the latter as the underlying reality and the former as its presentation would make it difficult to describe capacity on its own terms."
+          ]
+        },
+        {
+          "heading": "A website can do several kinds of work",
+          "paragraphs": [
+            "The institutional website is a good place to examine this. It can make the lab visible, but it can also preserve an account of its work, give people somewhere to find information, and locate the lab inside an institutional system. Those effects need to be traced separately. Calling the website legitimacy work does not yet explain them.",
+            "Equipment creates a similar difficulty for the earlier framing. An instrument can carry a claim about what kind of place this is while also enabling a measurement. Neither effect has to cancel the other. The task is to describe their relation in particular situations."
+          ]
+        },
+        {
+          "heading": "The repair is in the relations",
+          "paragraphs": [
+            "My working question is now how labhood is assembled and maintained across capacity, infrastructure, recognition and circulation. This lets legitimacy remain in the inquiry without asking it to explain every scene.",
+            "The repair is unfinished. I still need to revisit the distinction between outward presentation and the work behind it, and to test whether scarcity is directing my attention too strongly. The earlier observations remain useful; their explanatory arrangement is changing."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "runpod-practice",
+      "encounter": "runpod-practice",
+      "date": "2026-09-19",
+      "movement": "note",
+      "title": "RunPod as a forcing function",
+      "subject": "ML / learning practice",
+      "summary": "Paying for compute encouraged experiments before complete conceptual readiness.",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "account": "I put money into RunPod partly to create a reason to run an experiment before feeling conceptually ready. The failure mode was moving from tutorial to prerequisite to another prerequisite without touching the system. The intended loop is to reproduce a baseline, change one thing, observe what happens, then learn the prerequisite exposed by that experiment. This is an account of a learning practice; it does not require a changed belief, surprising output, or recorded question stack.",
+      "tags": [
+        "ML",
+        "Learning practice",
+        "RunPod"
+      ],
+      "writing": [
+        {
+          "heading": "Buying a reason to begin",
+          "paragraphs": [
+            "I put money into compute partly because I wanted to interrupt a familiar learning sequence. I would begin with a practical goal, encounter a prerequisite, follow that prerequisite into another one, and end with a growing reading list and no experiment.",
+            "A paid resource does not solve this. It can create another thing to configure or another reason to feel behind. What appealed to me was the possibility of making the next action concrete: reproduce something small enough that I could actually run it."
+          ]
+        },
+        {
+          "heading": "Let the experiment specify the next question",
+          "paragraphs": [
+            "The intended loop is to reproduce a baseline, change one thing, inspect the result, and learn what the failure exposes. This gives a prerequisite a location in the work. I can ask what I need to understand to explain this discrepancy, rather than what I ought to master before touching the system.",
+            "That requires restraint. If I change several things at once, the resulting confusion will not necessarily tell me what to study next. A small change and a record of what happened are part of the learning arrangement."
+          ]
+        },
+        {
+          "heading": "A practice to try, rather than a result to announce",
+          "paragraphs": [
+            "This entry records why I chose the arrangement. It does not show that paying for compute improved my learning, or that a baseline was successfully reproduced. Those would need their own records.",
+            "It belongs in Process without being forced into the three movements. If a run exposes a question, produces a surprising output, or changes a commitment, a Forest, Autopsy or Ship entry can grow from it."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vwp-competitor",
+      "encounter": "vwp-competitor",
+      "date": "2026-09-20",
+      "movement": "forest",
+      "title": "What counts as a phonological competitor here?",
+      "subject": "Nepali–English–Hindi VWP",
+      "summary": "What counts as a competitor in this experiment?",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "question": "What counts as a competitor in this experiment?",
+      "forest_attempt": "vwp-competitor",
+      "account": "Turning the proposal into stimuli made “phonological competitor” insufficient. The encounter is anchored to 20 September; work continued into the following day. No return through unresolved stack frames is inferred.",
+      "reflection": "There is enough direction to continue a pilot, without a final operational definition.",
+      "tags": [
+        "VWP",
+        "Multilingual processing",
+        "Experiment design"
+      ],
+      "writing": [
+        {
+          "heading": "The proposal had a noun; the experiment needs a relation",
+          "paragraphs": [
+            "“Phonological competitor” looked sufficiently clear in the proposal. It became less clear when I had to decide which actual words should occupy that role. A category in a description is not yet a rule for constructing an item set.",
+            "The first clarification was where overlap matters for the intended task. Word-initial overlap became the working focus. That gives stimulus construction a direction, but it leaves the question of how much overlap is enough and how differences should be compared."
+          ]
+        },
+        {
+          "heading": "Sound, script and comparability",
+          "paragraphs": [
+            "The multilingual design makes it especially easy to confuse visible similarity with the relation I want spoken input to establish. Nepali, Hindi and English do not offer identical arrangements of sound and script. Keeping the written forms similar would not by itself tell me that the phonological relation was comparable.",
+            "I also need to decide what counts as an equivalent manipulation across languages. Aspiration and place differences cannot simply disappear into the phrase “some overlap.” A defensible item set needs an account of which differences matter to the question being asked."
+          ]
+        },
+        {
+          "heading": "Where the pilot can begin",
+          "paragraphs": [
+            "The desire to keep identical item triplets across conditions is understandable. It promises a neat design. But identical materials can play different roles across conditions, so surface consistency may come at a cost to the intended comparison.",
+            "I can continue a minimal pilot while these issues remain open. The reconstructed stack stops with sound versus script and cross-language equivalence still present. That is a more faithful ending than giving the root question a tidy closure the account does not support."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gaze-mouse",
+      "encounter": "gaze-mouse",
+      "date": "2026-09-22",
+      "movement": "forest",
+      "title": "Can mouse and webcam gaze support the inference I want?",
+      "subject": "Gorilla / process tracing",
+      "summary": "Can concurrent gaze and mouse streams support the same temporal inference?",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "question": "Can concurrent gaze and mouse streams support the same temporal inference?",
+      "forest_attempt": "gaze-mouse",
+      "arose_from": "vwp-competitor",
+      "reflection": "Technical collection and defensible cognitive inference are separate questions.",
+      "tags": [
+        "Gorilla",
+        "Eye tracking",
+        "Mouse tracking",
+        "Process tracing"
+      ],
+      "writing": [
+        {
+          "heading": "Collection is only the first question",
+          "paragraphs": [
+            "I began with an implementation question: can mouse movement and webcam gaze be collected in the same task? The more consequential question is what a joint record would let me say about an unfolding response.",
+            "Separate descriptions of two recording features do not establish the behaviour of their simultaneous use in this setup. A pilot needs to show what each stream actually contains, how its timestamps behave, and whether the intended alignment is available."
+          ]
+        },
+        {
+          "heading": "A finer grid does not give me finer measurements",
+          "paragraphs": [
+            "The important correction was to separate analysis bins from acquired observations. I can divide time into 50-ms intervals, but that choice does not create an observation in every interval. A precise-looking plot can therefore exceed the precision of the evidence behind it.",
+            "For this proposed use, I need to keep the intended gaze claim modest until acquisition has been inspected. The relevant question is what the stream supports about areas of interest and timing in this task, rather than what a finely divided axis makes possible to draw."
+          ]
+        },
+        {
+          "heading": "Two clocks for two purposes",
+          "paragraphs": [
+            "Movement-normalized time may help compare trajectory shapes. It also changes the time coordinate. If the question concerns the relation between spoken input, gaze and mouse movement, I need a shared real-time reference rather than an alignment defined separately by each movement.",
+            "I now have a narrower plan: preserve audio-aligned time for cross-stream relations, and use normalized trajectories where the question concerns shape. Acquisition and layout checks remain pilot-dependent. The record marks that boundary instead of presenting the proposed analysis as already justified."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tu-http500",
+      "encounter": "tu-cms-23",
+      "date": "2026-09-23",
+      "movement": "autopsy",
+      "title": "Why does Message From Head return HTTP 500?",
+      "subject": "TU CMS",
+      "summary": "Minimal input still fails, while other modules can be edited.",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "observation": "Saving Message From Head returned a generic HTTP 500, including with a minimal record.",
+      "expected": "The record should save or the CMS should identify a missing required field.",
+      "status": "open",
+      "rivals": [
+        {
+          "id": "workflow",
+          "explanation": "A required activation, status or configuration step is missing.",
+          "introduced": "2026-09-23"
+        },
+        {
+          "id": "content",
+          "explanation": "The submitted rich text, image or content causes the failure.",
+          "introduced": "2026-09-23"
+        },
+        {
+          "id": "constraint",
+          "explanation": "An undocumented field or database constraint is violated.",
+          "introduced": "2026-09-23"
+        },
+        {
+          "id": "module",
+          "explanation": "A module-specific backend fault occurs independently of ordinary content.",
+          "introduced": "2026-09-23"
+        }
+      ],
+      "checks": [
+        {
+          "id": "minimal",
+          "date": "2026-09-23",
+          "description": "Reduce the submission",
+          "produced": "The failure persisted with minimal content.",
+          "comparisons": [
+            {
+              "rival": "content",
+              "result": "against"
+            },
+            {
+              "rival": "workflow",
+              "result": "inconclusive"
+            },
+            {
+              "rival": "constraint",
+              "result": "inconclusive"
+            },
+            {
+              "rival": "module",
+              "result": "supports"
+            }
+          ]
+        },
+        {
+          "id": "manual",
+          "date": "2026-09-23",
+          "description": "Inspect the documented workflow",
+          "produced": "No documented prerequisite explained the failure.",
+          "comparisons": [
+            {
+              "rival": "workflow",
+              "result": "against"
+            },
+            {
+              "rival": "content",
+              "result": "not_tested"
+            },
+            {
+              "rival": "constraint",
+              "result": "not_tested"
+            },
+            {
+              "rival": "module",
+              "result": "inconclusive"
+            }
+          ]
+        },
+        {
+          "id": "modules",
+          "date": "2026-09-23",
+          "description": "Compare other CMS modules",
+          "produced": "Other modules could be edited; the failure appeared localized.",
+          "comparisons": [
+            {
+              "rival": "module",
+              "result": "supports"
+            },
+            {
+              "rival": "constraint",
+              "result": "inconclusive"
+            },
+            {
+              "rival": "workflow",
+              "result": "inconclusive"
+            },
+            {
+              "rival": "content",
+              "result": "not_tested"
+            }
+          ]
+        }
+      ],
+      "assessment": "The checks narrow the failure to this module’s request path. They do not establish which server-side component failed.",
+      "residue": "Without server logs, validation, controller and database causes remain unresolved. Same-day ordering is reconstructed.",
+      "tags": [
+        "TU CMS",
+        "CSPL",
+        "Web infrastructure"
+      ],
+      "writing": [
+        {
+          "heading": "A failure with very little explanation attached",
+          "paragraphs": [
+            "Message From Head returned HTTP 500 when I tried to save it. The message gave me a failed operation without a useful account of what had failed. I expected either a saved record or feedback pointing to a missing field.",
+            "Several explanations could fit that observation: a workflow step I had missed, a problem in the content, an undocumented constraint, or a fault in the module. Treating the error as backend failure immediately would skip alternatives that were still available."
+          ]
+        },
+        {
+          "heading": "Reducing the request",
+          "paragraphs": [
+            "The supplied account reports that minimal content failed too. That makes a content-specific explanation less persuasive, but does not eliminate every field constraint. A small request can still violate a requirement I have not identified.",
+            "Inspecting the documented workflow did not reveal a prerequisite that explained the failure. Comparing other modules was useful in a different way: successful edits elsewhere made a general outage less plausible and localized the problem more closely to this module."
+          ]
+        },
+        {
+          "heading": "A narrower boundary, not an identified cause",
+          "paragraphs": [
+            "These checks improve the location of the question. They do not tell me whether validation, a controller or a database operation produced the failure. Without server logs, choosing one would add certainty that the checks did not supply.",
+            "The useful outcome is therefore a narrower report: this operation fails even with minimal content, while other editing operations work. That is information I can carry into a request for help. The Autopsy stays open because the mechanism remains unknown."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tu-shell",
+      "encounter": "tu-cms-23",
+      "date": "2026-09-23",
+      "movement": "ship",
+      "title": "The TU site is not just a domain pointing elsewhere",
+      "subject": "CSPL institutional web infrastructure",
+      "summary": "Institutional hosting changed where local control could sit.",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "belief": "Obtain the TU subdomain while retaining substantial control of the existing web stack; treat the institutional address mostly as recognition.",
+      "challenge": "TU provisioned a hosted CMS, accounts and maintenance responsibilities. The supplied account describes more than a domain pointing to an independent site.",
+      "replacement": "Treat TU as the institutional shell and discover how much page-level control can work within it.",
+      "provenance": "reconstructed",
+      "consequences": [
+        {
+          "id": "hosting",
+          "description": "Hosting model",
+          "depends": "Deployment had been planned as if the infrastructure were independently chosen.",
+          "kind": "decision",
+          "status": "repaired",
+          "reason": "Plan within the provisioned institutional system."
+        },
+        {
+          "id": "design",
+          "description": "Page architecture",
+          "depends": "The earlier plan assumed arbitrary Astro-style architecture.",
+          "kind": "work",
+          "status": "repaired",
+          "reason": "Use native modules and custom HTML pages where appropriate."
+        },
+        {
+          "id": "layout",
+          "description": "Full-width layout",
+          "depends": "Custom content was treated like a standalone page.",
+          "kind": "work",
+          "status": "repaired",
+          "reason": "Constrain the content to cooperate with TU navigation and surrounding layout."
+        },
+        {
+          "id": "media",
+          "description": "Media hosting",
+          "depends": "External images were assumed to be ordinary deployable assets.",
+          "kind": "decision",
+          "status": "repaired",
+          "reason": "Prefer TU-hosted assets for the institutional site."
+        },
+        {
+          "id": "maintenance",
+          "description": "Maintenance responsibility",
+          "depends": "The website had been treated primarily as a design and deployment problem.",
+          "kind": "work",
+          "status": "needs_repair",
+          "reason": "Moderation, security and continuing maintenance need an operational plan."
+        }
+      ],
+      "next": "The supplied account spans 23–24 September. Content and presentation control remain goals; their location has changed.",
+      "tags": [
+        "CSPL",
+        "TU CMS",
+        "Web infrastructure"
+      ],
+      "writing": [
+        {
+          "heading": "I was planning around the address",
+          "paragraphs": [
+            "My earlier preference was to obtain an institutional domain while keeping substantial control of the existing web stack. In that arrangement, the TU address would give the site an institutional location without substantially changing how I built and deployed it.",
+            "The provisioned CMS changed the arrangement. Hosting, accounts and continuing responsibilities came with it. The question became where local control could operate inside a system that already had its own modules and surrounding interface."
+          ]
+        },
+        {
+          "heading": "Several decisions had depended on the same assumption",
+          "paragraphs": [
+            "The hosting plan had assumed I could choose deployment infrastructure independently. The page plan had assumed the freedom of an Astro site. Full-width custom content had assumed something close to a standalone page. Each decision needed a different repair once the institutional shell was part of the working environment.",
+            "The supplied account describes using native modules where they help and custom HTML where additional control is needed. Layout also has to cooperate with navigation and the surrounding shell. These are consequences of the changed hosting arrangement, rather than isolated styling preferences."
+          ]
+        },
+        {
+          "heading": "Control changes location",
+          "paragraphs": [
+            "The desire to control content structure and presentation survives. I need to locate that control at the level the system permits, and distinguish it from control over the whole deployment.",
+            "Maintenance is a less settled consequence. Managing the website includes ongoing operational responsibilities, not just producing a finished page. The repaired design decisions do not by themselves settle how those responsibilities will be sustained."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "track1",
+      "encounter": "track1",
+      "date": "2026-09-27",
+      "movement": "forest",
+      "title": "Is Track 1 classification, regression, or retrieval?",
+      "subject": "Neural Interfaces",
+      "summary": "Is Track 1 classification, regression, or retrieval?",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "question": "Is Track 1 classification, regression, or retrieval?",
+      "forest_attempt": "track1",
+      "tags": [
+        "Neural Interfaces",
+        "ML",
+        "EEG"
+      ],
+      "writing": [
+        {
+          "heading": "Top-5 made me reach for the wrong description",
+          "paragraphs": [
+            "The evaluation language made classification seem like the obvious description of Track 1. When I tried to explain the pipeline, that shortcut became uncomfortable: what, exactly, was the network supposed to output?",
+            "The supplied task account describes a continuous embedding target. That means the network’s immediate prediction and the eventual retrieval decision occupy different parts of the pipeline. Naming the whole task after its final score obscures that distinction."
+          ]
+        },
+        {
+          "heading": "Follow the output into evaluation",
+          "paragraphs": [
+            "The model predicts an embedding from EEG. Evaluation then compares that prediction against candidate embeddings in a gallery. Top-5 describes where the relevant candidate falls in that retrieval procedure.",
+            "This lets me give a more precise account without choosing a single familiar label for everything: continuous prediction is followed by retrieval-based evaluation. I can now ask about errors in the predicted representation separately from choices in the evaluation procedure."
+          ]
+        },
+        {
+          "heading": "A question left outside the traversal",
+          "paragraphs": [
+            "Repeat averaging remains a separate question. I want to understand what it changes about the evidence presented to the model and what a good score under that procedure would establish. I have exposed the question without adding an answer.",
+            "The encounter ends when I can explain the basic pipeline. It records a clarification of the task, not a trained model or a performance result. The earlier shortcut was corrected at the level of description."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lsn-counts",
+      "encounter": "lsn-counts",
+      "date": "2026-09-27",
+      "movement": "autopsy",
+      "title": "Why are the condition counts wrong?",
+      "subject": "LSN dataset audit",
+      "summary": "A probable label correction restores balance, but symmetry is not proof.",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "observation": "Metadata did not initially give the expected balance between अस्ति and अब framing.",
+      "expected": "The supplied design has 15 speakers and 30 items: 450 trials and 225 per condition.",
+      "status": "resolved",
+      "rivals": [
+        {
+          "id": "balance",
+          "explanation": "Counterbalancing was not exact.",
+          "introduced": "2026-09-27"
+        },
+        {
+          "id": "missing",
+          "explanation": "A trial is missing or duplicated.",
+          "introduced": "2026-09-27"
+        },
+        {
+          "id": "label",
+          "explanation": "One condition label is miscoded.",
+          "introduced": "2026-09-27"
+        },
+        {
+          "id": "adherence",
+          "explanation": "Cue non-adherence is being confused with metadata imbalance.",
+          "introduced": "2026-09-27"
+        }
+      ],
+      "checks": [
+        {
+          "id": "counts",
+          "date": "2026-09-27",
+          "description": "Inspect participant and picture counts",
+          "produced": "The pattern localized the imbalance to a suspicious trial.",
+          "comparisons": [
+            {
+              "rival": "balance",
+              "result": "against"
+            },
+            {
+              "rival": "missing",
+              "result": "inconclusive"
+            },
+            {
+              "rival": "label",
+              "result": "supports"
+            },
+            {
+              "rival": "adherence",
+              "result": "inconclusive"
+            }
+          ]
+        },
+        {
+          "id": "flagged",
+          "date": "2026-09-27",
+          "description": "Inspect the flagged trial and a proposed correction",
+          "produced": "The supplied audit reports that a probable label correction restored 225/225 and 15 observations per picture.",
+          "comparisons": [
+            {
+              "rival": "label",
+              "result": "supports"
+            },
+            {
+              "rival": "balance",
+              "result": "against"
+            },
+            {
+              "rival": "missing",
+              "result": "against"
+            },
+            {
+              "rival": "adherence",
+              "result": "not_tested"
+            }
+          ]
+        }
+      ],
+      "assessment": "Provisionally resolved at the structural level. A probable label error explains the imbalance better than a global design failure.",
+      "residue": "Restoring symmetry does not independently prove the correction. Cue adherence is a separate issue. Exact participant identifiers are omitted from this public reconstruction.",
+      "tags": [
+        "LSN",
+        "Dataset audit"
+      ],
+      "writing": [
+        {
+          "heading": "Balance was an expectation, not a finding",
+          "paragraphs": [
+            "The expected structure was simple enough to make the discrepancy conspicuous: 15 speakers, 30 items, 450 trials, and a balanced division between the two temporal conditions. The metadata did not initially reproduce that structure.",
+            "There are several ways this could happen. Counterbalancing might be imperfect, a row might be missing or duplicated, or a label might be wrong. A speaker’s response to a cue is another issue and should not automatically be treated as evidence about the assigned condition."
+          ]
+        },
+        {
+          "heading": "A correction that makes the table look right",
+          "paragraphs": [
+            "The supplied audit localized the problem to a flagged trial. Its context suggested a probable condition-label correction. Applying that correction restored the expected 225/225 division and the expected observations per picture.",
+            "That is a useful consistency check. It is also tempting evidence because the repaired table has a satisfying shape. If balance alone becomes the reason for changing the label, the audit would use its expectation to manufacture its conclusion."
+          ]
+        },
+        {
+          "heading": "Keep the correction and its uncertainty together",
+          "paragraphs": [
+            "The current assessment is provisional: the label-error explanation fits the localized pattern better than a global counterbalancing failure. The correction still needs to retain its provenance and the reason for treating it as probable.",
+            "I would keep the original label alongside the proposed correction in the research record. The public notebook does not need a participant identifier to preserve the methodological point. A structurally repaired dataset and an independently confirmed label are different achievements."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "no-le",
+      "encounter": "no-le",
+      "date": "2026-09-27",
+      "movement": "autopsy",
+      "title": "Why is “no -ले” not one thing?",
+      "subject": "Kathmandu Nepali picture descriptions",
+      "summary": "Some absent-marker responses use different constructions.",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "observation": "The supplied account describes responses without agentive -ले, including one participant repeatedly using द्वारा and काम हुँदै.",
+      "expected": "A binary marking analysis would require absence and presence to be comparable alternatives within an appropriate constructional space.",
+      "status": "open",
+      "rivals": [
+        {
+          "id": "omission",
+          "explanation": "The same construction is used with optional marker omission.",
+          "introduced": "2026-09-27"
+        },
+        {
+          "id": "tam",
+          "explanation": "TAM changes the construction and the availability of marking.",
+          "introduced": "2026-09-27"
+        },
+        {
+          "id": "alternative",
+          "explanation": "A lexical or discourse alternative changes the description.",
+          "introduced": "2026-09-27"
+        },
+        {
+          "id": "strategy",
+          "explanation": "A participant-specific strategy changes scene packaging.",
+          "introduced": "2026-09-27"
+        }
+      ],
+      "checks": [
+        {
+          "id": "transcripts",
+          "date": "2026-09-27",
+          "description": "Read transcriptions alongside binary coding",
+          "produced": "Some responses coded absent were structurally different.",
+          "comparisons": [
+            {
+              "rival": "omission",
+              "result": "against"
+            },
+            {
+              "rival": "tam",
+              "result": "inconclusive"
+            },
+            {
+              "rival": "alternative",
+              "result": "inconclusive"
+            },
+            {
+              "rival": "strategy",
+              "result": "inconclusive"
+            }
+          ],
+          "assessment": "This counts against omission as a universal explanation; it does not distinguish the remaining mechanisms."
+        },
+        {
+          "id": "within-speaker",
+          "date": "2026-09-29",
+          "description": "Compare the recurring responses within the participant",
+          "produced": "The supplied account describes a repeated pattern rather than isolated omission.",
+          "comparisons": [
+            {
+              "rival": "strategy",
+              "result": "supports"
+            },
+            {
+              "rival": "tam",
+              "result": "inconclusive"
+            },
+            {
+              "rival": "alternative",
+              "result": "inconclusive"
+            },
+            {
+              "rival": "omission",
+              "result": "against"
+            }
+          ]
+        }
+      ],
+      "assessment": "The binary variable appears to combine multiple linguistic processes. The account spans 27–29 September; finer check chronology is reconstructed.",
+      "residue": "Which contexts belong in the primary analysis, how TAM and construction should be coded, and whether framing acts directly on marking remain open.",
+      "tags": [
+        "LSN",
+        "Nepali",
+        "Agentive marking"
+      ],
+      "writing": [
+        {
+          "heading": "The zero category began to contain different things",
+          "paragraphs": [
+            "A present-versus-absent column makes the response look like one binary choice. Reading the transcriptions complicated that picture. The supplied account includes a participant repeatedly using द्वारा and काम हुँदै among responses without -ले.",
+            "Those forms matter because the intended comparison assumes some relevant comparability of contexts. If the construction changes, an absent marker may no longer be another realization of the same choice. The coding can remain literally correct while the interpretation of the zero becomes unstable."
+          ]
+        },
+        {
+          "heading": "A recurring pattern helps, but does not finish the explanation",
+          "paragraphs": [
+            "The recurrence within one participant counts against treating the cases as a handful of isolated omissions. It raises the possibility of a response strategy or a recurring way of packaging the scenes.",
+            "It does not yet tell me whether temporal or aspectual framing, lexical choices, discourse conditions or a participant-specific strategy best explains the pattern. These explanations may also interact. I need to compare actual constructions rather than let one binary column stand in for that analysis."
+          ]
+        },
+        {
+          "heading": "The observation changes the next question",
+          "paragraphs": [
+            "The immediate task is to articulate the constructional space in which a marking comparison would be meaningful. Other responses may need a separate analysis rather than an automatic exclusion. Both choices require a reason tied to the linguistic question.",
+            "This Autopsy stays open. Its contribution is to show that the observable outcome combines processes I had not separated. That observation prompts the Ship record on coding and the later return to the GLMM inquiry."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lsn-glmm-28",
+      "encounter": "lsn-glmm-28",
+      "date": "2026-09-28",
+      "movement": "forest",
+      "title": "Why do I need a GLMM here?",
+      "subject": "LSN paper / statistics",
+      "summary": "Why do I need a GLMM for these responses?",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "question": "Why do I need a GLMM for these responses?",
+      "forest_attempt": "lsn-glmm-28",
+      "tags": [
+        "LSN",
+        "Statistics",
+        "GLMM"
+      ],
+      "writing": [
+        {
+          "heading": "What is repeated in these observations?",
+          "paragraphs": [
+            "The dataset’s size initially made it easy to speak as if each row were an independent instance. Explaining why a mixed model might be needed forced me to say what the rows share.",
+            "Responses from the same speaker can share tendencies, and responses to the same picture can share features of the item. The design therefore gives me repeated observations across speakers and items. Merely counting rows does not explain the information structure."
+          ]
+        },
+        {
+          "heading": "Why the outcome matters too",
+          "paragraphs": [
+            "The next question concerns the intended outcome. If the response is defensibly binary, I need a model for its probability. In this inquiry, the binomial model and logistic link provide the working statistical direction.",
+            "That statement is conditional on the coding. It does not show that every absent marker belongs in a comparable zero category. The statistical explanation can become clearer before the linguistic outcome is adequately defined."
+          ]
+        },
+        {
+          "heading": "Enough to read a model specification",
+          "paragraphs": [
+            "I can now explain why the proposed analysis needs to account for repeated speaker and item observations and why the outcome leads toward a binomial mixed model. That gives the syntax of a model somewhere to attach.",
+            "Random slopes remain exposed rather than settled. Their specification needs an account of the design and the available information. The encounter ends with the basic structural rationale clarified; the next day’s return will reveal a different kind of obstacle."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "le-coding",
+      "encounter": "le-coding",
+      "date": "2026-09-29",
+      "movement": "ship",
+      "title": "“-ले present vs absent” is not yet the right dependent variable",
+      "subject": "LSN methodology",
+      "summary": "Constructional differences challenge the original binary framing.",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "arose_from": "no-le",
+      "belief": "Code every response as -ले present or absent, then model whether temporal framing changes the probability of the marker.",
+      "challenge": "The absent category includes alternative constructions and event packaging, rather than a clearly uniform alternative.",
+      "replacement": "Define the comparable constructional space first. It is still undecided whether to use a restricted marking model plus a secondary construction analysis, or a broader response model.",
+      "provenance": "reconstructed",
+      "consequences": [
+        {
+          "id": "coding",
+          "description": "Binary coding",
+          "depends": "Every grammatical zero was treated as comparable.",
+          "kind": "work",
+          "status": "needs_repair",
+          "reason": "Add construction and TAM coding before final outcome decisions."
+        },
+        {
+          "id": "population",
+          "description": "Analysis population",
+          "depends": "All 450 rows were presumed eligible for one analysis.",
+          "kind": "decision",
+          "status": "needs_repair",
+          "reason": "Define principled inclusion criteria."
+        },
+        {
+          "id": "interpretation",
+          "description": "Coefficient interpretation",
+          "depends": "The coefficient would be read as a direct change in agentive marking.",
+          "kind": "explanation",
+          "status": "needs_repair",
+          "reason": "Distinguish marking choice from framing through event packaging and construction."
+        },
+        {
+          "id": "paper",
+          "description": "The paper question",
+          "depends": "The question was organized narrowly around optional -ले.",
+          "kind": "work",
+          "status": "needs_repair",
+          "reason": "The framing now accommodates event packaging, but the question is not fully repaired."
+        },
+        {
+          "id": "learning",
+          "description": "The main analysis blocker",
+          "depends": "Random-effects specification appeared to be the central obstacle.",
+          "kind": "belief",
+          "status": "repaired",
+          "reason": "Recognize construct and coding validity as a prior problem."
+        }
+      ],
+      "next": "The GLMM learning survives: it may apply to a principled comparable subset.",
+      "tags": [
+        "LSN",
+        "Methodology",
+        "Agentive marking"
+      ],
+      "writing": [
+        {
+          "heading": "The initial commitment lived inside the coding plan",
+          "paragraphs": [
+            "The working plan was to code each response as -ले present or absent and ask whether temporal framing changed its probability. That is more than a convenient spreadsheet format. It commits the analysis to treating the two values as an interpretable contrast.",
+            "The transcription audit challenged that commitment. The zero category included descriptions that appeared to differ in construction or event packaging. A binary label could still describe the absence of a string while failing to identify the linguistic choice the paper was meant to explain."
+          ]
+        },
+        {
+          "heading": "Trace what the binary framing was holding up",
+          "paragraphs": [
+            "The coding plan, analysis population and coefficient interpretation all depended on comparability. If every row entered one model, the condition coefficient could be read as a change in marking. That reading becomes harder to defend when condition differences may operate through construction choice.",
+            "The repairs therefore reach beyond the outcome column. I need a construction and TAM account, principled inclusion decisions, and a paper question that can accommodate event packaging. Each repair should state how it depended on the earlier commitment."
+          ]
+        },
+        {
+          "heading": "The model may survive with a different scope",
+          "paragraphs": [
+            "I have not settled whether to restrict the primary marking analysis and examine alternative constructions separately, or build a broader account of the response system. That uncertainty should remain visible while coding work continues.",
+            "The GLMM learning is still useful. A binomial model may be appropriate within a justified comparable subset. What changes is the scope of the inference and the order of work: defining the outcome comes before treating model specification as the main remaining obstacle."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lsn-glmm-29",
+      "encounter": "lsn-glmm-29",
+      "date": "2026-09-29",
+      "movement": "forest",
+      "title": "What counts as a comparable -ले trial?",
+      "subject": "LSN paper / statistics",
+      "summary": "The recurring GLMM inquiry returns to constructional comparability and the meaning of an absent marker.",
+      "example": true,
+      "reconstruction": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "question": "What is a legitimate zero in the dependent variable?",
+      "forest_attempt": "lsn-glmm-29",
+      "arose_from": "le-coding",
+      "reflection": "The recurring inquiry shifts from model structure to what its outcome can mean.",
+      "tags": [
+        "LSN",
+        "Statistics",
+        "GLMM"
+      ],
+      "writing": [
+        {
+          "heading": "Returning to the same inquiry from another direction",
+          "paragraphs": [
+            "Yesterday’s question was why a mixed model belonged in this analysis. Today the more pressing question is what the model would be modeling. The coding discussion sends me back to the same inquiry with a new difficulty rather than a demand for more syntax.",
+            "An absent marker is observable. Its interpretation as a comparable alternative depends on the construction in which it occurs. The transcription patterns make that dependence hard to leave implicit."
+          ]
+        },
+        {
+          "heading": "A pathway to consider, not a result to claim",
+          "paragraphs": [
+            "One possible pathway is from temporal framing to TAM or event packaging, then to construction choice, and then to the availability or use of -ले. Writing that pathway makes the assumptions easier to inspect. It does not establish the pathway from the present account.",
+            "It also complicates the proposed role of covariates. If a constructional change is part of the phenomenon, adjusting it away may answer a different question from the one I began with. I need to articulate the intended comparison before deciding what belongs on the right-hand side of the model."
+          ]
+        },
+        {
+          "heading": "The stack remains open",
+          "paragraphs": [
+            "The reconstructed encounter ends with comparable trials, constructional identity and the proposed pathway still on the stack. There is no evidence for a clean return through those questions, so the record does not manufacture one.",
+            "The next useful action is a principled coding account grounded in the responses. This is progress in locating the obstacle, even though it leaves more questions visible than the earlier statistical explanation did."
+          ]
+        }
+      ]
+    }
+  ]
+}

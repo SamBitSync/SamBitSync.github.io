@@ -14,6 +14,7 @@ export default defineConfig({
     '/frameworks': '/meta',
     '/notes': '/meta',
     '/notes/critical-realism': '/meta/critical-realism',
+    '/maps/theories-of-cognition-moc': '/maps/research-programmes/',
   },
   integrations: [
     sitemap(),

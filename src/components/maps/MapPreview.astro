@@ -1,0 +1,40 @@
+---
+interface Props { id:string }
+const {id}=Astro.props;
+// Reduced catalogue sketches of the existing maps, not additional data plots.
+const captions:Record<string,string>={
+ 'research-programmes':'Five programmes, three layers of disagreement',
+ 'orientation-framework':'Four orientations around a recurring question',
+};
+---
+<figure>
+ <svg viewBox="0 0 480 180" aria-hidden="true" fill="none">
+  <path class="registration" d="M10 24V10H24M456 170H470V156"/>
+  {id==='research-programmes'?<>
+   <g class="faint"><path d="M132 36H436V147H132ZM132 73H436M132 110H436M193 36V147M254 36V147M315 36V147M376 36V147"/></g>
+   <g class="labels"><text x="30" y="59">Ontology</text><text x="30" y="96">Explanation</text><text x="30" y="133">Method</text></g>
+   <g class="ink">{[162,223,284,345,406].map(x=><><path d={`M${x} 23V30`}/><circle cx={x} cy="54" r="4"/><circle cx={x} cy="91" r="4"/><circle cx={x} cy="128" r="4"/></>)}</g>
+   <circle class="station" cx="284" cy="91" r="4"/>
+  </>:id==='orientation-framework'?<>
+   <g class="faint"><path d="M108 57V121M372 57V121"/><path d="M119 47L213 85M119 131L213 97M361 47L267 85M361 131L267 97" stroke-dasharray="3 5"/></g>
+   <g class="ink"><circle cx="108" cy="47" r="5"/><circle cx="108" cy="131" r="5"/><circle cx="372" cy="47" r="5"/><circle cx="372" cy="131" r="5"/><path d="M102 71L108 65L114 71M102 107L108 113L114 107M366 71L372 65L378 71M366 107L372 113L378 107"/></g>
+   <circle class="station" cx="240" cy="91" r="5"/>
+   <g class="labels" text-anchor="middle"><text x="108" y="32">Bayesian</text><text x="108" y="155">Dynamical</text><text x="372" y="32">Mechanistic</text><text x="372" y="155">Semiotic</text><text x="240" y="116">Emergence</text></g>
+  </>:<>
+   <g class="faint"><path d="M38 126C97 28 140 160 236 81S369 28 445 110M38 144C112 53 149 174 250 106S373 57 445 129"/></g>
+   <path class="ink" d="M38 102C110 6 144 134 236 57S363 4 445 85"/>
+   <circle class="station" cx="236" cy="57" r="5"/>
+  </>}
+ </svg>
+ {captions[id]&&<figcaption>{captions[id]}</figcaption>}
+</figure>
+<style>
+ figure { margin:0; }
+ svg { display:block;width:100%;height:auto;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round; }
+ .ink { stroke:var(--accent); }
+ .faint { stroke:var(--text-tertiary);opacity:.55; }
+ .registration { stroke:var(--annotation);opacity:.6; }
+ .station { fill:var(--bg-elevated);stroke:var(--annotation);stroke-width:1.5; }
+ .labels { fill:var(--text-secondary);font:12px var(--font-sans); }
+ figcaption { color:var(--text-secondary);font:.7rem/1.6 var(--font-sans);margin:.65rem 0 0; }
+</style>

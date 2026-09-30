@@ -1,0 +1,114 @@
+---
+import type { Registry } from '../../lib/forest';
+const { registry, attempt,compact=false } = Astro.props as { registry: Registry; attempt: Registry['attempts'][number];compact?:boolean };
+const node = (id: string) => registry.nodes.find(n => n.id === id)!;
+const stack: string[] = [];
+const visited = new Set<string>();
+const paths = new Set<string>();
+const frames = attempt.events.map(event => {
+  if (event.type === 'push') {
+    if (stack.length) paths.add(JSON.stringify([stack.at(-1), event.node]));
+    stack.push(event.node);
+    visited.add(event.node);
+  } else if (event.type === 'pop') stack.pop();
+  const top = stack.at(-1);
+  const change = event.type === 'push' ? `${node(event.node).label} joins the stack.`
+    : event.type === 'pop' ? `${node(event.node).label} leaves the stack.${top ? ` Attention returns to ${node(top).label}.` : ' The stack is empty.'}`
+    : event.type === 'reflect' ? 'Reflection recorded. The stack stays unchanged.'
+    : event.type === 'expose' ? `Noticed while explaining ${node(event.from).label}. The stack stays unchanged.`
+    : 'The session ends with the remaining questions preserved.';
+  const title = event.type === 'stop' ? ({time_budget:'Paused at the time budget',deferred:'Paused for another session',popped_to_root:'Returned to the starting question'}[event.reason]) : node(event.node).question;
+  return {event, stack:[...stack].reverse(), visited:[...visited], paths:[...paths], top, change, title};
+});
+---
+<section class:list={['stack-replay',{compact}]} id={`replay-${attempt.id}`} aria-label="Stack and field note">
+  <div class="replay-controls">
+    <button type="button" data-previous disabled>← Previous</button>
+    <span data-counter aria-live="polite" tabindex="-1">Event 1 of {frames.length}</span>
+    <button type="button" data-next disabled={frames.length < 2}>Next →</button>
+  </div>
+  {frames.map((frame,i) => <div class="replay-frame" data-frame={i} data-top={frame.top ?? ''} data-node={'node' in frame.event ? frame.event.node : ''} data-visited={JSON.stringify(frame.visited)} data-paths={JSON.stringify(frame.paths)} hidden={i !== 0}>
+    <div class="stack-column">
+      <p class="micro">Current stack · top first</p>
+      <ol class="stack-levels" aria-label="Current stack, top first">
+        {frame.stack.map((id,j) => <li><span>{node(id).label}</span>{j === 0 && <small>top</small>}</li>)}
+      </ol>
+      {!frame.stack.length && <p class="empty-stack">Empty stack</p>}
+    </div>
+    <div class="field-note">
+      <p class="micro">{frame.event.type}{'node' in frame.event && ` · ${node(frame.event.node).label}`}</p>
+      <h3>{frame.title}</h3>
+      {'note' in frame.event && frame.event.note && <p class="event-prose">{frame.event.note}</p>}
+      <p class="change">{frame.change}</p>
+    </div>
+  </div>)}
+</section>
+<script>
+document.querySelectorAll<HTMLElement>('.stack-replay').forEach(replay => {
+  const frames = [...replay.querySelectorAll<HTMLElement>('[data-frame]')];
+  const previous = replay.querySelector<HTMLButtonElement>('[data-previous]')!;
+  const next = replay.querySelector<HTMLButtonElement>('[data-next]')!;
+  const view = replay.closest<HTMLElement>('.view')!;
+  let index = 0;
+  function render() {
+    frames.forEach((frame,i) => frame.hidden = i !== index);
+    const frame = frames[index];
+    previous.disabled = index === 0;
+    next.disabled = index === frames.length - 1;
+    replay.querySelector('[data-counter]')!.textContent = `Event ${index+1} of ${frames.length}`;
+    const visited: string[] = JSON.parse(frame.dataset.visited!);
+    const paths: string[] = JSON.parse(frame.dataset.paths!);
+    view.querySelectorAll<HTMLElement | SVGElement>('[data-question]').forEach(point => {
+      point.classList.toggle('current-attention', point.dataset.question === frame.dataset.top);
+      point.classList.toggle('event-focus', point.dataset.question === frame.dataset.node);
+      point.classList.toggle('visited', visited.includes(point.dataset.question!));
+      const mark=point.querySelector('[data-visit-mark]');
+      if(mark)mark.textContent=visited.includes(point.dataset.question!)?'●':'○';
+    });
+    view.querySelectorAll<SVGElement>('[data-edge]').forEach(edge => edge.classList.toggle('traced', paths.includes(edge.dataset.edge!)));
+    view.querySelectorAll<HTMLElement>('[data-replay-step]').forEach(link => {
+      if (Number(link.dataset.replayStep) === index) link.setAttribute('aria-current','step');
+      else link.removeAttribute('aria-current');
+    });
+    replay.dispatchEvent(new CustomEvent('forest:event',{bubbles:true,detail:{node:frame.dataset.node,top:frame.dataset.top}}));
+  }
+  view.querySelectorAll<HTMLAnchorElement>('[data-replay-step]').forEach(link => link.addEventListener('click',event => {
+    event.preventDefault();
+    index = Number(link.dataset.replayStep);
+    render();
+    replay.scrollIntoView({block:'start',behavior:'instant'});
+    replay.querySelector<HTMLElement>('[data-counter]')!.focus({preventScroll:true});
+  }));
+  previous.addEventListener('click', () => {index = Math.max(0,index-1);render()});
+  next.addEventListener('click', () => {index = Math.min(frames.length-1,index+1);render()});
+  render();
+});
+</script>
+<style>
+  .stack-replay { border-top:1px solid var(--border);padding:0 0 2rem;scroll-margin-top:5rem; }
+  .replay-controls { display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:1.25rem 0 1.75rem; }
+  .replay-controls button { font:inherit;font-size:.8rem;color:var(--accent);background:transparent;border:1px solid var(--border);border-radius:3px;padding:.65rem .85rem;cursor:pointer; }
+  .replay-controls button:disabled { opacity:.4;cursor:default; }
+  .replay-controls button:focus-visible { outline:2px solid var(--accent);outline-offset:3px; }
+  [data-counter] { font:.75rem var(--font-mono);color:var(--text-secondary); }
+  .replay-frame { display:grid;grid-template-columns:minmax(160px,.8fr) minmax(0,1.4fr);gap:2rem;min-height:260px; }
+  [hidden] { display:none!important; }
+  .micro { font:.7rem/1.6 var(--font-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--text-secondary);margin:0 0 .8rem; }
+  .stack-levels { list-style:none;padding:0;margin:0;display:grid;gap:.35rem; }
+  .stack-levels li { display:flex;justify-content:space-between;gap:.75rem;padding:.7rem .8rem;border:1px solid var(--border);border-radius:2px;font-size:.85rem; }
+  .stack-levels li:first-child { border-left:2px solid var(--accent);background:var(--surface); }
+  .stack-levels small { font:.7rem var(--font-mono);color:var(--text-secondary); }
+  .field-note h3 { font:400 1.4rem/1.4 var(--font-serif);margin:0 0 .8rem; }
+  .event-prose { font:400 1.2rem/1.65 var(--font-serif);margin:.8rem 0; }
+  .change,.empty-stack { font-size:.8rem;line-height:1.7;color:var(--text-secondary); }
+  .compact { display:flex;flex-direction:column;padding-bottom:0; }
+  .compact .replay-controls { order:1;padding:1rem 0 0; }
+  .compact .replay-controls button { padding:.5rem;font-size:.7rem; }
+  .compact [data-counter] { font-size:.65rem;white-space:nowrap; }
+  .compact .replay-frame { display:flex;flex-direction:column;gap:1rem;min-height:190px;padding-top:1rem; }
+  .compact .field-note h3 { display:none; }
+  .compact .event-prose { font:400 .9rem/1.65 var(--font-serif); }
+  .compact .stack-levels li { padding:.45rem .6rem;font-size:.75rem; }
+  .compact .change { font-size:.75rem; }
+  @media(max-width:600px) { .replay-frame { grid-template-columns:1fr;gap:1.5rem; } .stack-column { max-width:320px; } .replay-controls button { min-height:44px; } }
+</style>

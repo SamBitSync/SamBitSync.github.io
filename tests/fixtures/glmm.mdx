@@ -1,0 +1,22 @@
+---
+title: "What a generalized linear mixed model combines"
+description: "A provisional explanation of GLMMs and the questions it exposes. This is an illustrative Forest of Ignorance entry."
+date: 2026-09-28
+dimension: "structured-learning"
+project: "bayesian-statistics"
+status: "in-progress"
+tags: ["statistics", "GLMM", "learning"]
+forest: "glmm"
+---
+
+This is an **illustrative entry**, not a record of a completed study session. It demonstrates how a Process note can hold the current explanation while the optional forest records questions that arose during writing.
+
+## My current explanation
+
+A generalized linear mixed model (GLMM) combines a generalized linear model with terms for variation across groups. The generalized linear model relates predictors to an outcome through a link function and a chosen response distribution. The mixed part allows observations from the same group to share some parameters instead of treating them as independent copies of one population-wide pattern.
+
+That sentence is only a starting point. To explain *why* the link function is needed for a binary outcome, I would need to explain logit and odds clearly. To explain what the group-level terms accomplish, I would need a better account of random effects and partial pooling. Those are questions to investigate, not claims that the example traversals below have resolved.
+
+## Where the explanation stops
+
+I can name the components, but I cannot yet give a worked example that shows how the link function and group-level variation jointly affect a prediction. A future revision should build one small example and then state which parts of this explanation survived it.

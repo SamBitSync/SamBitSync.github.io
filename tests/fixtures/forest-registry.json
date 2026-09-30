@@ -1,0 +1,199 @@
+{
+  "version": 2,
+  "example": true,
+  "nodes": [
+    {
+      "id": "glmm",
+      "label": "GLMM",
+      "question": "How does a GLMM combine a response distribution with group-level variation?",
+      "first_encountered": "2026-09-20",
+      "process_note": "glmm"
+    },
+    {
+      "id": "glm",
+      "label": "GLM",
+      "question": "How does a GLM relate predictors to a non-normal response?",
+      "first_encountered": "2026-09-20"
+    },
+    {
+      "id": "link",
+      "label": "link function",
+      "question": "What does a link function connect, and why is it needed?",
+      "first_encountered": "2026-09-20"
+    },
+    {
+      "id": "logit",
+      "label": "logit",
+      "question": "Why use log-odds as the linear predictor’s scale?",
+      "first_encountered": "2026-09-20"
+    },
+    {
+      "id": "odds",
+      "label": "odds",
+      "question": "How do odds differ from probability?",
+      "first_encountered": "2026-09-20",
+      "domain": "technical",
+      "closure": "convergent",
+      "thought_i_knew": true,
+      "due": "2026-09-27"
+    },
+    {
+      "id": "lmm",
+      "label": "LMM",
+      "question": "What changes when a linear model includes group-level terms?",
+      "first_encountered": "2026-09-28"
+    },
+    {
+      "id": "random-effects",
+      "label": "random effects",
+      "question": "What does a distribution over group effects represent?",
+      "first_encountered": "2026-09-28"
+    },
+    {
+      "id": "partial-pooling",
+      "label": "partial pooling",
+      "question": "How does sharing information change group estimates?",
+      "first_encountered": "2026-09-28"
+    },
+    {
+      "id": "likelihood-calculation",
+      "label": "likelihood: calculation",
+      "question": "How do I calculate a likelihood ratio for two candidate parameter values?",
+      "first_encountered": "2026-09-28",
+      "domain": "technical",
+      "closure": "convergent"
+    },
+    {
+      "id": "likelihood-evidence",
+      "label": "likelihood: evidence",
+      "question": "In what sense can relative likelihood count as evidence for an explanation?",
+      "first_encountered": "2026-09-28",
+      "domain": "philosophical",
+      "closure": "divergent"
+    },
+    {
+      "id": "model-checking",
+      "label": "model checking",
+      "question": "Which model checks might expose assumptions I have overlooked?",
+      "first_encountered": "2026-09-28",
+      "domain": "technical",
+      "closure": "divergent"
+    }
+  ],
+  "edges": [
+    {
+      "id": "likelihood-sharpens",
+      "from": "likelihood-calculation",
+      "to": "likelihood-evidence",
+      "type": "sharpens",
+      "attempt": "glmm-02"
+    }
+  ],
+  "dissolutions": [],
+  "attempts": [
+    {
+      "id": "glmm-01",
+      "date": "2026-09-20",
+      "root": "glmm",
+      "note": "Illustrative session.",
+      "title": "Working from the link function down to odds",
+      "events": [
+        {
+          "type": "push",
+          "node": "glmm"
+        },
+        {
+          "type": "push",
+          "node": "glm"
+        },
+        {
+          "type": "push",
+          "node": "link"
+        },
+        {
+          "type": "push",
+          "node": "logit"
+        },
+        {
+          "type": "push",
+          "node": "odds"
+        },
+        {
+          "type": "stop",
+          "reason": "time_budget"
+        }
+      ]
+    },
+    {
+      "id": "glmm-02",
+      "date": "2026-09-28",
+      "root": "glmm",
+      "note": "Illustrative branching session, including a circular discovery.",
+      "title": "Working through partial pooling and likelihood",
+      "events": [
+        {
+          "type": "push",
+          "node": "glmm"
+        },
+        {
+          "type": "push",
+          "node": "lmm"
+        },
+        {
+          "type": "push",
+          "node": "random-effects"
+        },
+        {
+          "type": "push",
+          "node": "partial-pooling"
+        },
+        {
+          "type": "pop",
+          "node": "partial-pooling",
+          "note": "A worked two-group example sufficed to continue."
+        },
+        {
+          "type": "pop",
+          "node": "random-effects"
+        },
+        {
+          "type": "pop",
+          "node": "lmm"
+        },
+        {
+          "type": "push",
+          "node": "likelihood-calculation"
+        },
+        {
+          "type": "expose",
+          "from": "likelihood-calculation",
+          "node": "likelihood-evidence"
+        },
+        {
+          "type": "reflect",
+          "node": "likelihood-evidence",
+          "note": "I initially treated higher likelihood as greater probability that an explanation is true. I now distinguish support within a specified comparison from posterior belief."
+        },
+        {
+          "type": "expose",
+          "from": "likelihood-evidence",
+          "node": "glmm"
+        },
+        {
+          "type": "expose",
+          "from": "glmm",
+          "node": "model-checking"
+        },
+        {
+          "type": "pop",
+          "node": "likelihood-calculation",
+          "note": "Calculated a likelihood ratio; its interpretation remains open."
+        },
+        {
+          "type": "stop",
+          "reason": "popped_to_root"
+        }
+      ]
+    }
+  ]
+}

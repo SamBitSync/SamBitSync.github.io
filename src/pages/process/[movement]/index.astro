@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import {getCollection} from 'astro:content';
+import { movements, type Movement } from '../../../lib/inquiry-movements';
+export function getStaticPaths(){return (['autopsy','ship'] as Movement[]).map(movement=>({params:{movement},props:{movement}}))}
+const {movement}=Astro.props as {movement:Movement};
+const info=movements[movement];
+const records=(await getCollection('inquiries')).flatMap(b=>b.data.records).filter(r=>r.movement===movement).sort((a,b)=>b.date.localeCompare(a.date));
+---
+<BaseLayout title={info.title} description={info.question}>
+  <article class="editorial-page movement-index">
+    <nav class="editorial-subnav"><a href="/process/">← Process</a></nav>
+    <PageHeader title={info.title} eyebrow="A practice within Process" description={info.question}/>
+    <figure class="epigraph">
+      {movement==='autopsy'?<>
+        <blockquote cite="https://faculty.washington.edu/minster/bio_inspired_robotics_2016/papers/Braitenberg1984_chapters1-6.pdf">“the law of uphill analysis and downhill invention”</blockquote>
+        <figcaption>Valentino Braitenberg · <cite><a href="https://faculty.washington.edu/minster/bio_inspired_robotics_2016/papers/Braitenberg1984_chapters1-6.pdf">Vehicles: Experiments in Synthetic Psychology</a> (1984), Vehicle 5</cite></figcaption>
+      </>:<>
+        <blockquote cite="https://ditext.com/quine/quine.html">“no statement is immune to revision”</blockquote>
+        <figcaption>W. V. Quine · <cite><a href="https://ditext.com/quine/quine.html">“Two Dogmas of Empiricism”</a> (1951), section 6</cite></figcaption>
+      </>}
+    </figure>
+    {movement==='ship'&&<p class="framework"><a href="/meta/neuraths-boat/">Neurath’s boat: the framework behind this practice ↗</a></p>}
+    <section class="editorial-section">
+      <h2>{movement==='autopsy'?'Subjects to open':'Commitments under revision'}</h2>
+      {records.some(r=>r.reconstruction)&&<p>Some records reconstruct earlier encounters; their provenance is noted on each entry.</p>}
+      {!records.length&&<p>No entries recorded yet.</p>}
+      {records.map(r=><article class="sample-card"><p class="micro">{r.date} · {r.subject}</p><h3><a href={`/process/entries/${r.id}/`}>{r.title} ↗</a></h3><p>{r.summary}</p></article>)}
+    </section>
+  </article>
+</BaseLayout>
+<style>
+ .movement-index { max-width:780px; }
+ .framework { font-size:.85rem;margin-top:1rem; }
+ .epigraph { border-left:1px solid var(--accent);padding-left:1rem;margin:0 0 2rem;max-width:65ch; }
+ .epigraph blockquote { font:400 1.2rem/1.6 var(--font-serif);color:var(--text-secondary);margin:0 0 .8rem;padding:0;border:0; }
+ .epigraph figcaption { font:.75rem/1.7 var(--font-sans);color:var(--text-secondary); }
+ .epigraph figcaption a { color:var(--text-secondary);text-underline-offset:3px; }
+ .sample-card { max-width:440px;padding:1.5rem;border:1px solid var(--border);border-top:2px solid var(--accent);border-radius:3px;background:var(--surface); }
+ .sample-card svg { display:block;width:100%;max-width:320px;margin:0 auto 1.5rem;fill:none;stroke:var(--text-secondary);stroke-width:1.3; }
+ .sample-card .micro { font:.68rem var(--font-mono);color:var(--text-secondary); }
+ .sample-card h3 { font:400 1.5rem/1.3 var(--font-serif);margin:.7rem 0; }
+ .sample-card h3 a { color:var(--text-primary);text-decoration:none; }
+ .sample-card h3 a:hover { color:var(--accent); }
+ .sample-card p { font-size:.9rem;line-height:1.7;color:var(--text-secondary); }
+</style>

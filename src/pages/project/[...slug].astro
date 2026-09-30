@@ -9,7 +9,21 @@ const all = (await Promise.all([getCollection('maps'),getCollection('meta'),getC
 const related = ids.flatMap(id=>{ const [collection,slug]=id.includes('/')?id.split('/'):['maps',id]; const item=all.find(e=>e.collection===collection && e.id===slug); return item?[{title:item.collection==='meta'?item.data.framework:item.data.title,href:item.collection==='meta'?`/meta/#${item.id}`:`/${item.collection}/${item.id}/`}]:[]; });
 ---
 <ReadingLayout title={post.data.title} description={post.data.description} collection="Projects" backHref="/project/" date={post.data.date} datePrecision={post.data.datePrecision} label={`${post.data.type} · ${post.data.status}`} wide={false}>
-<div slot="context"><div class="editorial-reading-meta">{post.data.collaborators?.length && <span>With {post.data.collaborators.join(', ')}</span>}{post.data.methodology?.length && <span>Methods: {post.data.methodology.join(', ')}</span>}</div><div class="editorial-subnav">{post.data.outputs.map(output=> output.url ? <a href={output.url} target="_blank" rel="noreferrer">{output.label || output.type} ↗</a> : <span>{output.label || output.type}</span>)}</div></div>
+<div slot="context">
+  <div class="project-outputs" aria-label="Project outputs">
+    {post.data.outputs.map(output => output.url
+      ? <a class="project-output" href={output.url} target="_blank" rel="noreferrer">{output.label || output.type}<span aria-hidden="true">↗</span></a>
+      : <span>{output.label || output.type}</span>)}
+  </div>
+  <div class="editorial-reading-meta">{post.data.collaborators?.length && <span>With {post.data.collaborators.join(', ')}</span>}{post.data.methodology?.length && <span>Methods: {post.data.methodology.join(', ')}</span>}</div>
+</div>
 <Content />
 <aside slot="related" class="editorial-section">{related.length > 0 && <><h2>Related reading</h2><ul>{related.map(item=><li><a href={item.href}>{item.title}</a></li>)}</ul></>}</aside>
 </ReadingLayout>
+<style>
+  .project-outputs { display:flex; flex-wrap:wrap; gap:.75rem; margin:1.5rem 0 0; }
+  .project-output { display:inline-flex; align-items:center; justify-content:space-between; gap:2rem; min-height:48px; padding:.7rem 1.1rem; border:1px solid var(--accent); border-radius:3px; background:var(--accent); color:var(--bg); font:500 .95rem/1.5 var(--font-sans); text-decoration:none; }
+  .project-output:hover { background:var(--accent-hover); border-color:var(--accent-hover); text-decoration:none; }
+  .project-output span { font-size:1.15rem; }
+  .project-output:focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
+</style>

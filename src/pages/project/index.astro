@@ -2,11 +2,69 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHeader from "../../components/PageHeader.astro";
-import EntryList from "../../components/EntryList.astro";
+import ProjectPreview from "../../components/ProjectPreview.astro";
+import { accessionIndex, SHEET_PREFIX } from '../../lib/survey';
 
 const items = (await getCollection("project")).sort((a,b)=>b.data.date.valueOf()-a.data.date.valueOf());
 
 
-const entries = items.map(entry=>({href:`/project/${entry.id}/`,title:entry.data.title,description:entry.data.description,date:entry.data.date,datePrecision:entry.data.datePrecision,label:entry.data.type}));
+const accessions = accessionIndex(items, SHEET_PREFIX.project);
+const pretty = (date:Date, precision?:string) => date.toLocaleDateString('en-GB', {
+  day: precision === 'month' ? undefined : 'numeric', month:'short', year:'numeric', timeZone:'UTC',
+});
 ---
-<BaseLayout title="Projects" description="Projects I have built, published, or shared."><div class="editorial-page"><PageHeader title="Projects" eyebrow="Completed work" description="Projects I have built, published, or shared." /><EntryList entries={entries} />{!entries.length && <p>No entries yet.</p>}</div></BaseLayout>
+<BaseLayout title="Projects" description="Projects I have built, published, or shared.">
+  <div class="editorial-page projects-page">
+    <PageHeader title="Projects" eyebrow="Completed work" description="Projects I have built, published, or shared." />
+    {!!items.length && <section aria-label="Project catalogue">
+      <div class="catalogue-heading"><p>{items.length} {items.length === 1 ? 'project' : 'projects'}</p><p>Newest first</p></div>
+      <div class:list={['project-catalogue', { 'single-project': items.length === 1 }]}>
+        {items.map(entry => <article class="project-card">
+          <div class="card-topline"><span class="accession">{accessions.get(entry.id)}</span><span class="project-type">{entry.data.type}</span><span class="card-arrow" aria-hidden="true">↗</span></div>
+          <div class="project-preview"><ProjectPreview id={entry.id} /></div>
+          <div class="card-copy">
+            <h2><a href={`/project/${entry.id}/`}>{entry.data.title}</a></h2>
+            <p>{entry.data.description}</p>
+          </div>
+          <footer><time datetime={entry.data.date.toISOString().slice(0,entry.data.datePrecision === 'month' ? 7 : 10)}>{pretty(entry.data.date,entry.data.datePrecision)}</time></footer>
+        </article>)}
+      </div>
+    </section>}
+    {!items.length && <p>No projects recorded yet.</p>}
+  </div>
+</BaseLayout>
+<style>
+  .projects-page { max-width:1100px; }
+  .catalogue-heading { display:flex; justify-content:space-between; gap:1rem; border-top:1px solid var(--border); padding:1rem 0; }
+  .catalogue-heading p { margin:0; font:.65rem/1.6 var(--font-mono); letter-spacing:.07em; text-transform:uppercase; color:var(--text-secondary); }
+  .project-catalogue { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1.5rem; }
+  .project-card { position:relative; display:flex; flex-direction:column; min-width:0; padding:1.35rem; border:1px solid var(--border); border-top:2px solid var(--accent); border-radius:3px; background:var(--bg-elevated); transition:border-color .15s ease; }
+  .project-card:hover { border-color:var(--accent); }
+  .card-topline { display:flex; align-items:center; gap:.8rem; color:var(--text-secondary); font:.65rem/1.6 var(--font-mono); }
+  .card-topline .accession { color:var(--annotation); }
+  .project-type { text-transform:capitalize; }
+  .card-arrow { margin-left:auto; color:var(--accent); font:1rem var(--font-sans); }
+  .project-preview { margin:1.1rem 0 1.4rem; padding-bottom:1rem; border-bottom:1px solid var(--border); }
+  h2 { font:400 clamp(1.4rem,2.3vw,1.7rem)/1.3 var(--font-serif); letter-spacing:-.015em; margin:0 0 .7rem; }
+  h2 a { color:var(--text-primary); text-decoration:none; }
+  h2 a::after { content:''; position:absolute; inset:0; }
+  h2 a:hover { color:var(--accent); }
+  .project-card:focus-within { outline:2px solid var(--accent); outline-offset:4px; }
+  .card-copy p { color:var(--text-secondary); font:.9rem/1.75 var(--font-sans); margin:0; max-width:62ch; }
+  footer { margin-top:auto; padding-top:1.3rem; color:var(--text-secondary); font:.65rem/1.6 var(--font-mono); }
+  .single-project { grid-template-columns:1fr; }
+  .single-project .project-card { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); column-gap:2.5rem; padding:1.5rem; }
+  .single-project .card-topline { grid-column:1/-1; }
+  .single-project .project-preview { grid-column:1; grid-row:2/4; border-bottom:0; border-right:1px solid var(--border); padding:0 2rem 0 0; margin:1.5rem 0 .5rem; }
+  .single-project .card-copy { align-self:center; padding-top:1.5rem; }
+  .single-project h2 { font-size:clamp(1.5rem,2.5vw,2rem); }
+  .single-project footer { align-self:end; padding-top:1.2rem; }
+  @media(max-width:650px) {
+    .project-catalogue { grid-template-columns:1fr; gap:1.25rem; }
+    .project-card,.single-project .project-card { display:flex; padding:1.1rem; }
+    .single-project .project-preview { border-right:0; border-bottom:1px solid var(--border); padding:0 0 1rem; margin:1.1rem 0 1.4rem; }
+    .single-project .card-copy { padding:0; align-self:auto; }
+    .single-project footer { align-self:auto; }
+    h2,.single-project h2 { font-size:1.5rem; }
+  }
+</style>

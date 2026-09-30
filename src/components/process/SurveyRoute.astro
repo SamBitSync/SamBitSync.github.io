@@ -1,0 +1,152 @@
+---
+import EncounterLog from './EncounterLog.astro';
+import StackReplay from './StackReplay.astro';
+import { forestView, deriveEdges, type Registry } from '../../lib/forest';
+const { registry, root, initialAttempt,coordinated=true,accountHref } = Astro.props as { registry: Registry; root: string; initialAttempt?:string;coordinated?:boolean;accountHref?:string };
+const attempts = registry.attempts.filter(a => a.root === root);
+const label = (id: string) => registry.nodes.find(n => n.id === id)!.label;
+const date = (value: string) => new Date(value+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+const views = [undefined,...attempts];
+const initialIndex=initialAttempt?Math.max(0,views.findIndex(a=>a?.id===initialAttempt)):0;
+const layoutRows=forestView(registry,root).filter(row=>!row.reference);
+const prepared=views.map((attempt,index)=>{
+  const rows=forestView(registry,root,attempt).filter(row=>!row.reference);
+  const ids=new Set(rows.map(r=>r.node.id));
+  const allEdges=deriveEdges(registry).filter(e=>ids.has(e.from)&&ids.has(e.to)&&(!attempt || registry.attempts.findIndex(a=>a.id===e.attempt)<=registry.attempts.indexOf(attempt))&&!registry.dissolutions.some(d=>d.edge===e.id&&(!attempt||d.date<=attempt.date)));
+  const parents=new Map(rows.filter(r=>r.via).map(r=>[r.node.id,r.via!.from]));
+  const layoutParents=coordinated?new Map(layoutRows.filter(r=>r.via).map(r=>[r.node.id,r.via!.from])):parents;
+  const points=new Map<string,{x:number;y:number}>(); let leaf=0;
+  function place(id:string,depth=0):number {
+   const children=(coordinated?layoutRows:rows).filter(r=>layoutParents.get(r.node.id)===id);
+   const xs=children.map(r=>place(r.node.id,depth+1));
+   const x=xs.length?(xs[0]+xs[xs.length-1])/2:100+leaf++*210;
+   points.set(id,{x,y:40+depth*92}); return x;
+  }
+  place(root);
+  const width=Math.max(400,leaf*210);
+  const height=Math.max(...[...points.values()].map(p=>p.y))+65;
+  const steps=new Map<string,number[]>();const path=new Set<string>();const stack:string[]=[];
+  attempt?.events.forEach((e,eventIndex)=>{
+   if(e.type==='push'||e.type==='pop'){
+    steps.set(e.node,[...(steps.get(e.node)??[]),eventIndex+1]);
+    if(e.type==='push'){if(stack.length)path.add(JSON.stringify([stack.at(-1),e.node]));stack.push(e.node);}else stack.pop();
+   }
+  });
+
+  const selectedId=`reading-${root}-${index}`;
+return {attempt,index,rows,allEdges,parents,points,width,height,steps,path,selectedId};
+});
+---
+<section class:list={['survey',{coordinated}]} data-coordinated={coordinated?'true':undefined} aria-label="Survey routes">
+ {coordinated&&<header class="instrument-heading"><div><p class="instrument-label">Forest · Inquiry</p><h2>{registry.nodes.find(n=>n.id===root)!.question}</h2></div><a href={`/process/forest/${root}/`}>Inquiry overview ↗</a></header>}
+ {registry.example && <p class="example">Illustrative inquiry · sample questions and attempts</p>}
+ <div class="controls"><label>{coordinated?'Encounter':'Route'} <select aria-label="Select inquiry route"><option value="0" selected={initialIndex===0}>All known questions</option>{attempts.map((a,i)=><option value={i+1} selected={initialIndex===i+1}>{date(a.date)}</option>)}</select></label><span>{coordinated?'Select a station to inspect its question.':'Choose a question to read it below.'}</span></div>
+ {prepared.map(({attempt,index,rows,allEdges,parents,points,width,height,steps,path,selectedId})=>{
+  return <div class="view" data-view={index} data-encounter={attempt?.id} hidden={index!==initialIndex}>
+   <div class="diagram-body"><figure>
+    {coordinated&&<p class="instrument-label">Question relationships</p>}
+    <svg class="desktop-map" viewBox={`0 0 ${width} ${height}`} role="group" aria-label={`Survey of questions around ${label(root)}${attempt?' on '+date(attempt.date):''}`}>
+     {rows.filter(r=>r.via).map(r=>{const a=points.get(r.via!.from)!;const b=points.get(r.node.id)!;return <path data-edge={JSON.stringify([r.via!.from,r.node.id])} class:list={['connection',{traced:path.has(JSON.stringify([r.via!.from,r.node.id]))}]} d={`M${a.x},${a.y+52} V${a.y+66} H${b.x} V${b.y-7}`} />;})}
+     {rows.map(r=>{const p=points.get(r.node.id)!;return <a href={`#${selectedId}`} data-question={r.node.id} aria-label={r.node.question} class:list={['point',{visited:steps.has(r.node.id),selected:coordinated&&r.node.id===root}]} transform={`translate(${p.x},${p.y})`}><rect x="-100" y="-12" width="200" height="60" fill="transparent"/><circle class="selection-ring" r="10"/><circle r="5"/><text text-anchor="middle" y="26">{r.node.label}</text>{steps.has(r.node.id)&&<text class="step" text-anchor="middle" y="44">{steps.get(r.node.id)!.join(', ')}</text>}</a>;})}
+    </svg>
+    <div class="mobile-map" aria-label="Questions on this route">{rows.map(r=><button type="button" data-question={r.node.id} style={`--depth:${Math.min(r.depth,4)}`} class:list={{visited:steps.has(r.node.id)}}><span data-visit-mark aria-hidden="true">{steps.has(r.node.id)?'●':'○'}</span> {r.node.label}{steps.has(r.node.id)&&<small>{steps.get(r.node.id)!.join(', ')}</small>}</button>)}</div>
+    <figcaption><span>Fig. 01</span> {attempt?`Route recorded ${date(attempt.date)}`:'Questions encountered from this starting point'}{attempt&&' · numbers mark push and pop events'}</figcaption>
+    {coordinated&&<div class="map-key"><span><i class="key-route"/>Encounter route</span><span><i class="key-selection"/>Selected question</span></div>}
+   </figure>
+   <div class="instrument-side">
+   <div class="reading" id={selectedId} aria-live="polite">
+    {coordinated&&<p class="instrument-label">Selected question</p>}
+    {rows.map(r=><div data-reading={r.node.id} hidden={r.node.id!==root}>
+     <h3>{r.node.question}</h3>
+     <p class="tags">{[r.node.domain,r.node.closure,r.node.thought_i_knew?'thought I knew this':undefined,r.node.due?`review due ${date(r.node.due)}${r.node.due<(attempt?.date??new Date().toISOString().slice(0,10))?' (overdue)':''}`:undefined].filter(Boolean).join(' · ')}</p>
+     {r.node.note&&<><p>{r.node.note.split('\n\n')[0]}</p><p><a href={`/process/forest/questions/${r.node.id}/`}>{coordinated?'Open question note':'Question note'} ↗</a></p></>}
+     {coordinated&&accountHref&&!r.node.note&&r.node.id===root&&<p><a href={accountHref}>Written account ↗</a></p>}
+     {allEdges.filter(e=>e.from===r.node.id&&e.type==='sharpens').map(e=><p>Sharpens <button type="button" class="text-link" data-question={e.to}>{label(e.to)}</button>.</p>)}
+     {allEdges.filter(e=>e.from===r.node.id&&e.type==='exposed_while_explaining'&&parents.get(e.to)!==r.node.id).map(e=><p>Returns to <button type="button" class="text-link" data-question={e.to}>{label(e.to)}</button>.</p>)}
+     {registry.attempts.slice(0,attempt?registry.attempts.indexOf(attempt)+1:undefined).flatMap(a=>a.events.filter(e=>e.type==='reflect'&&e.node===r.node.id).map(e=>'note'in e&&<blockquote><p>{e.note}</p><cite>{date(a.date)}</cite></blockquote>))}
+    </div>)}
+   </div>
+   {attempt && <StackReplay registry={registry} attempt={attempt} compact={coordinated} />}
+   </div></div>
+   {coordinated&&<details class="operation-key"><summary>Push · pop · reflect · expose</summary><dl><dt>Push</dt><dd>Take up a question.</dd><dt>Pop</dt><dd>Enough clarified to continue the question underneath.</dd><dt>Reflect</dt><dd>Record a change in understanding.</dd><dt>Expose</dt><dd>Notice a question without pursuing it.</dd></dl></details>}
+   {attempt && <EncounterLog registry={registry} attempt={attempt} title={coordinated?'Event history':undefined} />}
+  </div>;
+ })}
+</section>
+<script>
+ document.querySelectorAll<HTMLElement>('.survey').forEach(survey=>{
+  function selectQuestion(view:HTMLElement,id:string|undefined){
+   view.querySelectorAll<HTMLElement>('[data-reading]').forEach(reading=>reading.hidden=reading.dataset.reading!==id);
+   view.querySelectorAll<HTMLElement>('[data-question]').forEach(node=>{const selected=node.dataset.question===id;node.classList.toggle('selected',selected);if(selected)node.setAttribute('aria-current','true');else node.removeAttribute('aria-current');});
+  }
+  survey.addEventListener('forest:event',((event:CustomEvent)=>{if(survey.dataset.coordinated==='true'){const view=(event.target as HTMLElement).closest<HTMLElement>('.view')!;selectQuestion(view,event.detail.node||event.detail.top||survey.querySelector('[data-reading]')?.getAttribute('data-reading')||undefined);}}) as EventListener);
+  const requested=new URLSearchParams(window.location.search).get('encounter');
+  const matched=[...survey.querySelectorAll<HTMLElement>('[data-encounter]')].find(view=>view.dataset.encounter===requested);
+  if(matched){survey.querySelector<HTMLSelectElement>('select')!.value=matched.dataset.view!;survey.querySelectorAll<HTMLElement>('[data-view]').forEach(view=>view.hidden=view!==matched)}
+  survey.querySelector('select')!.addEventListener('change',event=>{const value=(event.target as HTMLSelectElement).value;survey.querySelectorAll<HTMLElement>('[data-view]').forEach(view=>view.hidden=view.dataset.view!==value);});
+  survey.querySelectorAll<HTMLElement>('[data-question]').forEach(control=>control.addEventListener('click',event=>{
+   event.preventDefault();const view=control.closest<HTMLElement>('.view')!;const id=control.dataset.question;
+   selectQuestion(view,id);
+  }));
+ });
+</script>
+<style>
+ .example { color:var(--text-secondary);font-size:.8rem; }
+ .controls { display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:center;font-size:.85rem;margin:1.5rem 0; }
+ .controls>span { color:var(--text-secondary); }
+ select { font:inherit;color:var(--text-primary);background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:.5rem;margin-left:.5rem; }
+ [hidden] { display:none!important; }
+ figure { margin:0; }
+ .desktop-map { display:block;width:100%;height:auto;max-height:530px; }
+ .connection { stroke:var(--border);stroke-width:1.3;fill:none; }
+ .connection.traced { stroke:var(--accent);stroke-width:2; }
+ .point { color:var(--text-secondary);text-decoration:none; }
+ .point circle { fill:var(--bg);stroke:var(--text-secondary);stroke-width:1.5; }
+ .point.visited circle,.point.selected circle { fill:var(--accent);stroke:var(--accent); }
+ .point text { fill:currentColor;font:14px var(--font-sans); }
+ .point .step { fill:var(--text-secondary);font:11px var(--font-mono); }
+ .point.current-attention circle { stroke-width:4; }
+ .point .selection-ring { display:none;fill:none; }
+ .coordinated .point.selected .selection-ring { display:block;fill:none;stroke:var(--accent);stroke-width:1.5; }
+ .point.event-focus text { fill:var(--accent); }
+ .point.selected { color:var(--accent); }
+ figcaption { margin:1rem 0 2rem;color:var(--text-secondary);font-size:.75rem; }
+ figcaption>span { font-family:var(--font-mono);color:var(--annotation);margin-right:.5rem; }
+ .reading { border-top:1px solid var(--border);padding:1.5rem 0;min-height:110px; }
+ .reading h3 { font:400 1.5rem/1.4 var(--font-serif);margin:0 0 .7rem; }
+ .reading p { line-height:1.7; }
+ .tags { color:var(--text-secondary);font-size:.8rem; }
+ .text-link { border:0;background:none;padding:0;color:var(--accent);font:inherit;text-decoration:underline;cursor:pointer; }
+ .reading blockquote { border-left:1px solid var(--border);margin:1rem 0;padding-left:1rem; }
+ .mobile-map { display:none; }
+ .instrument-side { display:flex;flex-direction:column; }
+ .instrument-side>:global(.stack-replay) { order:0; }
+ .instrument-side>.reading { order:1; }
+ .coordinated { border:1px solid var(--border);border-radius:3px;padding:1.5rem;background:var(--surface);margin:3rem 0;width:min(1100px,calc(100vw - 3rem));position:relative;left:50%;transform:translateX(-50%);box-sizing:border-box; }
+ .instrument-heading { display:flex;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--border);padding-bottom:1.25rem; }
+ .instrument-heading h2 { font:400 1.5rem/1.4 var(--font-serif);margin:0;max-width:35ch; }
+ .instrument-heading>a { font:.75rem/1.8 var(--font-sans);white-space:nowrap; }
+ .instrument-label { font:.65rem/1.6 var(--font-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--text-secondary);margin:0 0 .65rem; }
+ .coordinated .diagram-body { display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);gap:1.5rem; }
+ .coordinated .instrument-side { border-left:1px solid var(--border);padding-left:1.5rem;min-width:0; }
+ .coordinated .reading { order:0;border-top:0;padding:0 0 1rem;min-height:190px; }
+ .coordinated .reading h3 { font-size:1.25rem; }
+ .coordinated .reading p { font-size:.85rem; }
+ .coordinated .reading .tags { font-size:.7rem; }
+ .coordinated .instrument-side>:global(.stack-replay) { order:1; }
+ .coordinated figcaption { margin:1rem 0;font-size:.7rem; }
+ .coordinated .point text { font-size:19px; }
+ .coordinated .point .step { font-size:14px; }
+ .map-key { display:flex;flex-wrap:wrap;gap:1rem;font:.7rem/1.8 var(--font-sans);color:var(--text-secondary); }
+ .map-key span { display:flex;align-items:center;gap:.4rem; }
+ .key-route { width:20px;border-top:2px solid var(--accent); }
+ .key-selection { width:10px;height:10px;border:1px solid var(--accent);border-radius:50%; }
+ .coordinated .mobile-map button.selected { outline:1px solid var(--accent);outline-offset:2px; }
+ .operation-key { border-top:1px solid var(--border);padding:.8rem 0;margin-top:1rem;font-size:.75rem; }
+ .operation-key summary { cursor:pointer;color:var(--accent); }
+ .operation-key dl { display:grid;grid-template-columns:60px 1fr;gap:.5rem;margin:1rem 0 0; }
+ .operation-key dd { margin:0;color:var(--text-secondary); }
+ @media(max-width:800px){.coordinated .diagram-body{grid-template-columns:1fr}.coordinated .instrument-side{border-left:0;border-top:1px solid var(--border);padding:1.5rem 0 0}.instrument-heading{flex-wrap:wrap}.coordinated .reading{min-height:0}.coordinated{padding:1rem}}
+ button:focus-visible,a:focus-visible,select:focus-visible,summary:focus-visible { outline:2px solid var(--accent);outline-offset:4px; }
+ @media(max-width:700px) { .desktop-map { display:none; } .mobile-map { display:grid;gap:.35rem; } .mobile-map button { text-align:left;background:none;border:0;padding:.65rem 0 .65rem calc(var(--depth)*.8rem);font:inherit;color:var(--text-secondary);cursor:pointer; } .mobile-map button.visited,.mobile-map button.selected { color:var(--accent); } .mobile-map small { margin-left:.8rem;font-family:var(--font-mono); } }
+</style>

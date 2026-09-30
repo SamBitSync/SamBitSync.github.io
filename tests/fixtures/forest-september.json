@@ -1,0 +1,687 @@
+{
+  "version": 2,
+  "example": false,
+  "nodes": [
+    {
+      "id": "mouse-flips",
+      "label": "x/y flips",
+      "question": "What does an x/y flip actually measure?",
+      "first_encountered": "2026-09-10",
+      "domain": "technical",
+      "closure": "convergent"
+    },
+    {
+      "id": "coordinate-direction",
+      "label": "Direction reversal",
+      "question": "What counts as changing direction along x or y?",
+      "first_encountered": "2026-09-10",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "The first distinction is between changing position and changing direction. If the cursor moves steadily from left to right, its x coordinate changes throughout the movement. That does not mean its horizontal direction has reversed. A flip concerns a change between increasing and decreasing position along an axis.\n\nA simple imagined sequence helps: x positions of 10, 20, 30, 25 describe rightward movement followed by leftward movement. The last segment reverses the preceding direction. The same idea applies separately to y. The screen centre is not part of this definition.\n\nThis clarifies the concept, while leaving implementation choices open. Repeated coordinates, tiny fluctuations and gaps need an explicit counting rule. I would want that rule written beside the resulting measure, rather than assume that every implementation treats them alike."
+    },
+    {
+      "id": "raw-events",
+      "label": "Raw events",
+      "question": "Can I count reversals directly in Gorilla’s raw mouse events?",
+      "first_encountered": "2026-09-10",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "A count can be easy to compute and difficult to interpret. I could compare successive recorded positions and count sign changes, but that would make the recording sequence and its small fluctuations part of the measure.\n\nThe distinction I need is between a raw-event count and a trajectory measure produced after stated processing decisions. Neither is automatically wrong. They describe different inputs, and their relation has to be inspected in the data rather than hidden behind the common name “flips.”\n\nA useful next check would preserve the raw trace and compare counts under explicitly chosen processing variants. That check has not been reported here. The present note explains why a naive raw count would need scrutiny before a cognitive interpretation."
+    },
+    {
+      "id": "sampling",
+      "label": "Sampling",
+      "question": "How does Gorilla acquire cursor positions?",
+      "first_encountered": "2026-09-10",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "Before deriving a trajectory measure, I need to understand the sequence of positions I actually have. The relevant evidence is the exported data from the configured task: timestamps, positions, gaps and the relation between recording and trial boundaries.\n\nThis reconstruction does not establish Gorilla’s acquisition schedule. A documented feature and the behaviour of a particular task configuration are different sources of evidence. I should not attach a fixed sampling rate to the stream without checking which source supports it.\n\nThe question can be approached with a small pilot and an acquisition report. Until then, timestamped positions are enough to identify what needs inspection, but not enough to justify precise claims about the temporal structure of movement."
+    },
+    {
+      "id": "preprocessing",
+      "label": "Preprocessing",
+      "question": "What has to happen before flips are meaningful?",
+      "first_encountered": "2026-09-10",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "Preprocessing determines the trajectory presented to a measure. Coordinate transformations, normalization and smoothing can each change what a later count or curve comparison means. I need to connect each operation to a specific problem in the analysis.\n\nFor direction reversals, the immediate issue is whether small fluctuations should enter the count. For comparisons across layouts, the issue may instead be a consistent coordinate convention. These should not become one unspecified “cleaning” step.\n\nThe working plan is to preserve raw positions, inspect the acquisition, and document transformations before deriving measures. The account does not provide a finished pipeline. The pop in the encounter means enough to continue the explanation, not that these choices have been validated."
+    },
+    {
+      "id": "bimodality",
+      "label": "Trajectory types",
+      "question": "Could average curvature hide different trajectory types?",
+      "first_encountered": "2026-09-10",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "An average trajectory can give a tidy account of a response while hiding differences between trials. The question exposed here is whether a similar average curvature could arise from movements with different shapes or decision histories.\n\nI should inspect individual trajectories before interpreting their average as a representative path. The concern is conceptual at this stage; no multimodal distribution or distinct trajectory classes have been established in this reconstruction.\n\nThis remains an exposed question. A later encounter could decide which features to inspect and what evidence would distinguish a continuous spread of paths from qualitatively different patterns. Giving it a note makes the question available without pretending that the analysis has happened."
+    },
+    {
+      "id": "competitor-definition",
+      "label": "Competitor",
+      "question": "What counts as a competitor in this experiment?",
+      "first_encountered": "2026-09-20",
+      "domain": "technical",
+      "closure": "divergent"
+    },
+    {
+      "id": "overlap-location",
+      "label": "Overlap location",
+      "question": "Does overlap anywhere count, or specifically early overlap?",
+      "first_encountered": "2026-09-20",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "“The words overlap” leaves out where their similarity becomes available in the unfolding stimulus. For the proposed spoken-word task, I need a definition tied to the point at which the target and competitor could begin to be confused.\n\nWord-initial overlap is the working focus in the supplied account. It gives stimulus construction a direction, but should not quietly become a universal rule for every kind of competition or every modality.\n\nThe remaining work is operational: define what counts as the beginning, specify the relation between the words, and inspect whether the selected materials realize that relation. Clarifying the location of overlap is one decision within that process, not the complete competitor definition."
+    },
+    {
+      "id": "phonology-orthography",
+      "label": "Sound and script",
+      "question": "Am I manipulating phonological similarity or visible-script similarity?",
+      "first_encountered": "2026-09-20",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "A pair can look similar without realizing the sound relation I intend to manipulate. Conversely, a sound relation can be represented through different scripts. I need to say which of these relations makes an item a competitor in each condition.\n\nThe multilingual task puts that distinction directly into stimulus construction. Devanagari and Roman representations cannot be treated as transparent copies of one common written relation. The role of script needs its own account beside the phonological relation.\n\nMy working clarification is to keep sound and visible form separate in the design description. Their interaction may still matter. This note does not establish that it has been controlled, and the reconstructed encounter stops before the cross-language question is settled."
+    },
+    {
+      "id": "cross-language-equivalence",
+      "label": "Comparable overlap",
+      "question": "What does the same amount of overlap mean across three languages?",
+      "first_encountered": "2026-09-20",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "A balanced design can use the same number of items in each language while still manipulating different relations. I need an account of comparability that goes beyond equal counts and familiar category names.\n\nThe phrase “same amount of overlap” needs a unit or a rule. It could conceal choices about segments, position, pronunciation or other properties of the materials. The present account does not provide a completed metric, so I should keep those choices visible.\n\nA useful next step is to annotate proposed item relationships and examine difficult cases. That would make disagreements inspectable. For now, cross-language equivalence remains on the stack as a question the minimal pilot has not resolved."
+    },
+    {
+      "id": "aspiration-place",
+      "label": "Aspiration and place",
+      "question": "How should aspiration and place differences enter the overlap definition?",
+      "first_encountered": "2026-09-20",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "A partial-overlap category requires decisions about which differences count as partial. Aspiration and place are named here because they make it hard to treat similarity as an intuitive property that everyone will assess in the same way.\n\nI need to connect any classification of these differences to the proposed task and item set. Calling two forms similar does not establish how that relation will function for speakers or how it compares with the other materials.\n\nThe encounter only exposed this issue. There is no completed coding convention or behavioural result in the account. A later note should state the convention, show its consequences for particular items, and preserve cases that do not fit cleanly."
+    },
+    {
+      "id": "identical-triplets",
+      "label": "Identical triplets",
+      "question": "Do all modality and script conditions need identical item triplets?",
+      "first_encountered": "2026-09-20",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "Using identical triplets across conditions seems to promise control: fewer material differences remain to explain a result. The difficulty is that an identical item can participate in different relations when the language, modality or script changes.\n\nI therefore need to distinguish identical materials from an equivalent manipulation. The decision to reuse a triplet should be justified in terms of the comparison it supports, rather than treated as automatically more rigorous.\n\nThis question was noticed without being pursued to closure. A minimal pilot can use a provisional choice, provided the reason and its limits are stated. The full stimulus space remains a design problem rather than a settled consequence of the proposal."
+    },
+    {
+      "id": "stream-inference",
+      "label": "Cross-stream inference",
+      "question": "Can concurrent gaze and mouse streams support the same temporal inference?",
+      "first_encountered": "2026-09-22",
+      "domain": "technical",
+      "closure": "convergent"
+    },
+    {
+      "id": "concurrent-streams",
+      "label": "Concurrent acquisition",
+      "question": "Can both raw streams be collected concurrently in this setup?",
+      "first_encountered": "2026-09-22",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "The practical question is whether this task configuration can return both mouse and gaze records in a form that supports their intended comparison. It is narrower than asking whether the platform offers each feature separately.\n\nA pilot would need to inspect actual outputs, trial boundaries and timestamp references. A successful visible interaction is not by itself evidence that the exported streams are aligned or complete.\n\nThe supplied account leaves concurrent raw-stream behaviour pilot-dependent. Popping this question means the explanation can continue with that limitation acknowledged. It does not record a successful acquisition test."
+    },
+    {
+      "id": "temporal-resolution",
+      "label": "Temporal resolution",
+      "question": "What temporal precision does webcam gaze provide?",
+      "first_encountered": "2026-09-22",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "A temporal claim has to be supported by what was acquired. I need to inspect the stream’s observations and gaps before attaching meaning to short intervals in an analysis.\n\nThis note does not assign a general numerical precision to webcam gaze. The working restriction is to make claims appropriate to the configured stream and its evidence, rather than borrow the language of a different recording arrangement.\n\nFor the proposed comparison, acquisition inspection comes before fine claims about timing. Coarse areas-of-interest and temporal descriptions remain working possibilities to evaluate, not a validation result already obtained."
+    },
+    {
+      "id": "analysis-bins",
+      "label": "Analysis bins",
+      "question": "Does a 50-ms analysis bin imply 50-ms measurement resolution?",
+      "first_encountered": "2026-09-22",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "An analysis bin is a partition I choose. A measurement is an observation the recording system provides. Drawing boundaries every 50 ms does not guarantee an observation inside each interval.\n\nA finely divided plot can still be useful, but its appearance should not substitute for an acquisition report. I need to know how empty intervals, repeated values and interpolation enter the display or calculation.\n\nThe clarification is enough to stop equating the analysis grid with measurement resolution. It leaves the binning choice open: that choice should follow the stream and the intended inference, not the attractiveness of a smooth time course."
+    },
+    {
+      "id": "normalization-clock",
+      "label": "Shared clock",
+      "question": "Should mouse–gaze relations use movement-normalized time?",
+      "first_encountered": "2026-09-22",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "Movement normalization gives trajectories a common progress coordinate. That can help describe shape across movements with different durations. The coordinate is then defined by each movement rather than by the same elapsed time.\n\nThe cross-stream question asks how gaze and cursor movement relate to spoken input. For that purpose, I need to preserve a shared temporal reference. Otherwise, identical normalized positions may represent different moments relative to the audio.\n\nThe working distinction is to use audio-aligned time for timing relations and movement-normalized coordinates for questions about shape. Both representations can be retained, with their purposes stated. The account does not establish that the acquisition alignment has already been checked."
+    },
+    {
+      "id": "signed-auc",
+      "label": "Signed AUC",
+      "question": "Does competitor-relative signed AUC behave correctly under different layouts?",
+      "first_encountered": "2026-09-22",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "A signed area measure needs a direction convention. If its sign is meant to indicate movement toward a competitor, that meaning must survive the way target and competitor positions change across layouts.\n\nThe calculation could be numerically consistent while its sign changes interpretation between layouts. I would want simple constructed trajectories with known directions to check the convention before interpreting recorded responses.\n\nThis remains exposed rather than tested. The proposed check is part of the next implementation work, not a result from the supplied month. The note preserves the question separately from the acquisition and timing questions."
+    },
+    {
+      "id": "track-task",
+      "label": "Task type",
+      "question": "Is Track 1 classification, regression, or retrieval?",
+      "first_encountered": "2026-09-27",
+      "domain": "technical",
+      "closure": "convergent"
+    },
+    {
+      "id": "model-output",
+      "label": "Model output",
+      "question": "What does the network output?",
+      "first_encountered": "2026-09-27",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "To describe the task, start with what the model is asked to produce. The supplied account specifies a continuous embedding prediction from EEG. That description is about the immediate output, before a candidate is retrieved from a gallery.\n\nThis separates two questions: how the prediction relates to the target representation, and how the evaluation uses that prediction to rank candidates. A name based only on the final score can blur those stages.\n\nThe clarification concerns the task description. It does not provide a model architecture, training run or result. Those should be documented independently if they become part of the work."
+    },
+    {
+      "id": "continuous-target",
+      "label": "Continuous target",
+      "question": "Is the target categorical or continuous?",
+      "first_encountered": "2026-09-27",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "The supplied task account names a 1536-dimensional embedding as the target. In that description, the prediction is a vector rather than a direct categorical label.\n\nThat is enough to distinguish the prediction target from the retrieved candidate. It does not settle which loss, architecture or representation properties matter most for the task.\n\nThe pop records that this distinction sufficed to continue explaining the pipeline. The dimensions and representation choice here are inherited from the supplied task account, not independently re-audited documentation."
+    },
+    {
+      "id": "top-five",
+      "label": "Top-5",
+      "question": "Why is performance reported as Top-5 accuracy?",
+      "first_encountered": "2026-09-27",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "Top-5 describes an evaluation outcome in the supplied pipeline: whether the relevant candidate is among the leading retrieved candidates. It does not, by itself, tell me the form of the model’s immediate output.\n\nTo interpret the score, I need to retain the link between prediction and ranking. The same headline metric can hide important evaluation decisions, such as what gallery is used and how similarity is computed.\n\nThe present clarification is descriptive. It does not establish a score or a comparison between models. The question became useful because it exposed how quickly evaluation vocabulary had shaped my initial task label."
+    },
+    {
+      "id": "retrieval",
+      "label": "Retrieval",
+      "question": "Where does retrieval enter the pipeline?",
+      "first_encountered": "2026-09-27",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "Retrieval enters after the embedding prediction in the task account. The predicted representation is compared with gallery representations so that candidates can be ranked.\n\nThat places candidate selection in the evaluation procedure rather than automatically in the network’s output definition. It also gives evaluation choices a visible place in the explanation.\n\nThe account does not specify or validate every retrieval setting. The next level of detail would require the actual evaluation protocol. For the current encounter, locating retrieval in the pipeline is enough."
+    },
+    {
+      "id": "repeat-averaging",
+      "label": "Repeat averaging",
+      "question": "What does averaging repeated trials reward?",
+      "first_encountered": "2026-09-27",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "Averaging repeated trials changes what a prediction is based on. The question exposed here is what a good retrieval result under that procedure would tell me about the signal and the task.\n\nI need to distinguish an average-based evaluation from claims about the information available in a single trial. Before drawing that distinction empirically, I would need the protocol: what is repeated, what is averaged, and where the operation occurs.\n\nNo comparison of averaged and individual trials is reported in this reconstruction. This is a question for another encounter, kept visible because it affects what a later score could mean."
+    },
+    {
+      "id": "lsn-glmm",
+      "label": "Why a GLMM?",
+      "question": "Why do I need a GLMM for these responses?",
+      "first_encountered": "2026-09-28",
+      "domain": "technical",
+      "closure": "convergent"
+    },
+    {
+      "id": "independence",
+      "label": "Independence",
+      "question": "Why are these observations not independent?",
+      "first_encountered": "2026-09-28",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "The important question is what observations share. Repeated responses by one speaker and repeated responses to one item give the rows structure that is not described by their total count.\n\nA model should account for the grouping relevant to the intended analysis. That does not mean every possible dependence has been identified merely by naming speaker and item. It gives the first structural explanation a concrete basis.\n\nThe encounter’s clarification is that 450 rows should not be explained as 450 independent participant-like observations. The adequacy of a particular model remains a separate question, especially while the outcome definition is unsettled."
+    },
+    {
+      "id": "speaker-repetition",
+      "label": "Repeated speakers",
+      "question": "What is shared across trials from one speaker?",
+      "first_encountered": "2026-09-28",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "Thirty responses from one speaker may share tendencies that are not present to the same extent in another speaker’s responses. Repeating the speaker therefore provides within-speaker information as well as repeated rows.\n\nThe analysis needs to distinguish that structure from the contrast it is trying to estimate. A speaker-level grouping is one way the working model begins to represent it, with the final specification still dependent on design and data.\n\nThis explanation is enough to identify why repeated speakers matter. It does not establish which tendencies occur in this dataset, or that a particular variance component has been estimated."
+    },
+    {
+      "id": "item-repetition",
+      "label": "Repeated pictures",
+      "question": "What is shared across responses to the same picture?",
+      "first_encountered": "2026-09-28",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "The same picture appears across speakers in the supplied design. Its properties can therefore recur across responses. A contrast that ignores this structure may confuse the intended condition comparison with differences associated with particular materials.\n\nNaming item repetition makes the model rationale more specific. It also makes stimulus design part of the analysis explanation, rather than treating items as interchangeable carriers of a condition label.\n\nThe encounter does not estimate picture-level effects. It records why the repeated-item structure belongs in the discussion of the model and why the number of rows alone is insufficient."
+    },
+    {
+      "id": "binary-outcome",
+      "label": "Binary outcome",
+      "question": "Why a binomial model with a logistic link?",
+      "first_encountered": "2026-09-28",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "The intended outcome has two values. A binomial probability model with a logistic link is the working statistical direction in the supplied account, rather than a model whose fitted mean is treated as an unconstrained continuous response.\n\nThat direction assumes the two values form an interpretable outcome for the question. A literally binary coding does not establish that its zeros represent comparable linguistic contexts.\n\nThe first encounter clarifies the statistical direction. The later encounter reopens its linguistic premise. The note should preserve both: the binomial rationale survives as conditional knowledge while the eligible outcome space remains under review."
+    },
+    {
+      "id": "random-slopes",
+      "label": "Random slopes",
+      "question": "Which random slopes can this design and data support?",
+      "first_encountered": "2026-09-28",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "A random-effects specification should follow what varies within the relevant grouping and what information the design supplies. The immediate question is which differences in condition response the proposed model is meant to allow across speakers or items.\n\nThe supplied account names the small speaker group as a concern, but does not settle a specification. Choosing a formula without articulating the design would make syntax carry a judgment it cannot explain on its own.\n\nThis question remains exposed. A later encounter should connect candidate specifications to the design, estimation behaviour and intended inference. No model comparison or convergence result is claimed here."
+    },
+    {
+      "id": "comparable-trials",
+      "label": "Comparable trials",
+      "question": "What is a legitimate zero in the dependent variable?",
+      "first_encountered": "2026-09-29",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "A legitimate zero needs more than an absent marker. It needs a relation to the comparison the analysis is meant to express. The transcription audit makes that relation uncertain because some responses appear to use different constructions.\n\nThe next task is to state the constructional space in which presence and absence can be compared. Responses outside it may deserve a separate analysis; excluding them should also require a linguistic reason rather than convenience.\n\nThe question remains on the stack at month end. The existing coding is evidence to inspect, not a completed definition of the analysis population. The Ship record on coding explains why this question became load-bearing."
+    },
+    {
+      "id": "same-construction",
+      "label": "Same construction",
+      "question": "Does an absent marker occur in the same construction?",
+      "first_encountered": "2026-09-29",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "The comparison assumes some account of sameness. If an absent marker occurs in a different construction, treating it as another outcome of one marking choice may compress distinct processes into a single column.\n\nThe supplied examples of द्वारा and काम हुँदै motivate inspection, but they do not supply a complete constructional classification. I need to examine the responses and articulate the criteria instead of infer grammatical categories from marker absence alone.\n\nThis note remains unresolved. The reconstructed event stream deliberately stops without popping it, because the account supports locating the difficulty more clearly, not completing the classification."
+    },
+    {
+      "id": "causal-chain",
+      "label": "Event packaging",
+      "question": "Could temporal framing act through TAM and construction choice?",
+      "first_encountered": "2026-09-29",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "One possible pathway runs from temporal framing through TAM or event packaging to construction choice and then to the availability or use of the marker. Writing it down helps identify where the proposed outcome might sit.\n\nThis is a candidate explanation, not an established causal result. The observation of different constructions does not by itself prove the whole chain or identify the direction of every relation.\n\nThe pathway changes what needs clarification before modeling. I need to decide which contrast the paper aims to explain, what the responses show, and which variables are descriptions, proposed mechanisms or adjustment choices. Those questions remain open."
+    },
+    {
+      "id": "mediation",
+      "label": "Mediation",
+      "question": "Would adjusting for TAM remove part of the phenomenon being studied?",
+      "first_encountered": "2026-09-29",
+      "domain": "technical",
+      "closure": "convergent",
+      "note": "If construction or TAM is part of how framing changes a response, including it as an adjustment variable may change the question answered by a model. The concern is about the intended contrast, not a rule that such variables should always be included or always be omitted.\n\nThe candidate pathway is still hypothetical. Before choosing an adjustment strategy, I need an explicit account of the relation I am trying to estimate and what assumptions support it.\n\nNo mediation analysis has been performed in this reconstruction. The encounter only exposes the issue. Keeping it as a separate note prevents the presence of a statistical term from masquerading as a resolved analysis decision."
+    }
+  ],
+  "attempts": [
+    {
+      "id": "mouse-flips",
+      "root": "mouse-flips",
+      "date": "2026-09-10",
+      "title": "What does an x/y flip actually measure?",
+      "note": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "events": [
+        {
+          "type": "push",
+          "node": "mouse-flips"
+        },
+        {
+          "type": "push",
+          "node": "coordinate-direction"
+        },
+        {
+          "type": "pop",
+          "node": "coordinate-direction",
+          "note": "A flip counts a reversal along an axis, rather than crossing the centre."
+        },
+        {
+          "type": "push",
+          "node": "raw-events"
+        },
+        {
+          "type": "push",
+          "node": "sampling"
+        },
+        {
+          "type": "reflect",
+          "node": "sampling",
+          "note": "Recorded movement events are not automatically a clean continuous trajectory."
+        },
+        {
+          "type": "pop",
+          "node": "sampling",
+          "note": "Timestamped positions need an acquisition audit before fine temporal claims."
+        },
+        {
+          "type": "push",
+          "node": "preprocessing"
+        },
+        {
+          "type": "pop",
+          "node": "preprocessing",
+          "note": "Inspect acquisition and resolution, normalize where justified, and evaluate smoothing before deriving measures."
+        },
+        {
+          "type": "pop",
+          "node": "raw-events",
+          "note": "Naively counting raw reversals could mostly measure noise."
+        },
+        {
+          "type": "expose",
+          "from": "mouse-flips",
+          "node": "bimodality"
+        },
+        {
+          "type": "pop",
+          "node": "mouse-flips",
+          "note": "I can distinguish the measure, acquisition, and cognitive interpretation."
+        },
+        {
+          "type": "stop",
+          "reason": "deferred",
+          "note": "Enough to understand the question; trajectory types remain for later."
+        }
+      ]
+    },
+    {
+      "id": "vwp-competitor",
+      "root": "competitor-definition",
+      "date": "2026-09-20",
+      "title": "What counts as a phonological competitor here?",
+      "note": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "events": [
+        {
+          "type": "push",
+          "node": "competitor-definition"
+        },
+        {
+          "type": "push",
+          "node": "overlap-location"
+        },
+        {
+          "type": "pop",
+          "node": "overlap-location",
+          "note": "Word-initial overlap is the working operational focus for incremental spoken-word competition."
+        },
+        {
+          "type": "push",
+          "node": "phonology-orthography"
+        },
+        {
+          "type": "reflect",
+          "node": "phonology-orthography",
+          "note": "Devanagari and Roman script can create a manipulation distinct from phonological competition."
+        },
+        {
+          "type": "push",
+          "node": "cross-language-equivalence"
+        },
+        {
+          "type": "expose",
+          "from": "cross-language-equivalence",
+          "node": "aspiration-place"
+        },
+        {
+          "type": "expose",
+          "from": "competitor-definition",
+          "node": "identical-triplets"
+        },
+        {
+          "type": "reflect",
+          "node": "competitor-definition",
+          "note": "Identical stimuli across conditions may change the construct being manipulated. Sound and script need separate treatment."
+        },
+        {
+          "type": "stop",
+          "reason": "time_budget",
+          "note": "Continue a minimal pilot; cross-language equivalence remains unresolved. The supplied account spans 20–21 September."
+        }
+      ]
+    },
+    {
+      "id": "gaze-mouse",
+      "root": "stream-inference",
+      "date": "2026-09-22",
+      "title": "Can mouse and webcam gaze support the inference I want?",
+      "note": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "events": [
+        {
+          "type": "push",
+          "node": "stream-inference"
+        },
+        {
+          "type": "push",
+          "node": "concurrent-streams"
+        },
+        {
+          "type": "pop",
+          "node": "concurrent-streams",
+          "note": "Feasibility is a pilot question; separate documentation does not establish simultaneous raw-stream behaviour."
+        },
+        {
+          "type": "push",
+          "node": "temporal-resolution"
+        },
+        {
+          "type": "push",
+          "node": "analysis-bins"
+        },
+        {
+          "type": "pop",
+          "node": "analysis-bins",
+          "note": "Finer bins do not create samples that were not acquired."
+        },
+        {
+          "type": "reflect",
+          "node": "temporal-resolution",
+          "note": "Analysis grid and measurement resolution are different."
+        },
+        {
+          "type": "pop",
+          "node": "temporal-resolution",
+          "note": "Narrow the intended claim to coarse temporal/AOI evidence pending an acquisition audit."
+        },
+        {
+          "type": "push",
+          "node": "normalization-clock"
+        },
+        {
+          "type": "reflect",
+          "node": "normalization-clock",
+          "note": "Movement normalization helps compare trajectory shape but removes the shared real-time clock."
+        },
+        {
+          "type": "pop",
+          "node": "normalization-clock",
+          "note": "Use audio-aligned real time for timing relations and normalized trajectories for shape."
+        },
+        {
+          "type": "expose",
+          "from": "stream-inference",
+          "node": "signed-auc"
+        },
+        {
+          "type": "stop",
+          "reason": "deferred",
+          "note": "Remaining acquisition and layout questions require pilot data."
+        }
+      ]
+    },
+    {
+      "id": "track1",
+      "root": "track-task",
+      "date": "2026-09-27",
+      "title": "Is Track 1 classification, regression, or retrieval?",
+      "note": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "events": [
+        {
+          "type": "push",
+          "node": "track-task"
+        },
+        {
+          "type": "push",
+          "node": "model-output"
+        },
+        {
+          "type": "push",
+          "node": "continuous-target"
+        },
+        {
+          "type": "pop",
+          "node": "continuous-target",
+          "note": "The supplied task account specifies a continuous 1536-dimensional DINOv2 embedding."
+        },
+        {
+          "type": "pop",
+          "node": "model-output",
+          "note": "The network predicts an embedding rather than an image class."
+        },
+        {
+          "type": "push",
+          "node": "top-five"
+        },
+        {
+          "type": "push",
+          "node": "retrieval"
+        },
+        {
+          "type": "pop",
+          "node": "retrieval",
+          "note": "Compare the predicted embedding with gallery embeddings."
+        },
+        {
+          "type": "pop",
+          "node": "top-five",
+          "note": "Top-5 describes the retrieval evaluation."
+        },
+        {
+          "type": "reflect",
+          "node": "track-task",
+          "note": "Top-5 accuracy does not by itself make the prediction task classification."
+        },
+        {
+          "type": "expose",
+          "from": "track-task",
+          "node": "repeat-averaging"
+        },
+        {
+          "type": "pop",
+          "node": "track-task",
+          "note": "EEG to continuous embedding prediction to retrieval evaluation."
+        },
+        {
+          "type": "stop",
+          "reason": "deferred",
+          "note": "Enough to explain the pipeline; averaging remains a separate question."
+        }
+      ]
+    },
+    {
+      "id": "lsn-glmm-28",
+      "root": "lsn-glmm",
+      "date": "2026-09-28",
+      "title": "Why do I need a GLMM here?",
+      "note": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "events": [
+        {
+          "type": "push",
+          "node": "lsn-glmm"
+        },
+        {
+          "type": "push",
+          "node": "independence"
+        },
+        {
+          "type": "push",
+          "node": "speaker-repetition"
+        },
+        {
+          "type": "pop",
+          "node": "speaker-repetition",
+          "note": "Responses share speaker-level tendencies."
+        },
+        {
+          "type": "push",
+          "node": "item-repetition"
+        },
+        {
+          "type": "pop",
+          "node": "item-repetition",
+          "note": "Pictures may differ in baseline elicitation patterns."
+        },
+        {
+          "type": "reflect",
+          "node": "independence",
+          "note": "450 trials do not constitute 450 independent participant-like observations."
+        },
+        {
+          "type": "pop",
+          "node": "independence",
+          "note": "Responses are repeated across speakers and items."
+        },
+        {
+          "type": "push",
+          "node": "binary-outcome"
+        },
+        {
+          "type": "pop",
+          "node": "binary-outcome",
+          "note": "For a defensible binary outcome, use a binomial probability model with a logistic link."
+        },
+        {
+          "type": "expose",
+          "from": "lsn-glmm",
+          "node": "random-slopes"
+        },
+        {
+          "type": "pop",
+          "node": "lsn-glmm",
+          "note": "I understand the structural reason for a binomial mixed model."
+        },
+        {
+          "type": "stop",
+          "reason": "deferred",
+          "note": "Enough to read examples; model specification remains deferred."
+        }
+      ]
+    },
+    {
+      "id": "lsn-glmm-29",
+      "root": "lsn-glmm",
+      "date": "2026-09-29",
+      "title": "What counts as a comparable -ले trial?",
+      "note": "Based on the supplied account of work. Dates and event ordering are reconstructed for this preview, not an archival session log.",
+      "events": [
+        {
+          "type": "push",
+          "node": "lsn-glmm"
+        },
+        {
+          "type": "push",
+          "node": "comparable-trials"
+        },
+        {
+          "type": "push",
+          "node": "same-construction"
+        },
+        {
+          "type": "reflect",
+          "node": "same-construction",
+          "note": "A statistically appropriate model can answer the wrong question if heterogeneous constructions are collapsed."
+        },
+        {
+          "type": "push",
+          "node": "causal-chain"
+        },
+        {
+          "type": "expose",
+          "from": "causal-chain",
+          "node": "mediation"
+        },
+        {
+          "type": "reflect",
+          "node": "causal-chain",
+          "note": "Consider framing to TAM/event packaging to construction choice to marker availability as a possible pathway, not an established result."
+        },
+        {
+          "type": "stop",
+          "reason": "deferred",
+          "note": "The conceptual blocker remains. No pop through the unresolved pathway is inferred."
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "dissolutions": []
+}

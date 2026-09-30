@@ -4,6 +4,12 @@ import ReadingLayout from "../../layouts/ReadingLayout.astro";
 export async function getStaticPaths() { return (await getCollection("process")).map(post=>({params:{slug:post.id},props:{post}})); }
 const {post}=Astro.props;
 const {Content}=await render(post);
+const forest = post.data.forest ? (await getCollection('forest')).find(bundle=>bundle.data.nodes.some(node=>node.id===post.data.forest)) : undefined;
+if (post.data.forest && (!forest || !forest.data.nodes.some(n => n.id === post.data.forest))) throw new Error('Unknown Forest root: ' + post.data.forest);
+if (forest) {
+ const published = new Set((await getCollection('process')).map(p => p.id));
+ for (const node of forest.data.nodes) if (node.process_note && !published.has(node.process_note)) throw new Error('Forest node ' + node.id + ': unknown Process note ' + node.process_note);
+}
 const ids: string[] = [];
 const all = (await Promise.all([getCollection('maps'),getCollection('meta'),getCollection('process'),getCollection('project')])).flat();
 const related = ids.flatMap(id=>{ const [collection,slug]=id.includes('/')?id.split('/'):['maps',id]; const item=all.find(e=>e.collection===collection && e.id===slug); return item?[{title:item.collection==='meta'?item.data.framework:item.data.title,href:item.collection==='meta'?`/meta/#${item.id}`:`/${item.collection}/${item.id}/`}]:[]; });
@@ -11,5 +17,6 @@ const related = ids.flatMap(id=>{ const [collection,slug]=id.includes('/')?id.sp
 <ReadingLayout title={post.data.title} description={post.data.description} collection="Process" backHref="/process/" date={post.data.date} label={`${post.data.dimension} · ${post.data.status}`} wide={false}>
 <div slot="context" class="editorial-reading-meta">{post.data.project && <a href={`/process/topics/${post.data.project}/`}>More notes on {post.data.project.replaceAll('-',' ')}</a>}{post.data.source && <span>Source: {post.data.source}</span>}{post.data.tools?.length && <span>Tools: {post.data.tools.join(', ')}</span>}</div>
 <Content />
+{forest && <p class="editorial-section"><a href={`/process/forest/${post.data.forest}/`}>Explore the inquiry behind this note ↗</a></p>}
 <aside slot="related" class="editorial-section">{related.length > 0 && <><h2>Related reading</h2><ul>{related.map(item=><li><a href={item.href}>{item.title}</a></li>)}</ul></>}</aside>
 </ReadingLayout>

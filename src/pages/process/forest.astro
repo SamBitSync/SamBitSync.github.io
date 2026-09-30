@@ -1,0 +1,103 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { getCollection } from 'astro:content';
+import { deriveEdges } from '../../lib/forest';
+const bundles=await getCollection('forest');
+const registries=bundles.filter(b=>!b.data.example).map(b=>b.data);
+const reconstructed=(await getCollection('inquiries')).some(b=>b.data.records.some(r=>r.movement==='forest'&&r.reconstruction));
+const registry=registries.length?{version:2 as const,nodes:registries.flatMap(r=>r.nodes),attempts:registries.flatMap(r=>r.attempts).sort((a,b)=>a.date.localeCompare(b.date)),edges:registries.flatMap(r=>r.edges),dissolutions:registries.flatMap(r=>r.dissolutions)}:undefined;
+const trees = registry ? [...new Set(registry.attempts.map(attempt => attempt.root))].map(root => {
+  const node = registry.nodes.find(node => node.id === root)!;
+  const edges = deriveEdges(registry).filter(edge => edge.type === 'exposed_while_explaining' && !registry.dissolutions.some(d => d.edge === edge.id));
+  const seen = new Set<string>();
+  const points: { id: string; x: number; y: number }[] = [];
+  const branches: { from: string; to: string }[] = [];
+  let leaf = 0;
+  function place(id: string, depth: number): number {
+    seen.add(id);
+    const children: number[] = [];
+    for (const edge of edges.filter(edge => edge.from === id)) {
+      if (seen.has(edge.to)) continue;
+      branches.push({ from: id, to: edge.to });
+      children.push(place(edge.to, depth + 1));
+    }
+    const x = children.length ? (children[0] + children[children.length - 1]) / 2 : leaf++;
+    points.push({ id, x, y: depth });
+    return x;
+  }
+  place(root, 0);
+  const depth = Math.max(...points.map(point => point.y), 1);
+  const positions = new Map(points.map(point => [point.id, { x: 24 + point.x * 252 / Math.max(leaf - 1, 1), y: 24 + point.y * 122 / depth }]));
+  return { node, points, branches, positions, attempts: registry.attempts.filter(attempt => attempt.root === root).length };
+}) : [];
+---
+<BaseLayout title="Forest of Ignorance" description="What must I clarify to continue? Questions discovered through attempted explanations.">
+  <article class="editorial-page forest-explanation">
+    <nav class="editorial-subnav" aria-label="Return to Process"><a href="/process/">← Process</a></nav>
+    <PageHeader title="Forest of Ignorance" eyebrow="A practice within Process" description="What must I clarify to continue?" />
+
+    <div class="forest-passages" aria-label="Two passages behind this practice">
+      <figure>
+        <blockquote cite="https://www.gutenberg.org/files/37423/37423-h/37423-h.htm">
+          “Our progress in genuine knowledge always consists in part in the discovery of something not understood in what had previously been taken for granted …”
+        </blockquote>
+        <figcaption>
+          <span>John Dewey</span>
+          <cite><a href="https://www.gutenberg.org/files/37423/37423-h/37423-h.htm">How We Think</a> (1910), chapter IX, p. 120</cite>
+        </figcaption>
+      </figure>
+      <figure>
+        <blockquote cite="https://web.stanford.edu/group/cslipublications/cslipublications/bromberger-corpus/On-What-We-Know-We-Dont-Know.pdf#page=136">
+          “What does one need to know in order to know that one does not know something?”
+        </blockquote>
+        <figcaption>
+          <span>Sylvain Bromberger</span>
+          <cite>“Rational Ignorance,” in <a href="https://web.stanford.edu/group/cslipublications/cslipublications/bromberger-corpus/On-What-We-Know-We-Dont-Know.pdf#page=136">On What We Know We Don’t Know</a> (1992), p. 131</cite>
+        </figcaption>
+      </figure>
+    </div>
+
+    <section class="editorial-section" aria-labelledby="trees-title">
+      <h2 id="trees-title">Starting questions</h2>
+      {reconstructed&&<p>Some encounters are reconstructed; their provenance is noted on each entry.</p>}
+      {!trees.length&&<p>No questions recorded yet.</p>}
+      <div class="trees">
+        {trees.map(tree => <article class="tree">
+          <svg viewBox="0 0 300 170" role="img" aria-label={`Branching questions around ${tree.node.label}`}>
+            {tree.branches.map(branch => {
+              const from = tree.positions.get(branch.from)!;
+              const to = tree.positions.get(branch.to)!;
+              return <path d={`M${from.x},${from.y} V${(from.y + to.y) / 2} H${to.x} V${to.y}`} />;
+            })}
+            {tree.points.map(point => { const p = tree.positions.get(point.id)!; return <circle cx={p.x} cy={p.y} r={point.id === tree.node.id ? 4 : 3}><title>{registry!.nodes.find(node => node.id === point.id)!.label}</title></circle>; })}
+          </svg>
+          <h3>{<a href={`/process/forest/${tree.node.id}/`}>{tree.node.label} ↗</a>}</h3>
+          <p>{tree.node.question}</p>
+          <div class="tree-meta">{tree.points.length} questions · {tree.attempts} attempts{registry?.example && ' · illustrative'}</div>
+        </article>)}
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+<style>
+  .forest-explanation { max-width: 780px; }
+  .forest-passages { display: grid; gap: 2rem; max-width: 64ch; }
+  .forest-passages figure { margin: 0; padding-left: 1rem; position: relative; }
+  .forest-passages figure::before { content: ''; position: absolute; left: 0; top: .2rem; height: 2.5rem; border-left: 1px solid var(--accent); opacity: .5; }
+  .forest-passages blockquote { font: 400 1.1rem/1.6 var(--font-serif); color: var(--text-secondary); margin: 0 0 .8rem; padding: 0; border: 0; }
+  .forest-passages figcaption { display: grid; gap: .2rem; color: var(--text-secondary); font: .75rem/1.5 var(--font-sans); }
+  .forest-passages figcaption > span { font-weight: 500; }
+  .forest-passages cite { font-style: italic; }
+  .forest-passages cite a { color: var(--text-secondary); text-underline-offset: 3px; }
+  .forest-explanation a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .trees { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr)); gap: 1.25rem; }
+  .tree { max-width: 360px; padding: 1.3rem; background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--accent); border-radius: 3px; }
+  .tree svg { display: block; width: 100%; height: auto; margin-bottom: 1rem; }
+  .tree svg path { fill: none; stroke: var(--border); stroke-width: 1.5; }
+  .tree svg circle { fill: var(--bg); stroke: var(--accent); stroke-width: 1.5; }
+  .tree h3 { font: 400 1.65rem/1.3 var(--font-serif); margin: 0 0 .5rem; }
+  .tree h3 a { color: var(--accent); text-decoration: none; }
+  .tree p { color: var(--text-secondary); font-size: .9rem; line-height: 1.7; margin: 0 0 1rem; }
+  .tree-meta { color: var(--text-secondary); font: .65rem/1.5 var(--font-mono); }
+</style>

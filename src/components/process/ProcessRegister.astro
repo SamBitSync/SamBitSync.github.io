@@ -1,0 +1,103 @@
+---
+import {subjectHref,recordTags} from '../../lib/process-subjects';
+import TopicStrip from './TopicStrip.astro';
+export interface Entry { id:string; title:string; question:string; subject?:string; tags?:string[]; movement:string; href:string; dates:string[]; example:boolean; noteHref?:string; noteLabel?:string }
+interface Props { entries:Entry[]; encounters:{id:string;date:string;example:boolean}[];previewNote?:string;showActivity?:boolean }
+const {entries,encounters,previewNote,showActivity=true}=Astro.props;
+const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Katmandu',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+const end=new Date(today+'T00:00:00Z');
+const start=new Date(end);start.setUTCDate(start.getUTCDate()-181-start.getUTCDay());
+const days=Array.from({length:Math.floor((end.getTime()-start.getTime())/86400000)+1},(_,i)=>{
+ const d=new Date(start);d.setUTCDate(d.getUTCDate()+i);
+ const date=d.toISOString().slice(0,10);
+ const count=new Set(encounters.filter(e=>e.date===date).map(e=>e.id)).size;
+ return {date,day:d.getUTCDay(),week:Math.floor(i/7),count,month:d.getUTCDate()<=7?d.toLocaleDateString('en-US',{month:'short',timeZone:'UTC'}):''};
+});
+const weeks=Math.ceil(days.length/7);
+const months=days.filter(d=>d.day===0&&d.month);
+const pretty=(d:string)=>new Date(d+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+---
+<section class="process-register" aria-labelledby="register-title">
+ <h2 id="register-title">Dated entries</h2>
+ {!entries.length?<p class="register-intro">No entries recorded yet.</p>:<p class="register-intro">What happened in each encounter, across questions, observations and changing commitments.</p>}
+ {!!entries.length&&entries.every(e=>e.example)&&<p class="preview-note">{previewNote??'Example records for previewing the notebook.'}</p>}
+ {showActivity&&!!entries.length&&<div class="activity">
+  <div class="activity-heading"><span>Recorded encounters · last six months</span><span>Each encounter counted once across movements</span></div>
+  <div class="calendar" style={`--weeks:${weeks}`}>
+   <div class="month-labels">{months.map(m=><span style={`grid-column:${m.week+1}`}>{m.month}</span>)}</div>
+   <div class="days" aria-label="Encounter activity by date">{days.map(d=><button type="button" data-date={d.date} style={`grid-column:${d.week+1};grid-row:${d.day+1}`} class:list={['day',`level-${Math.min(d.count,3)}`]} disabled={!d.count} aria-label={`${pretty(d.date)}: ${d.count} ${d.count===1?'encounter':'encounters'}`} title={`${pretty(d.date)} · ${d.count} ${d.count===1?'encounter':'encounters'}`} aria-pressed="false"></button>)}</div>
+  </div>
+  <div class="activity-footer"><p>Select a recorded day to see its entries.</p><div class="legend" aria-label="Activity intensity"><span>Fewer</span>{[0,1,2,3].map(n=><i class:list={['day',`level-${n}`]} aria-hidden="true"/>)}<span>More</span></div></div>
+ </div>}
+ {showActivity&&!!entries.length&&<TopicStrip records={entries}/>}
+ {!!entries.length&&<div class="list-heading"><span data-filter-label aria-live="polite">All {entries.length} entries</span><button type="button" data-clear hidden>Show all dates</button></div>}
+ <ul class="entry-list">{entries.map(entry=><li data-entry-dates={JSON.stringify(entry.dates)}>
+  <div class="entry-meta"><span>{entry.movement}</span></div>
+  <div class="entry-copy"><h3><a class="entry-primary" href={entry.href}>{entry.title} ↗</a></h3>{recordTags(entry).map(tag=><a class="subject-tag" href={subjectHref(tag)}>{tag}</a>)}{entry.noteHref&&<a class="written-note" href={entry.noteHref}>{entry.noteLabel??'Note'} ↗</a>}</div>
+  <time datetime={entry.dates.at(-1)} data-latest={entry.dates.at(-1)}>{pretty(entry.dates.at(-1)!)}</time>
+ </li>)}</ul>
+</section>
+<script>
+document.querySelectorAll<HTMLElement>('.process-register').forEach(register=>{
+ const cells=[...register.querySelectorAll<HTMLButtonElement>('[data-date]')];
+ const rows=[...register.querySelectorAll<HTMLElement>('[data-entry-dates]')];
+ const clear=register.querySelector<HTMLButtonElement>('[data-clear]')!;
+ if(!clear)return;
+ function select(date?:string){
+  let count=0;
+  rows.forEach(row=>{
+   row.hidden=!!date&&!JSON.parse(row.dataset.entryDates!).includes(date);if(!row.hidden)count++;
+   const time=row.querySelector<HTMLTimeElement>('time[data-latest]')!;
+   const shown=date??time.dataset.latest!;
+   time.dateTime=shown;
+   time.textContent=new Date(shown+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+  });
+  cells.forEach(cell=>cell.setAttribute('aria-pressed',String(cell.dataset.date===date)));
+  clear.hidden=!date;
+  register.querySelector('[data-filter-label]')!.textContent=date?`${new Date(date+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'})} · ${count} ${count===1?'entry':'entries'}`:`All ${count} entries`;
+ }
+ cells.forEach(cell=>cell.addEventListener('click',()=>select(cell.getAttribute('aria-pressed')==='true'?undefined:cell.dataset.date)));
+ clear.addEventListener('click',()=>select());
+});
+</script>
+<style>
+ .process-register { border-top:1px solid var(--border);padding-top:2rem;margin-top:3rem; }
+ h2 { font:400 1.8rem/1.3 var(--font-serif);margin:0 0 .6rem; }
+ .register-intro { color:var(--text-secondary);font-size:.9rem;line-height:1.7;margin:0 0 1.8rem; }
+ .preview-note { font-size:.8rem;color:var(--text-secondary);line-height:1.7;margin:-.8rem 0 1.8rem; }
+ .activity-heading { display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.75rem;color:var(--text-secondary);margin-bottom:1rem; }
+ .calendar { max-width:640px; }
+ .month-labels,.days { display:grid;grid-template-columns:repeat(var(--weeks),minmax(0,1fr));gap:4px; }
+ .month-labels { font:.65rem var(--font-mono);color:var(--text-secondary);margin-bottom:.6rem; }
+ .days { grid-template-rows:repeat(7,auto); }
+ .day { display:block;aspect-ratio:1;max-width:18px;width:100%;border:0;border-radius:2px;background:var(--border);padding:0; }
+ button.day { cursor:pointer; }
+ .level-0 { opacity:.45; }
+ .level-1 { background:color-mix(in srgb,var(--accent) 40%,var(--bg)); }
+ .level-2 { background:color-mix(in srgb,var(--accent) 70%,var(--bg)); }
+ .level-3 { background:var(--accent); }
+ button.day:disabled { cursor:default; }
+ button.day[aria-pressed=true] { outline:2px solid var(--text-primary);outline-offset:2px; }
+ button:focus-visible,a:focus-visible { outline:2px solid var(--accent);outline-offset:3px; }
+ .activity-footer { display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:.8rem; }
+ .activity-footer p { font-size:.75rem;line-height:1.6;color:var(--text-secondary);margin:0;max-width:65ch; }
+ .legend { display:flex;align-items:center;gap:4px;font-size:.65rem;color:var(--text-secondary); }
+ .legend .day { width:11px; }
+ .list-heading { margin-top:2rem;display:flex;justify-content:space-between;gap:1rem;align-items:center;font-size:.8rem;color:var(--text-secondary); }
+ [data-clear] { border:0;background:transparent;color:var(--accent);font:inherit;padding:.4rem;cursor:pointer; }
+ [hidden] { display:none!important; }
+ .entry-list { list-style:none;padding:0;margin:.8rem 0 0; }
+ .entry-list li { position:relative;display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:1.5rem;border-top:1px solid var(--border);padding:1.25rem 0; }
+ .entry-primary::after { content:'';position:absolute;inset:0; }
+ .entry-meta { display:grid;align-content:start;gap:.4rem;color:var(--text-secondary);font-size:.75rem;line-height:1.6; }
+ .entry-meta>span:last-child:not(:first-child) { font-size:.7rem;color:var(--text-tertiary); }
+ h3 { font:400 1.35rem/1.4 var(--font-serif);margin:0; }
+ h3 a { color:var(--text-primary);text-decoration:none; }
+ h3 a:hover { color:var(--accent); }
+ .subject-tag { position:relative;z-index:1;display:inline-block;margin-top:.65rem;padding:.15rem .5rem;border:1px solid var(--border);border-radius:3px;font:.7rem/1.6 var(--font-sans);color:var(--accent);text-decoration:none; }
+ .subject-tag+.subject-tag { margin-left:.4rem; }
+ .subject-tag:hover { border-color:var(--accent);background:var(--surface); }
+ .written-note { position:relative;z-index:1;font-size:.75rem;color:var(--accent); }
+ time { font:.7rem/1.7 var(--font-mono);color:var(--text-secondary);white-space:nowrap; }
+ @media(max-width:600px) { .entry-list li { grid-template-columns:1fr auto;gap:.5rem; } .entry-meta { grid-column:1;display:flex;gap:.7rem;flex-wrap:wrap; } .entry-copy { grid-column:1/-1;grid-row:2; } time { grid-column:2;grid-row:1; } .month-labels,.days { gap:3px; } }
+</style>

@@ -1,20 +1,43 @@
 ---
-title: "Cognitive Science: Research Programmes, Stratified Disagreement, and Ur-Questions"
-description: "Cognitive science as a cluster of competing research programmes rather than a unified discipline."
+title: "Where theories of cognition disagree"
+description: "Separate disagreements about what cognition is, what counts as an explanation, and how to investigate it."
 date: 2025-12-07
 mapType: "moc"
-aspects: ["meta-theory", "methodology"]
-patterns: ["stratification", "disagreement", "lakatosian-programmes"]
-connections: ["orientation-framework"]
-visualType: ["diagram", "text"]
-organizes: [
+aspects: ["cognition", "meta-theory", "methodology"]
+patterns: ["stratification", "disagreement", "lakatosian-programmes", "representation", "embodiment"]
+connections: [
+  "orientation-framework",
   "meta/computationalism",
-  "meta/connectionism",
-  "meta/predictive-processing",
-  "meta/enactivism"
+  "meta/functionalism",
+  "meta/embodied-cognition",
+  "meta/extended-mind",
+  "meta/predictive-processing"
 ]
+visualType: ["diagram", "interactive", "text"]
 ---
 
 import ResearchProgrammesBoard from '../../components/maps/ResearchProgrammesBoard.astro';
+import TheoriesOfCognitionMap from '../../components/maps/TheoriesOfCognitionMap.astro';
+
+Two accounts of cognition can disagree at different levels. They might propose different mechanisms, accept different kinds of explanation, or draw the boundary of the cognitive system differently. Treating all of these as one dispute makes it harder to say what would settle any of them.
+
+This map compares research programmes across those commitments. Its purpose is to locate a disagreement before trying to resolve it. The categories are working distinctions, and individual accounts may cross them.
+
+## A first orientation to the theories
+
+Different accounts bring different features of cognition into focus: symbols and operations, functional organization, bodily activity, relations to the environment, prediction, or processes unfolding through time.
+
+The overview below groups these emphases for browsing. Membership in a cluster does not make two theories equivalent, and placement in different clusters does not by itself make them incompatible. Each relationship is a question to investigate in the linked notes.
+
+<details id="theory-overview">
+  <summary>Explore the theory overview</summary>
+  <TheoriesOfCognitionMap />
+</details>
+
+## From emphasis to disagreement
+
+Knowing what an account foregrounds is a starting point. Comparing it with another requires a more specific question: do they disagree about what exists, about what an explanation should accomplish, or about how to investigate the phenomenon?
+
+The five research programmes below organize that comparison. They are not a second classification of every theory in the overview. A position such as functionalism, or a claim about the boundaries of cognition, can intersect more than one programme. The three layers help locate what is actually at stake in a particular disagreement.
 
 <ResearchProgrammesBoard />

@@ -1,0 +1,57 @@
+---
+interface Props { kind: 'experiments' | 'ethnography' | 'modeling' }
+const { kind } = Astro.props;
+const captions = {
+  experiments: 'Tracing a response as it unfolds',
+  ethnography: 'Following practices and their supports',
+  modeling: 'Relating a model to what it explains',
+};
+---
+<figure>
+  <svg viewBox="0 0 300 140" fill="none" aria-hidden="true">
+    <path class="registration" d="M8 23V8H23M277 132H292V117" />
+    {kind === 'experiments' && <>
+      <g class="faint"><path d="M45 111H255M45 103V119M150 103V119M255 103V119"/><circle cx="84" cy="44" r="15"/><circle cx="216" cy="44" r="15"/></g>
+      <path class="ink" d="M150 95C148 78 133 74 127 63S108 45 84 44"/>
+      <path class="alternative" d="M150 95C154 81 174 85 178 66S198 46 216 44"/>
+      <circle class="station" cx="127" cy="63" r="3"/>
+      <circle class="ink point" cx="150" cy="95" r="3"/>
+      <text class="label" x="84" y="20" text-anchor="middle">choice</text>
+      <text class="label" x="216" y="20" text-anchor="middle">choice</text>
+      <text class="label" x="150" y="130" text-anchor="middle">response traces</text>
+    </>}
+    {kind === 'ethnography' && <>
+      <path class="alternative" d="M69 43L238 51L198 106L69 43M238 51L99 112"/>
+      <path class="ink" d="M69 43L144 72L238 51M144 72L99 112M144 72L198 106"/>
+      <g class="faint"><circle cx="69" cy="43" r="7"/><path d="M60 60Q69 51 78 60M229 41H247V60H229ZM91 103H107V121H91ZM192 100H204V113H192Z"/></g>
+      <circle class="station" cx="144" cy="72" r="4"/>
+      <text class="label" x="69" y="23" text-anchor="middle">people</text>
+      <text class="label" x="238" y="26" text-anchor="middle">instruments</text>
+      <text class="label" x="99" y="137" text-anchor="middle">records</text>
+      <text class="label" x="214" y="133" text-anchor="middle">institutions</text>
+    </>}
+    {kind === 'modeling' && <>
+      <g class="faint"><path d="M35 94H136M35 94V30M166 94H267M166 94V30"/><path d="M45 83L68 72L87 49L109 42L128 37"/></g>
+      <path class="ink" d="M44 84C67 84 68 56 87 50S114 49 129 35M177 83C190 71 196 78 205 61S228 47 257 35"/>
+      <path class="alternative" d="M177 81C199 81 201 57 216 48S242 47 257 34"/>
+      <g class="faint"><circle cx="181" cy="79" r="2"/><circle cx="198" cy="73" r="2"/><circle cx="214" cy="55" r="2"/><circle cx="236" cy="43" r="2"/><circle cx="252" cy="38" r="2"/></g>
+      <path class="ink" d="M143 66H158M146 62L142 66L146 70M155 62L159 66L155 70"/>
+      <circle class="station" cx="87" cy="50" r="3"/>
+      <text class="label" x="86" y="118" text-anchor="middle">model</text>
+      <text class="label" x="218" y="118" text-anchor="middle">observation</text>
+    </>}
+  </svg>
+  <figcaption>{captions[kind]}</figcaption>
+</figure>
+<style>
+  figure { margin:0; }
+  svg { display:block; width:100%; height:auto; stroke-width:1.2; stroke-linecap:round; stroke-linejoin:round; }
+  .registration { stroke:var(--annotation); opacity:.6; }
+  .ink { stroke:var(--accent); }
+  .faint { stroke:var(--text-tertiary); opacity:.5; }
+  .alternative { stroke:var(--text-tertiary); stroke-dasharray:3 4; opacity:.65; }
+  .station { stroke:var(--annotation); fill:var(--bg-elevated); }
+  .point { fill:var(--bg-elevated); }
+  .label { fill:var(--text-secondary); font:10px var(--font-mono); stroke:none; }
+  figcaption { margin:.5rem 0 0; color:var(--text-secondary); font:.7rem/1.6 var(--font-sans); }
+</style>

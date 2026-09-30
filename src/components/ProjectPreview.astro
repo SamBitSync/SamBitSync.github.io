@@ -1,0 +1,36 @@
+---
+interface Props { id: string }
+const { id } = Astro.props;
+---
+<figure>
+  <svg viewBox="0 0 480 240" fill="none" aria-hidden="true">
+    <path class="registration" d="M12 28V12H28M452 228H468V212" />
+    {id === 'digital-setu' ? <>
+      <g class="contours">
+        <path d="M28 154C95 53 133 132 201 58S329 30 451 71M28 173C105 73 145 154 214 80S332 51 451 92M28 194C114 94 157 174 227 102S341 75 451 115M53 221C128 113 176 193 244 125S351 98 451 140" />
+      </g>
+      <path class="route" d="M85 175L149 111L230 141L320 81L394 119" />
+      <g class="places">
+        <path d="M78 175V163L85 157L92 163V175ZM142 111V99L149 93L156 99V111ZM223 141V129L230 123L237 129V141ZM313 81V69L320 63L327 69V81ZM387 119V107L394 101L401 107V119Z" />
+      </g>
+      <g class="sightings"><circle cx="149" cy="111" r="3"/><circle cx="230" cy="141" r="3"/><circle cx="320" cy="81" r="3"/></g>
+      <text class="place-label" x="30" y="40">BHIMDHUNGA · NAGARJUN</text>
+      <text class="sketch-label" x="450" y="209" text-anchor="end">storymap sketch</text>
+    </> : <>
+      <path class="route" d="M87 66H393V176H87ZM113 94H249M113 119H324M113 144H287" />
+    </>}
+  </svg>
+  <figcaption>{id === 'digital-setu' ? 'Interviews, photographs, and infrastructure mapping' : 'A record of the completed work'}</figcaption>
+</figure>
+<style>
+  figure { margin:0; }
+  svg { display:block; width:100%; height:auto; stroke-linecap:round; stroke-linejoin:round; }
+  .registration { stroke:var(--annotation); stroke-width:1; opacity:.65; }
+  .contours { stroke:var(--border); stroke-width:1; }
+  .route { stroke:var(--accent); stroke-width:1.2; stroke-dasharray:4 5; }
+  .places { stroke:var(--accent); stroke-width:1.3; fill:var(--bg-elevated); }
+  .sightings { stroke:var(--annotation); stroke-width:1.2; fill:var(--bg-elevated); }
+  .place-label { fill:var(--text-secondary); font:10px var(--font-mono); letter-spacing:1px; }
+  .sketch-label { fill:var(--text-tertiary); font:10px var(--font-mono); }
+  figcaption { color:var(--text-secondary); font:.7rem/1.6 var(--font-sans); margin:.6rem 0 0; }
+</style>
